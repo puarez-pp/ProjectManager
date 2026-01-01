@@ -1,0 +1,247 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Todos.Queries.GetTodo
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+@inject ICurrentUserService  currentUserService
+@model TodoVm
+
+@{
+    ViewData["Title"] = "Podgląd zadania";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var userId = currentUserService.UserId;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-finish",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz zakończyć wybrane zadanie?"
+    })" 
+/>
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybrany komentarz?"
+    })" 
+/>
+
+
+<table id="project" class="table table-bordered:none">
+    <tbody>
+    <tr>
+        <td>
+           Nazwa projektu:
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Name
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Nazwa klienta:
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Client
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Typ projektu:
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.ProjectType
+        </td>
+    </tr>
+    
+    </tbody>
+</table>
+<a class="edit-link mt-2" href='/Todo/UserTodos'>
+    <i class="fas fa-solid fa-circle-chevron-left"></i>Powrót do listy zadań
+</a>
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+
+            @if (!@Model.Todo.IsCompleted)
+            {
+            <a href="/Todo/AddPost?id=@Model.Todo.Id&&title=@Model.Todo.Title" class="btn btn-primary mb-1" role="button">
+                <i class="fas fa-regular fa-comment"></i>Dodaj komentarz
+            </a>
+            <button class="btn btn-success mb-1" onclick="finishTodo('@Model.Todo.Id')">
+                <i class="fas fa-solid fa-pen-to-square"></i>Zakończ
+            </button>
+            }
+
+        <h6>Utworzył <b>@Model.Todo.UserFrom </b>w dniu @Model.Todo.CreatedDate dla <b>@Model.Todo.UserTo</b></h6>
+        <h6 class="card-title mt-2">Temat: <b>@Model.Todo.Title</b></h6>
+        <h6 class="card-title mt-2">Termin realizacji: <b>@Model.Todo.CompletionDate</b></h6>
+        <b>Treść:</b>
+        <p>@Model.Todo.Content</p>
+        @if (Model.Replies.Count()>0)
+        {
+        <h6 class="mt-4"><b>Komentarze</b></h6>
+            <table id="posts" class="table table-bordered table-hover mt-1">
+                <thead>
+                    <tr> 
+                        <th class="desktop">Data utworzenia</th>
+                        <th class="desktop">Utworzył</th>
+                        <th class="desktop">Treść</th>
+                        <th class="desktop"></th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var post in Model.Replies)
+                    {
+                        <tr>
+                           <td>
+
+                               @post.CreatedDate
+                           </td>
+                           <td>
+                               @post.User
+                           </td>
+                           <td>
+                                @post.Content
+                           </td>
+                           <td>
+                            @if(!Model.Todo.IsCompleted && post.UserId.Equals(userId))
+                               {
+
+                                   <button class="btn btn-danger btn-sm" onclick="deletePost('@post.Id', this)">    
+                                       <i class="fas fa-solid fa-trash-can"></i>Usuń
+                                   </button>   
+                               }       
+                         </tr>
+                    }
+                </tbody>
+            </table>
+        }  
+    </div>
+</div>
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+<script>
+    var selectedRow;
+    var selectedPostId = 0;
+    var todoId = 0;
+    var posts;
+
+    $(document).ready(function () {
+        project = $('#project').DataTable({
+            info: false,
+            columnDefs: [
+                { width: "15%", targets: [0]},
+                { width: "85%", targets: [1]}],
+            paging: false,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+        posts = $('#posts').DataTable({
+            info: true,
+            columnDefs: [
+                { width: "20%", targets: [0]},
+                { width: "20%", targets: [1]},
+                { width: "45%", targets: [2]},
+                { width: "15%", targets: [3]}],
+                
+            paging: true,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+    });
+
+        function finishTodo(id) {
+        todoId = id;
+        $('#modal-confirm-finish').modal('show');
+        }
+
+    $('#modal-confirm-finish-btn').on('click', function (e) {
+
+        $('#modal-confirm-finish').modal('hide');
+
+        $.ajax({
+            type: "POST",
+            url: "/Todo/FinishTodo",
+            data: {
+                id: todoId
+            },
+            success: function (data) {
+                if (data.success) {
+                    location.reload();
+                    toastr.success('Zadanie zostało pomyślnie zakończone.')
+                } 
+                else 
+                    toastr.error('Błąd. ' + data.message);
+            },
+            error: function (data) {
+                toastr.error('Błąd. Nie udało się zamknąć wybranego zadania. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+            },
+            dataType: "json"
+        });
+
+    });
+
+    function deletePost(id, btn) {
+    selectedRow = btn.parentNode.parentNode;
+    selectedPostId = id;
+    $('#modal-confirm-delete').modal('show');
+    }
+
+    $('#modal-confirm-delete-btn').on('click', function (e) {
+
+        $('#modal-confirm-delete').modal('hide');
+
+        $.ajax({
+            type: "POST",
+            url: "/Todo/DeletePost",
+            data: {
+                id: selectedPostId
+            },
+            success: function (data) {
+                if (data.success) {
+                    posts.rows(selectedRow).remove().draw();
+                    toastr.success('Komentarz został pomyślnie usunięty.')
+                } 
+                else 
+                    toastr.error('Błąd. ' + data.message);
+            },
+            error: function (data) {
+                toastr.error('Błąd. Nie udało się usunąć wybranej pozycji. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+            },
+            dataType: "json"
+        });
+
+    });
+
+</script>
+}  

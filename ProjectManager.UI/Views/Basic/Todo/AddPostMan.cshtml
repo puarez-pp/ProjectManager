@@ -1,0 +1,49 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Todos.Commands.AddPost
+@using ProjectManager.Domain.Enums
+
+@model AddPostCommand
+
+@{
+    var title = ViewData["Todo"].ToString();
+    ViewData["Title"] = "Dodawanie komentarza";
+}
+
+@section Styles {
+
+}
+
+<div class="card card-primary card-border-top">
+    <h4 class="card-title mt-2 mx-4"><b>@title</b></h4>
+    @using (Html.BeginForm("AddPostMan", "Todo"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.TodoId)
+        <div class="card-body">
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Content)
+                @Html.TextAreaFor(x => x.Content, new { @class = "form-control", placeholder="Wprowadź treść"})
+                @Html.ValidationMessageFor(x => x.Content)
+            </div>
+
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+
+    }
+
+</div>
+
+@section Scripts {
+
+<script>
+
+</script>
+}  

@@ -1,0 +1,205 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions 
+@using ProjectManager.Application.Todos.Queries.GetProjectTodos
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+
+@model IEnumerable<TodoDto>
+
+@{
+    ViewData["Title"] = "Zadania ode mnie";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-finish",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz zakończyć wybrane zadanie?"
+    })" 
+/>
+
+<div class="card card-primary card-border-top">
+
+    <div class="card-body">
+        <a href='/Todo/UserTodos' class="btn btn-primary mb-3" role="button">
+            <i class="fas fa-regular fa-rectangle-list"></i>Zadania dla mnie
+        </a>
+
+        <div class="form-group mt-0">
+            <div class="form-check form-check-inline form-switch mt-0">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="form-check-input" id="isActiveTodoCb" onclick="refreshTable();" />
+                    <label class="form-check-label custom-control-label" for="isActiveTodoCb">
+                        Tylko aktywne
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <table id="todos" class="table table-bordered table-hower">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th class="desktop">Utworzył</th>
+                    <th class="desktop">Tytuł</th>
+                    <th class="desktop">Termin</th>
+                    <th class="desktop">Status</th>
+                    <th class="desktop"></th>
+                    <th class="desktop"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var todo in Model)
+                {
+                    <tr>
+                        <td>
+                            @todo.CreatedDate
+                        </td>
+                        <td>
+                            @todo.UserFrom
+                        </td>
+                        <td>
+                            @todo.Title
+                        </td>
+                           <td>
+                                @todo.CompletionDate
+                           </td>
+                            <td>
+                               @if(todo.IsCompleted)
+                                {
+                                     <span>Zakończony</span>
+                                }
+                                else
+                                {
+                                     <span>W toku</span>
+                                }
+                           </td> 
+                            <td>
+                               @if(todo.IsCompleted)
+                                {
+                                     <span>1</span>
+                                }
+                                else
+                                {
+                                     <span>0</span>
+                                }
+                           </td> 
+
+                        <td>
+                            <a class="edit-link" href='/Todo/UserToTodo?Id=@todo.Id'>
+                                    <i class="fas fa-solid fa-circle-info"></i>Szczegóły
+                            </a>
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+<script>
+    var selectedRow;
+    var selectedTodoId = 0;
+    var todoId = 0;
+    var todos;
+
+    $(document).ready(function () {
+
+        $('#isActiveTodoCb').prop('checked', $.cookie("isActiveTodoCb") === "1")
+
+        $('#isActiveTodoCb').change(function() {
+           var cookiesIsActiveTodoCbVal = this.checked === true ? "1" : "0" ;
+           $.cookie("isActiveTodoCb", cookiesIsActiveTodoCbVal, { path: '/Todo', expires: 365 });
+        });
+
+        todos = $('#todos').DataTable({
+            info: true,
+            paging: true,
+            searching: true,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            },
+
+            columnDefs: [
+                {
+                    targets: [5],
+                    visible: false,
+                    searchable: true
+                }]
+        });
+    });
+
+        $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+            var isActiveTodoCb = $('#isActiveTodoCb').is(":checked");
+
+            var activeTodoCol = parseInt(data[5]);
+
+            if (isActiveTodoCb && activeTodoCol == 1)
+                return false;
+            return true;
+        }
+    );
+
+    function refreshTable() {
+        employees.draw();
+    }
+
+        function refreshTable() {
+        todos.draw();
+    }
+        function finishTodo(id, btn) {
+        selectedRow = btn.parentNode.parentNode;
+        selectedTodoId = id;
+        $('#modal-confirm-finish').modal('show');
+    }
+
+    $('#modal-confirm-finish-btn').on('click', function (e) {
+
+        $('#modal-confirm-finish').modal('hide');
+
+        $.ajax({
+            type: "POST",
+            url: "/Todo/FinishTodo",
+            data: {
+                id: selectedTodoId
+            },
+            success: function (data) {
+                if (data.success) {
+                    todos.rows(selectedRow).reload().draw();
+                    toastr.success('Zadanie zostało pomyślnie zakończone.')
+                } 
+                else 
+                    toastr.error('Błąd. ' + data.message);
+            },
+            error: function (data) {
+                toastr.error('Błąd. Nie udało się zamknąć wybranej pozycji. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+            },
+            dataType: "json"
+        });
+
+    });
+
+</script>
+}  

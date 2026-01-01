@@ -1,0 +1,137 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.SubContractors.Queries.GetSubContractorBasics
+
+
+@model IEnumerable<SubContractorBasicsDto>
+
+@{
+    ViewData["Title"] = "Podwykonawcy";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybranego podwykonawcę?"
+    })" 
+/>
+
+<div class="card card-primary card-border-top">
+
+    <div class="card-body">
+
+        <a href='/SubContractor/AddSubContractor' class="btn btn-primary mb-3" role="button">
+            <i class="fas fa-solid fa-circle-plus"></i>Dodaj podwykonawcę
+        </a>
+
+        <table id="subContractors" class="table table-bordered">
+            <thead>
+                <tr> 
+                    <th>Nazwa podwykonawcy</th>
+                    <th>Osoba do kontaktu</th>
+                    <th class="desktop"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var subContractor in Model)
+                {
+                    <tr>
+                        <td>
+                            <a class="edit-link" href='/subContractor/EditsubContractor?id=@subContractor.Id'>@subContractor.Name</a>
+                        </td>
+                        <td>
+                            @subContractor.ContactPerson
+                        </td>
+                        <td>
+                            <a class="btn btn-success btn-sm" role="button" href="/subContractor/EditsubContractor?id=@subContractor.Id">
+                                <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                            </a>
+
+                            <button class="btn btn-danger btn-sm" onclick="deleteSubContractor('@subContractor.Id', this)">
+                                <i class="fas fa-solid fa-trash-can"></i>Usuń
+                            </button>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+<script>
+
+    var selectedRow;
+    var selectedsubContractorId = 0;
+    var subContractors;
+
+    $(document).ready(function () {
+
+        subContractors = $('#subContractors').DataTable({
+            paging: true,
+            ordering: false,
+            info: true,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+             columnDefs: [
+            ],
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            },
+            order: [[0, "asc"]]
+        });
+
+
+    });
+
+    function deleteSubContractor(id, btn) {
+        selectedRow = btn.parentNode.parentNode;
+        selectedsubContractorId = id;
+        $('#modal-confirm-delete').modal('show');
+    }
+
+    $('#modal-confirm-delete-btn').on('click', function (e) {
+
+        $('#modal-confirm-delete').modal('hide');
+
+        $.ajax({
+            type: "POST",
+            url: "/SubContractor/DeleteSubContractor",
+            data: {
+                id: selectedsubContractorId
+            },
+            success: function (data) {
+                if (data.success) {
+                    subContractors.rows(selectedRow).remove().draw();
+                    toastr.success('Podwykonawcy zostali zaktualizowani.')
+                } 
+                else 
+                    toastr.error('Błąd. ' + data.message);
+            },
+            error: function (data) {
+                toastr.error('Błąd. Nie udało się usunąć wybranego podwykonawcy. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+            },
+            dataType: "json"
+        });
+
+    });
+
+
+</script>
+}

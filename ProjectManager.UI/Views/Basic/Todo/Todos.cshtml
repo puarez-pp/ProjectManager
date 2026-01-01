@@ -1,0 +1,172 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Projects.Queries.GetProject
+@using ProjectManager.Application.Todos.Queries.GetProjectTodos
+@using ProjectManager.Domain.Enums
+
+
+@model ProjectTodos
+
+@{
+    ViewData["Title"] = "Projekt";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+        <h2 class="mt-0">Informacje o projekcie</h2>
+        <div class="mt-2">
+            <table id="project" class="table table-bordered:none">
+                <tbody>
+                <tr>
+                    <td>
+                       Nazwa projektu:
+                    </td>
+                    <td style="font-weight:bold">
+                        @Model.Project.Name
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                       Nazwa klienta:
+                    </td>
+                    <td style="font-weight:bold">
+                        @Model.Project.Client
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                       Typ projektu:
+                    </td>
+                    <td style="font-weight:bold">
+                        @Model.Project.ProjectType
+                    </td>
+                </tr>     
+                </tbody>
+            </table>
+        </div>       
+    </div>
+</div>
+
+
+<a class="edit-link mt-2" href='/Project/Project?Id=@Model.Project.Id'>
+    <i class="fas fa-solid fa-circle-chevron-left"></i>Powrót do projektu
+</a>
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+        <h2 class="mt-0">Zadania dla projektu</h2>
+        <div class="mt-2">
+            <a href="/Todo/AddTodo?id=@Model.Project.Id" class="btn btn-primary mb-3" role="button">
+                <i class="fas fa-solid fa-circle-plus"></i>Dodaj zadanie
+            </a>
+        </div>
+            <table id="todos" class="table table-bordered table-hover">
+            <thead>
+                <tr> 
+                    <th>Data utworzenia</th>
+                    <th class="desktop">Utworzył</th>
+                    <th class="desktop">Tytuł</th>
+                    <th class="desktop">Termin realizacji</th>
+                    <th class="desktop">Dla</th>
+                    <th class="desktop"></th>
+                    <th class="desktop">Status</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach (var todo in Model.Todos)
+                    {
+                        <tr>
+                           <td>
+                                @todo.CreatedDate
+                           </td>
+                           <td>
+                               @todo.UserFrom
+                           </td>
+                           <td>
+                               @todo.Title  
+                           </td>
+                           <td>
+                                @todo.CompletionDate
+                           </td>
+                           <td>
+                                @todo.UserTo
+                           </td>
+                           <td>
+                                <a class="edit-link" href='/Todo/Todo?Id=@todo.Id'>
+                                    <i class="fas fa-solid fa-circle-info"></i>Podgląd
+                                </a> 
+                           </td>
+                           <td>
+                                @if (todo.IsCompleted){
+                                     <p>Zakończony</p>
+                                }
+                                else{
+                                    <p>W realizacji</p>
+                                }
+                           </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+
+<script>
+    var selectedRow;
+    var selectedTodoId = 0;
+    var todos;
+    var project;
+
+    $(document).ready(function () {
+                
+        project = $('#project').DataTable({
+            info: false,
+            columnDefs: [
+                { width: "15%", targets: [0]},
+                { width: "85%", targets: [1]}],
+            paging: false,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+        todos = $('#todos').DataTable({
+            info: false,
+            columnDefs: [
+                    ],
+            paging: true,
+            searching: true,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+    });
+
+</script>
+}
+

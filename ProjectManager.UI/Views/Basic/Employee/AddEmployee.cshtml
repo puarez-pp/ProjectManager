@@ -1,0 +1,102 @@
+﻿@using ProjectManager.Application.Employees.Commands.AddEmployee
+@using System.Globalization
+@using ProjectManager.Domain.Enums
+
+@model AddEmployeeCommand
+
+@{
+    ViewData["Title"] = "Dodawanie nowego pracownika";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_DateTimeStyles" />
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+}
+
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("AddEmployee", "Employee"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card-body">
+
+             <div class="form-group">
+                @Html.LabelFor(x => x.Email)
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder="Wprowadź e-mail"})
+                @Html.ValidationMessageFor(x => x.Email)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Password)
+                @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder="Wprowadź hasło"})
+                @Html.ValidationMessageFor(x => x.Password)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.ConfirmPassword)
+                @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder="Potwierdź hasło"})
+                @Html.ValidationMessageFor(x => x.ConfirmPassword)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.FirstName)
+                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder="Wprowadź imię"})
+                @Html.ValidationMessageFor(x => x.FirstName)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.LastName)
+                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder="Wprowadź nazwisko"})
+                @Html.ValidationMessageFor(x => x.LastName)
+            </div>
+
+            <div class="form-group"> 
+                @Html.LabelFor(x => x.PositionId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("PositionId", Html.GetEnumSelectList<Position>(), null, htmlAttributes: new { @class="form-control select2-PositionId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.PositionId)
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_DateTimeScripts" />
+    <partial name="Scripts/_EditorScripts" />
+    <partial name="Scripts/_SelectScripts" />
+    <script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+
+    <script>
+
+        var selectedFileBrowseId;
+
+        $(document).ready(function() {
+
+
+            $('.select2-PositionId').select2({
+                theme: 'bootstrap-5'
+            });
+
+        });
+    </script>
+}

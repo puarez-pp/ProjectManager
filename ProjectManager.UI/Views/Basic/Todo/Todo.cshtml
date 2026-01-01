@@ -1,0 +1,156 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Projects.Queries.GetPosition
+@using ProjectManager.Application.Todos.Queries.GetTodo
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+
+@model TodoVm
+
+@{
+    ViewData["Title"] = "Podgląd zadania";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+
+
+
+<table id="project" class="table table-bordered:none">
+    <tbody>
+    <tr>
+        <td>
+           Nazwa projektu:
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Name
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Nazwa klienta:
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Client
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Typ projektu:
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.ProjectType
+        </td>
+    </tr>
+    
+    </tbody>
+</table>
+<a class="edit-link mt-2" href='/Project/Project?Id=@Model.Project.Id'>
+    <i class="fas fa-solid fa-circle-chevron-left"></i>Powrót do projektu
+</a>
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+            @if (roles)
+            {
+            <a href="/Todo/AddPostMan?id=@Model.Todo.Id&&title=@Model.Todo.Title" class="btn btn-primary mb-1" role="button">
+                <i class="fas fa-regular fa-comment"></i>Dodaj komentarz
+            </a>
+            }
+        <h6 class="card-title mt-2">Temat: <b>@Model.Todo.Title</b></h6>
+        <h6 class="card-title mt-2">Termin realizacji: <b>@Model.Todo.CompletionDate</b></h6>
+        <h6>Utworzył <b>@Model.Todo.UserFrom </b>w dniu @Model.Todo.CreatedDate dla <b>@Model.Todo.UserTo</b></h6>
+        <b>Treść:</b>
+        <p>@Model.Todo.Content</p>
+        @if (Model.Replies.Count()>0)
+        {
+        <h6 class="mt-4"><b>Komentarze</b></h6>
+            <table id="posts" class="table table-bordered table-hover mt-1">
+                <thead>
+                    <tr> 
+                        <th class="desktop">Data utworzenia</th>
+                        <th class="desktop">Utworzył</th>
+                        <th class="desktop">Treść</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var post in Model.Replies)
+                    {
+                        <tr>
+                           <td>
+
+                               @post.CreatedDate
+                           </td>
+                           <td>
+                               @post.User
+                           </td>
+                           <td>
+                                @post.Content
+                           </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }  
+    </div>
+</div>
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+<script>
+    var selectedRow;
+    var selectedPostId = 0;
+    var todoId = 0;
+    var posts;
+
+    $(document).ready(function () {
+        project = $('#project').DataTable({
+            info: false,
+            columnDefs: [
+                { width: "15%", targets: [0]},
+                { width: "85%", targets: [1]}],
+            paging: false,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+        posts = $('#posts').DataTable({
+            info: true,
+            columnDefs: [
+                { width: "15%", targets: [0]},
+                { width: "20%", targets: [1]},
+                { width: "50%", targets: [2]}],
+                
+            paging: true,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+        $('divPost').hide();
+    });
+
+
+
+</script>
+}  

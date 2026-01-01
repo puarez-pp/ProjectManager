@@ -1,0 +1,14 @@
+﻿@inject IConfiguration configuration
+
+@{
+    var templateKey = configuration.GetSection("TemplateKey").Value;
+    Layout = $"/Views/{templateKey}/Shared/_LayoutMain.cshtml";
+    ViewData["Title"] = "Strona Główna - Logowanie";
+}
+
+
+
+<div class="container">
+
+</div>
+

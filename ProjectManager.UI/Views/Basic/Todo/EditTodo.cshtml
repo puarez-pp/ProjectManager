@@ -1,0 +1,130 @@
+﻿@using ProjectManager.Application.Todos.Queries.GetEditTodo
+@using System.Globalization
+
+@model EditTodoVm
+
+@{
+    ViewData["Title"] = "Edytowanie zadania";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DataTablesStyles" />
+<partial name="Styles/_DateTimeStyles" />
+}
+
+
+<table id="project" class="table table-bordered:none">
+    <tbody>
+    <tr>
+        <td>
+           Nazwa projektu
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Name
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Nazwa klienta
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Client
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Typ projektu
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.ProjectType
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Todo.ProjectId)
+        @Html.HiddenFor(x => x.Todo.Id)
+        @Html.HiddenFor(x => x.Project.Id)
+        
+        @for (int i = 0; i < Model.AvaiableUsers.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvaiableUsers[i].Id)
+            @Html.HiddenFor(x => x.AvaiableUsers[i].FullName)
+        }
+        <div class="card-body">
+            <div class="form-group">
+                @Html.LabelFor(x => x.Todo.Title)
+                @Html.TextBoxFor(x => x.Todo.Title, new { @class = "form-control", placeholder="Wprowadź tytuł"})
+                @Html.ValidationMessageFor(x => x.Todo.Title)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Todo.Content)
+                @Html.TextAreaFor(x => x.Todo.Content, new { @class = "form-control", placeholder="Wprowadź treść"})
+                @Html.ValidationMessageFor(x => x.Todo.Content)
+            </div>
+
+            <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Todo.UserToId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Todo.UserToId", @Model.AvaiableUsers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-UserId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Todo.UserToId)
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DataTablesScripts" />
+    <partial name="Scripts/_DateTimeScripts" />
+
+    <script>
+        $(document).ready(function() {
+             project = $('#project').DataTable({
+            info: false,
+            columnDefs: [
+                { width: "25%", targets: [0]},
+                { width: "75%", targets: [1]}],
+            paging: false,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+            $('.select2-UserId').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+
+    </script>
+}

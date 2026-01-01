@@ -1,0 +1,273 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Projects.Queries.GetProject
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+
+@model GetProjectVm
+
+@{
+    ViewData["Title"] = "Przegląd projektu";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var inPreparation = Model.Project.ProjectStatus == ProjectStatus.InPreparation;
+    var inProgres = Model.Project.ProjectStatus == ProjectStatus.InProgress;
+    var completed = Model.Project.ProjectStatus == ProjectStatus.Completed;
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybraną pozycję?"
+    })" 
+/>
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-finish",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz zakończyć wybraną pozycję?"
+    })" 
+/>
+
+<div class="card card-primary card-border-top">
+    <div class="card-body">
+        @if (roles && !completed)
+        {
+            <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-primary mb-3 mx-2" role="button">
+                <i class="fas fa-solid fa-circle-plus"></i>Edytuj projekt
+            </a>
+      
+          @*  <a href="/Project/EditProject" class="btn btn-success mb-3 mx-2" role="button">
+                <i class="fas fa-solid fa-dollar-sign"></i>Rejestr kosztów
+            </a>*@
+        }
+        <a href="/Todo/Todos?id=@Model.Project.Id" class="btn btn-success mb-3 mx-2" role="button">
+            <i class="fas fa-solid fa-list-check"></i>Zadania dla pracowników
+        </a>
+        @*<a href="/Project/EditProject" class="btn btn-secondary mb-3 mx-2" role="button">
+            <i class="fas fa-solid fa-blog"></i>Forum projektu
+        </a>*@
+
+        <p class="mt-2">Status: <b>@Model.Project.ProjectStatus.GetDisplayName()</b></p>
+        @if (completed)
+        {
+            <p class="mt-2">Data zamknięcia: <b>@Model.Project.FinishedDate</b></p>
+        }
+        <h3 class="mt-2">
+            @Model.Project.Name
+        </h3>
+         <p class="mt-3">Kategoria: <b>@Model.Project.ProjectType</b></p>
+         <p class="mt-3">Klient: <b>@Model.Project.Client</b></p>
+        <p class="mt-3">Utworzył: <b>@Model.Project.User</b>, Data utworzenia: <b>@Model.Project.CreatedDate</b></p>
+        <p class="mt-3">Zmodyfikował: <b>@Model.Project.UserUpdate</b>, Data modyfikacji: <b>@Model.Project.EditDate</b></p>
+        <p class="mt-3">Kierownik projektu: <b>@Model.Project.UserPM</b></p>
+        <p class="mt-3">Link do Sharepoint: <b><a class="edit-link" href=@Model.Project.Sharepoint target="_blank"></a></b></p>
+        <p class="mt-2"><b>Uwagi:</b></p>
+        <p class="mt-0">@Model.Project.Comment</p>
+    </div>
+</div>
+    
+<h4 class="mx-4 mt-2"><b>Realizacja projektu</b></h4>
+
+@for (int i =0; i<Model.Divisions.Count(); i++)
+{
+    <div class="card card-primary card-border-top mt-2">
+        <div class="card-body">
+            <h4 class="card-title mt-2"><b>@Model.Divisions[i].DivisionType.GetDisplayName()</b></h4>
+            @if (roles && !completed)
+            {
+                <a href="/Project/EditDivision?Id=@Model.Divisions[i].Id" class="btn btn-success mb-1" role="button">
+                    <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                </a>
+            }
+            
+            <p>Prowadzący: <b>@Model.Divisions[i].User.ToUserDto().FullName</b></p>
+            <table id="@Model.Divisions[i].DivisionType.ToString()" class="table table-bordered table-hover mt-2">
+                <thead>
+                    <tr> 
+                        <th>Etap</th>
+                        <th class="desktop">Wykonawca</th>
+                        <th class="desktop"></th>
+                        <th class="desktop">Status</th>
+                        <th class="desktop"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var position in Model.Positions[i])
+                    {
+                        <tr>
+                           <td>
+                               @position.DivisionPositionType.GetDisplayName()
+                               
+                           </td>
+                           <td>
+                               @position.SubContractor.Name
+                           </td>
+                           <td>
+                               <a class="edit-link" href='/Project/Position?Id=@position.Id'>
+                                   <i class="fas fa-solid fa-circle-info"></i>Szczegóły</a>
+                           </td>
+                           <td>
+                               @if(completed || inPreparation)
+                                {
+                                    <p>@string.Empty </p>
+                                }
+                                else
+                                {
+                                    @if (position.IsCompleted)
+                                    {
+                                        <p>Zakończony</p>
+                                    } 
+                                    else
+                                    {
+                                        <p>W realizacji</p>
+                                    } 
+                                }
+                           </td> 
+                           <td>
+                               @if(!position.IsCompleted && !completed)
+                               {
+@*                                   <a class="btn btn-danger btn-sm" onclick="finishPosition('@position.Id', '@Model.Project.Id',this)">
+                                       <i class="fas fa-solid fa-pen-to-square"></i>Zakończ
+                                   </a>*@
+    
+    
+                                   <a class="btn btn-sm btn-success" role="button" href="/Project/EditPosition?Id=@position.Id">
+                                       <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                                   </a>
+    
+                                   @*<button class="btn btn-danger btn-sm" onclick="deletePosition('@position.Id', this)">    
+                                       <i class="fas fa-solid fa-trash-can"></i>Usuń
+                                    </button>*@
+                                }
+                                else
+                                {
+                                    @string.Empty
+                                }       
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if(roles && !completed)
+            {
+                @*<a href="/Project/AddPosition?Id=@Model.Divisions[i].Id&&Project=@Model.Project.Id&&Division=@Model.Divisions[i].DivisionType" class="btn btn-primary mt-2" role="button">
+                <i class="fas fa-solid fa-circle-plus"></i>Dodaj
+            </a>*@
+            }  
+        </div>
+    </div>
+}
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+
+<script>
+    var selectedRow;
+    var projectId;
+    var selectedPositionId = 0;
+    var positionsDesign;
+    var positionsElectric;
+    var positionsAutomatic;
+
+    $(document).ready(function () {
+
+        positionsDesign = $('#Design').DataTable({
+            info: false,
+
+            paging: true,
+            searching: true,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+        positionsElectric = $('#Electric').DataTable({
+            info: false,
+
+            paging: true,
+            searching: true,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+        positionsAutomatic = $('#Automatic').DataTable({
+            info: false,
+
+            paging: true,
+            searching: true,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+    });
+
+    //    function deletePosition(id, btn) {
+    //    selectedRow = btn.parentNode.parentNode;
+    //    selectedPositiontId = id;
+    //    $('#modal-confirm-delete').modal('show');
+    //}
+
+
+    //$('#modal-confirm-delete-btn').on('click', function (e) {
+
+    //    $('#modal-confirm-delete').modal('hide');
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Project/DeletePosition",
+    //        data: {
+    //            id: selectedPositiontId
+    //        },
+    //        success: function (data) {
+    //            if (data.success) {
+    //                positionsDesign.rows(selectedRow).remove().draw();
+    //                positionsElectric.rows(selectedRow).remove().draw();
+    //                positionsAutomatic.rows(selectedRow).remove().draw();
+    //                toastr.success('Projekt został zaktualizowany.')
+    //            } 
+    //            else 
+    //                toastr.error('Błąd. ' + data.message);
+    //        },
+    //        error: function (data) {
+    //            toastr.error('Błąd. Nie udało się usunąć wybranej pozycji. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+    //        },
+    //        dataType: "json"
+    //    });
+
+    });
+
+    });
+
+</script>
+}
+
+        

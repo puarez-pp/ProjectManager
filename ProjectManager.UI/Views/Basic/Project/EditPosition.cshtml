@@ -1,0 +1,155 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Projects.Queries.GetEditPosition
+@using ProjectManager.Application.Projects.Queries.GetProject
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+
+@model EditPositionVm
+
+@{
+    ViewData["Title"] = "Edycja projektu";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DataTablesStyles" />
+<link rel="stylesheet" href="~/lib/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" />
+}
+
+
+<table id="project" class="table table-bordered:none">
+    <tbody>
+    <tr>
+        <td>
+           Nazwa projektu
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.Name
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Nazwa klienta
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.ClientName
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Typ projektu
+        </td>
+        <td style="font-weight:bold">
+            @Model.Project.ProjectType
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+           Branża
+        </td>
+        <td style="font-weight:bold">
+            @Model.DivisionType.GetDisplayName()
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+           Nazwa obszaru
+        </td>
+        <td style="font-weight:bold">
+            @Model.Position.DivisionPositionType.GetDisplayName()
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("EditPosition", "Project"))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Position.Id)
+        @Html.HiddenFor(x => x.Project.Id)
+        
+        @for (int i = 0; i < Model.AvaiableSubContractors.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvaiableSubContractors[i].Id)
+            @Html.HiddenFor(x => x.AvaiableSubContractors[i].Name)
+        }
+        <div class="card-body">
+
+            <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Position.SubContractorId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Position.SubContractorId", @Model.AvaiableSubContractors.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class="form-control select2-SubContractorId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Position.SubContractorId)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Position.Comment)
+                @Html.TextAreaFor(x => x.Position.Comment, new { @class = "form-control", placeholder="Wprowadź komentarz"})
+                @Html.ValidationMessageFor(x => x.Position.Comment)
+            </div>
+        </div>
+
+        <div class="form-check">
+            @Html.CheckBoxFor(x=>x.Position.IsCompleted)
+            @Html.Label("Zakończony", null, new { @class = "form-check-label font-weight-bold" })
+        </div>
+
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_EditorScripts" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DataTablesScripts" />
+
+
+    <script>
+
+        $(document).ready(function() {
+            project = $('#project').DataTable({
+            info: false,
+            columnDefs: [
+                { width: "25%", targets: [0]},
+                { width: "75%", targets: [1]}],
+            paging: false,
+            searching: false,
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+            
+            $('.select2-SubContractorId').select2({
+                theme: 'bootstrap-5'
+            });
+
+        });
+    </script>
+}

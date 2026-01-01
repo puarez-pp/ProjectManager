@@ -1,0 +1,148 @@
+﻿@using System.Globalization
+@using GymManager.Application.Employees.Queries.GetEditEmployee
+@using ProjectManager.Domain.Enums
+
+@model EditEmployeeVm
+
+
+@{
+    ViewData["Title"] =  "Edytowanie danych pracownika";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_DateTimeStyles" />
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+}
+
+<partial name="Modals/_ModalChooseFile" />
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("EditEmployee", "Employee"))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Employee.Id)
+
+        @for (int i = 0; i < Model.AvailableManagers.Count(); i++)
+        {
+            @Html.HiddenFor(model => Model.AvailableManagers[i].Id)
+            @Html.HiddenFor(model => Model.AvailableManagers[i].FullName)
+        }
+
+        @for (int i = 0; i < Model.AvailableRoles.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvailableRoles[i].Id)
+            @Html.HiddenFor(x => x.AvailableRoles[i].Name)
+        }
+
+        @Html.HiddenFor(x => x.EmployeeFullPathImage)
+
+        <div class="card-body">
+                
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Employee.Email)
+                @Html.TextBoxFor(x => x.Employee.Email, new { @class = "form-control", placeholder="Wprowadź e-mail"})
+                @Html.ValidationMessageFor(x => x.Employee.Email)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Employee.Password)
+                @Html.PasswordFor(x => x.Employee.Password, new { @class = "form-control", placeholder="Wprowadź hasło"})
+                @Html.ValidationMessageFor(x => x.Employee.Password)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Employee.ConfirmPassword)
+                @Html.PasswordFor(x => x.Employee.ConfirmPassword, new { @class = "form-control", placeholder="Potwierdź hasło"})
+                @Html.ValidationMessageFor(x => x.Employee.ConfirmPassword)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Employee.FirstName)
+                @Html.TextBoxFor(x => x.Employee.FirstName, new { @class = "form-control", placeholder="Wprowadź imię"})
+                @Html.ValidationMessageFor(x => x.Employee.FirstName)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Employee.LastName)
+                @Html.TextBoxFor(x => x.Employee.LastName, new { @class = "form-control", placeholder="Wprowadź nazwisko"})
+                @Html.ValidationMessageFor(x => x.Employee.LastName)
+            </div>
+
+            <div class="form-group"> 
+                @Html.LabelFor(x => x.Employee.PositionId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Employee.PositionId", Html.GetEnumSelectList<Position>(), null, htmlAttributes: new { @class="form-control select2-PositionId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Employee.PositionId)
+                </div>
+            </div>
+
+             <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Employee.ManagerId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Employee.ManagerId", @Model.AvailableManagers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-ManagerId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Employee.ManagerId)
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                    @Html.LabelFor(x => x.Employee.RoleIds)
+                    
+                    <select data-dropdown-css-class="select2-blue" class="form-control select2 select2-RoleIds" multiple="multiple" data-placeholder="Wybierz rolę" style="width: 100%;" asp-for="@Model.Employee.RoleIds" asp-items="@Model.AvailableRoles.Select(x => new SelectListItem(x.Name, x.Id))" >
+                    </select>
+
+                    @Html.ValidationMessageFor(x => x.Employee.RoleIds)
+             </div>
+
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+
+        </div>
+
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_DateTimeScripts" />
+    <partial name="Scripts/_EditorScripts" />
+    <partial name="Scripts/_SelectScripts" />
+    <script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+
+    <script>
+
+        var selectedFileBrowseId;
+
+        $(document).ready(function() {
+
+            $('.select2-PositionId').select2({
+                theme: 'bootstrap-5'
+            });
+
+            $('.select2-RoleIds').select2();
+
+            $('.select2-ManagerId').select2({
+                theme: 'bootstrap-5'
+            });
+
+        });
+    
+    </script>
+}

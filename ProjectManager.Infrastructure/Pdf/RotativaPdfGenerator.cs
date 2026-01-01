@@ -1,0 +1,19 @@
+﻿using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Common.Models;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
+
+namespace ProjectManager.Infrastructure.Pdf;
+public class RotativaPdfGenerator : IPdfFileGenerator
+{
+    public async Task<byte[]> GetAsync(FileGeneratorParams @params)
+    {
+        var pdfResult = new ViewAsPdf(@params.ViewTemplate, @params.Model)
+        {
+            PageSize = Size.A4,
+            PageOrientation = Orientation.Portrait
+        };
+
+        return await pdfResult.BuildFile(@params.Context);
+    }
+}

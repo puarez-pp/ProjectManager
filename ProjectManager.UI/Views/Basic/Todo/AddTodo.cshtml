@@ -1,0 +1,108 @@
+﻿
+@using ProjectManager.Application.Todos.Queries.GetAddTodo
+@using System.Globalization
+
+
+@model AddTodoVm
+
+@{
+    ViewData["Title"] = "Dodawanie nowego zadania";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DateTimeStyles" />
+}
+
+<div class="card card-primary card-border-top">
+    <div class="card-body">
+        <h3 class="mt-2">@Model.Project.Name</h3>
+        <h4 class="mt-2">@Model.Project.Client</h4>
+        <h6 class="mt-2"><b>@Model.Project.ProjectType</b></h6>
+    </div>
+</div>
+
+<div id="divAdd" class="card card-primary card-border-top">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Todo.ProjectId)
+        @Html.HiddenFor(x => x.Project.Id)
+        
+        @for (int i = 0; i < Model.AvaiableUsers.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvaiableUsers[i].Id)
+            @Html.HiddenFor(x => x.AvaiableUsers[i].FullName)
+        }
+        <div class="card-body">
+            <div class="form-group">
+                @Html.LabelFor(x => x.Todo.Title)
+                @Html.TextBoxFor(x => x.Todo.Title, new { @class = "form-control", placeholder="Wprowadź tytuł"})
+                @Html.ValidationMessageFor(x => x.Todo.Title)
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(x => x.Todo.CompletionDate)
+
+                <div class="input-group date" id="dtpDateOfCompletion" data-target-input="nearest">
+                    <input asp-for="Todo.CompletionDate" type="text" class="form-control datetimepicker-input" data-target="#dtpDateOfCompletion" />
+                    <div class="input-group-append" data-target="#dtpDateOfCompletion" data-toggle="datetimepicker">
+                        <div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+
+                @Html.ValidationMessageFor(x => x.Todo.CompletionDate)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Todo.Content)
+                @Html.TextAreaFor(x => x.Todo.Content, new { @class = "form-control", placeholder="Wprowadź treść"})
+                @Html.ValidationMessageFor(x => x.Todo.Content)
+            </div>
+
+            <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Todo.UserToId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Todo.UserToId", @Model.AvaiableUsers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-UserId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Todo.UserToId)
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DateTimeScripts" />
+
+    <script>
+        $(document).ready(function() {
+
+            $('#dtpDateOfCompletion').datetimepicker({
+            format: 'L',
+            locale: '@locale'
+            });
+
+            $('.select2-UserId').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+
+    </script>
+}
