@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Plants\Commands\" />
     <Folder Include="Projects\Schedules\" />
   </ItemGroup>
 

@@ -27,6 +27,17 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<TodoPost> TodoPosts { get; set; }
         DbSet<Tool> Tools { get; set; }
         DbSet<ToolRental> ToolRentals { get; set; }
+        DbSet<Plant> Plants { get; set; }
+        DbSet<Device> Devices { get; set; }
+        DbSet<Template> Templates { get; set; }
+        DbSet<TemplatePosition> TemplatePositions { get; set; }
+        DbSet<DeviceHeader> DeviceHeaders { get; set; }
+        DbSet<Alarm> Alarms { get; set; }
+        DbSet<OtherCounter> OtherCounters { get; set; }
+        DbSet<ElectricCounter> ElectricCounters { get; set; }
+        DbSet<HeatCounter> HeatCounters { get; set; }
+        DbSet<GasCounter> GasCounters { get; set; }
+        DbSet<Engine> Engines { get; set; }
 
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

@@ -26,3 +26,5 @@ class DivisionConfiguration : IEntityTypeConfiguration<Division>
 
     }
 }
+
+

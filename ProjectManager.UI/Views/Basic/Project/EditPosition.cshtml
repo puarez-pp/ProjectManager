@@ -20,55 +20,26 @@
 <link rel="stylesheet" href="~/lib/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" />
 }
 
-
-<table id="project" class="table table-bordered:none">
-    <tbody>
-    <tr>
-        <td>
-           Nazwa projektu
-        </td>
-        <td style="font-weight:bold">
-            @Model.Project.Name
-        </td>
-    </tr>
-    
-    <tr>
-        <td>
-           Nazwa klienta
-        </td>
-        <td style="font-weight:bold">
-            @Model.Project.ClientName
-        </td>
-    </tr>
-    
-    <tr>
-        <td>
-           Typ projektu
-        </td>
-        <td style="font-weight:bold">
-            @Model.Project.ProjectType
-        </td>
-    </tr>
-    
-    <tr>
-        <td>
-           Branża
-        </td>
-        <td style="font-weight:bold">
-            @Model.DivisionType.GetDisplayName()
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-           Nazwa obszaru
-        </td>
-        <td style="font-weight:bold">
-            @Model.Position.DivisionPositionType.GetDisplayName()
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+        <div class="mt-2">
+            <ul class="ul-style">
+                <li>
+                    <p class="mt-3">Nazwa projektu: <b>@Model.Project.Name</b></p>
+                </li>
+                <li>
+                    <p>Nazwa klienta: <b>@Model.Project.ClientName</b></p>
+                </li>
+                <li>
+                    <p >Typ projektu: <b>@Model.Project.ProjectType</b></p>
+                </li>
+                <li>
+                    <p>Branża: <b> @Model.DivisionType.GetDisplayName()</b></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <div class="card card-primary card-border-top">
 
@@ -130,21 +101,6 @@
     <script>
 
         $(document).ready(function() {
-            project = $('#project').DataTable({
-            info: false,
-            columnDefs: [
-                { width: "25%", targets: [0]},
-                { width: "75%", targets: [1]}],
-            paging: false,
-            searching: false,
-            ordering: false,
-            responsive: true,
-            autoWidth: false,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            }
-        });
             
             $('.select2-SubContractorId').select2({
                 theme: 'bootstrap-5'

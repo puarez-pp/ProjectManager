@@ -130,9 +130,11 @@
 
         todos = $('#todos').DataTable({
             info: true,
+            columnDefs: [
+                    ],
             paging: true,
-            searching: true,
-            ordering: false,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,

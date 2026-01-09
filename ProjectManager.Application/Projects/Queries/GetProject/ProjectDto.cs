@@ -1,4 +1,3 @@
-using ProjectManager.Domain.Entities;
 using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Projects.Queries.GetProject;

@@ -31,7 +31,7 @@
                 <i class="fas fa-solid fa-circle-plus"></i>Dodaj projekt
             </a>
         }
-        <h6 class="card-title">Projekty z podziałem na katagorie</h6>
+        <h6 class="card-title">Projekty z podziałem na katagorie:</h6>
         <table id="projects" class="table table-bordered table-hover">
             <thead>
                 <tr> 
@@ -58,7 +58,7 @@
                             2
                         </td>
                         <td>
-                            <a class="edit-link" href='/Project/ProjectsCat?id=@ProjectType.Diesel'><i class="fas fa-solid fa-oil-can"></i>@diesel</a>
+                            <a class="edit-link" href='/Project/ProjectsCat?id=@ProjectType.Diesel'><i class="fas fa-solid fa-gas-pump"></i>@diesel</a>
                         </td>
                         <td>
                             <a class="edit-link" href="https://www.wp.pl" target="_blank">@diesel</a>
@@ -95,7 +95,7 @@
     </div>
 
     <div class="card-body mt-2">
-        <h6 class="card-title">Ostatnio edytowane projekty</h6>
+        <h6 class="card-title">Ostatnio edytowane projekty:</h6>
          <table id="projectsLastEdit" class="table table-bordered table-hover">
             <thead>
                 <tr> 
@@ -142,16 +142,17 @@
         projects = $('#projects').DataTable({
             info: false,
             columnDefs: [
-            ],
-            paging: false,
-            searching: false,
-            ordering: false,
+                    ],
+            paging: true,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,
             language: {
                 url: `/lib/datatables/lang/${'@locale'}.json`
             }
+            order: [[0, "asc"]]
         });
 
         projectsLastEdit = $('#projectsLastEdit').DataTable({
@@ -167,9 +168,8 @@
             language: {
                 url: `/lib/datatables/lang/${'@locale'}.json`
             }
+            order: [[0, "asc"]]
         });
-
-
     });
 
 </script>

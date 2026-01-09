@@ -1,6 +1,6 @@
-﻿using ProjectManager.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Dictionaries;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Infrastructure.Persistence.Extensions;
 
@@ -22,6 +22,4 @@ static class ModelBuilderExtensionsSettings
                 Order = 1
             });
     }
-
-
 }

@@ -15,3 +15,4 @@ static class ModelBuilderExtensionsSubContractor
             });
     }
 }
+

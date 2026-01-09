@@ -2,21 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Commands.AddPosition;
-using ProjectManager.Application.Projects.Commands.AddProject;
-using ProjectManager.Application.Projects.Commands.DeletePosition;
 using ProjectManager.Application.Projects.Commands.AddPositionPost;
+using ProjectManager.Application.Projects.Commands.AddProject;
+using ProjectManager.Application.Projects.Commands.ClosePosition;
+using ProjectManager.Application.Projects.Commands.DeletePosition;
+using ProjectManager.Application.Projects.Commands.DeletePost;
+using ProjectManager.Application.Projects.Commands.EditPositionPost;
+using ProjectManager.Application.Projects.Extensions.Commands.FinishProject;
 using ProjectManager.Application.Projects.Queries.GetCatProjectBasics;
 using ProjectManager.Application.Projects.Queries.GetEditDivision;
 using ProjectManager.Application.Projects.Queries.GetEditPosition;
+using ProjectManager.Application.Projects.Queries.GetEditPositionPost;
 using ProjectManager.Application.Projects.Queries.GetEditProject;
 using ProjectManager.Application.Projects.Queries.GetPosition;
 using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
+using ProjectManager.Application.Todos.Commands.FinishTodo;
 using ProjectManager.Domain.Enums;
-using ProjectManager.Application.Projects.Queries.GetEditPositionPost;
-using ProjectManager.Application.Projects.Commands.EditPositionPost;
-using ProjectManager.Application.Projects.Commands.ClosePosition;
-using ProjectManager.Application.Projects.Commands.DeletePost;
 
 namespace ProjectManager.UI.Controllers
 {
@@ -85,6 +87,26 @@ namespace ProjectManager.UI.Controllers
             TempData["Success"] = "Dane projektu zostały zaktualizowane.";
 
             return RedirectToAction("Project", new { @id = viewModel.Project.Id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FinishProject(int id)
+        {
+            try
+            {
+                await Mediator.Send(
+                    new FinishProjectCommand
+                    {
+                        Id = id
+                    });
+
+                return Json(new { success = true });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, null);
+                return Json(new { success = false });
+            }
         }
 
         public async Task<IActionResult> EditDivision(int Id)

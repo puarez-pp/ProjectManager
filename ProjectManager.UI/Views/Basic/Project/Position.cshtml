@@ -32,89 +32,41 @@
 <div class="card card-primary card-border-top mt-2">
     <div class="card-body">
         <div class="mt-2">
-           <table id="project" class="table table-bordered:none">
-            <tbody>
-            <tr>
-                <td>
-                   Nazwa projektu
-                </td>
-                <td style="font-weight:bold">
-                    @Model.Project.Name
-                </td>
-            </tr>
-            
-            <tr>
-                <td>
-                   Nazwa klienta
-                </td>
-                <td style="font-weight:bold">
-                    @Model.Project.ClientName
-                </td>
-            </tr>
-            
-            <tr>
-                <td>
-                   Typ projektu
-                </td>
-                <td style="font-weight:bold">
-                    @Model.Project.ProjectType
-                </td>
-            </tr>
-            <tr>
-                <td>
-                   Branża
-                </td>
-                <td style="font-weight:bold">
-                    @Model.DivisionType.GetDisplayName() 
-                </td>
-            </tr>
+            <ul class="ul-style">
+                <li>
+                    <p class="mt-3">Nazwa projektu: <b>@Model.Project.Name</b></p>
+                </li>
+                <li>
+                    <p>Nazwa klienta: <b>@Model.Project.ClientName</b></p>
+                </li>
+                <li>
+                    <p >Typ projektu: <b>@Model.Project.ProjectType</b></p>
+                </li>
+                <li>
+                    <p>Branża: <b>@Model.DivisionType.GetDisplayName() </b></p>
+                </li>
+                <li>
+                    <p>Status: @if (Model.Position.IsCompleted)
+                        {
+                            <b>Zakończony</b>
+                        }
+                        else
+                        {
+                            <b>W realizacji</b>
+                        }
+                    </p>
+                </li>
+                <li>
+                    <p>Etap: <b>@Model.Position.Name.GetDisplayName()</b></p>
+                </li>
+                  <li>
+                    <p>Wykonawca: <b>@Model.Position.SubContractor</b></p>
+                </li>
+                <li>
+                    <p><b>Uwaga: </b>@Model.Position.Comment</p>
+                </li>
+            </ul>
 
-            <tr>
-                <td>
-                   Status
-                </td>
-                @if (Model.Position.IsCompleted)
-                    {
-                        <td style="font-weight:bold">
-                            Zakończony
-                        </td>
-                    }
-
-                else
-                    {
-                        <td style="font-weight:bold">
-                            W realizacji
-                        </td>
-                    }
-                </td>
-            </tr>
-
-             <tr>
-                <td>
-                   Etap
-                </td>
-                <td style="font-weight:bold">
-                    @Model.Position.Name.GetDisplayName()
-                </td>
-            </tr>
-             <tr>
-                <td>
-                   Wykonawca
-                </td>
-                <td style="font-weight:bold">
-                    @Model.Position.SubContractor
-                </td>
-            </tr>
-            <tr>
-                <td>
-                   Uwaga
-                </td>
-                <td style="font-weight:bold">
-                    @Model.Position.Comment
-                </td>
-            </tr>
-            </tbody>
-            </table>
         </div>
     </div>
 </div>
@@ -186,11 +138,10 @@
         project = $('#project').DataTable({
             info: false,
             columnDefs: [
-                { width: "25%", targets: [0]},
-                { width: "75%", targets: [1]}],
-            paging: false,
-            searching: false,
-            ordering: false,
+                    ],
+            paging: true,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,
@@ -202,13 +153,10 @@
         posts = $('#posts').DataTable({
             info: true,
             columnDefs: [
-                { width: "15%", targets: [0]},
-                { width: "20%", targets: [1]},
-                { width: "50%", targets: [2]},
-                { width: "15%", targets: [3]}],
-            paging: false,
-            searching: false,
-            ordering: false,
+                    ],
+            paging: true,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,

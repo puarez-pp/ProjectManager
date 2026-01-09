@@ -22,36 +22,17 @@
     <div class="card-body">
         <h2 class="mt-0">Informacje o projekcie</h2>
         <div class="mt-2">
-            <table id="project" class="table table-bordered:none">
-                <tbody>
-                <tr>
-                    <td>
-                       Nazwa projektu:
-                    </td>
-                    <td style="font-weight:bold">
-                        @Model.Project.Name
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>
-                       Nazwa klienta:
-                    </td>
-                    <td style="font-weight:bold">
-                        @Model.Project.Client
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>
-                       Typ projektu:
-                    </td>
-                    <td style="font-weight:bold">
-                        @Model.Project.ProjectType
-                    </td>
-                </tr>     
-                </tbody>
-            </table>
+             <ul class="ul-style">
+                <li>
+                    <p class="mt-3">Nazwa projektu: <b>@Model.Project.Name</b></p>
+                </li>
+                <li>
+                    <p>Nazwa klienta: <b>@Model.Project.Client</b></p>
+                </li>
+                <li>
+                    <p >Typ projektu: <b>@Model.Project.ProjectType</b></p>
+                </li>
+            </ul>
         </div>       
     </div>
 </div>
@@ -136,28 +117,13 @@
 
     $(document).ready(function () {
                 
-        project = $('#project').DataTable({
-            info: false,
-            columnDefs: [
-                { width: "15%", targets: [0]},
-                { width: "85%", targets: [1]}],
-            paging: false,
-            searching: false,
-            ordering: false,
-            responsive: true,
-            autoWidth: false,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            }
-        });
         todos = $('#todos').DataTable({
             info: false,
             columnDefs: [
                     ],
             paging: true,
-            searching: true,
-            ordering: false,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,

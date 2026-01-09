@@ -116,11 +116,10 @@
         project = $('#project').DataTable({
             info: false,
             columnDefs: [
-                { width: "15%", targets: [0]},
-                { width: "85%", targets: [1]}],
-            paging: false,
-            searching: false,
-            ordering: false,
+                    ],
+            paging: true,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,
@@ -132,13 +131,10 @@
         posts = $('#posts').DataTable({
             info: true,
             columnDefs: [
-                { width: "15%", targets: [0]},
-                { width: "20%", targets: [1]},
-                { width: "50%", targets: [2]}],
-                
+                    ],
             paging: true,
-            searching: false,
-            ordering: false,
+            ordering: true,
+            info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,

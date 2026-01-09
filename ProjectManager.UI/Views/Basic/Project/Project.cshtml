@@ -9,74 +9,85 @@
 @model GetProjectVm
 
 @{
-    ViewData["Title"] = "Przegląd projektu";
+    ViewData["Title"] = "Podgląd projektu";
     var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var inPreparation = Model.Project.ProjectStatus == ProjectStatus.InPreparation;
     var inProgres = Model.Project.ProjectStatus == ProjectStatus.InProgress;
     var completed = Model.Project.ProjectStatus == ProjectStatus.Completed;
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var hasAllPositionsCompleted = Model.Positions.SelectMany(x => x).All(x => x.IsCompleted);
+    var description = "Czy na pewno chcesz zakończyć wybrany projekt?";
+    var title = hasAllPositionsCompleted ? description : $"Projekt zawiera niezakończone pozycje. {description}";
 }
 
 @section Styles {
 <partial name="Styles/_DataTablesStyles" />
 }
 
-
 <partial 
     name="Modals/_ModalConfirm"
-    model="@(new ModalParams
-    {
-        Id = "modal-confirm-delete",
-        Title = "Potwierdź proszę",
-        Description = "Czy na pewno chcesz usunąć wybraną pozycję?"
-    })" 
-/>
 
-<partial 
-    name="Modals/_ModalConfirm"
     model="@(new ModalParams
     {
         Id = "modal-confirm-finish",
         Title = "Potwierdź proszę",
-        Description = "Czy na pewno chcesz zakończyć wybraną pozycję?"
+        Description = title
     })" 
 />
 
 <div class="card card-primary card-border-top">
     <div class="card-body">
-        @if (roles && !completed)
-        {
-            <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-primary mb-3 mx-2" role="button">
-                <i class="fas fa-solid fa-circle-plus"></i>Edytuj projekt
-            </a>
-      
-          @*  <a href="/Project/EditProject" class="btn btn-success mb-3 mx-2" role="button">
-                <i class="fas fa-solid fa-dollar-sign"></i>Rejestr kosztów
-            </a>*@
-        }
-        <a href="/Todo/Todos?id=@Model.Project.Id" class="btn btn-success mb-3 mx-2" role="button">
-            <i class="fas fa-solid fa-list-check"></i>Zadania dla pracowników
-        </a>
-        @*<a href="/Project/EditProject" class="btn btn-secondary mb-3 mx-2" role="button">
-            <i class="fas fa-solid fa-blog"></i>Forum projektu
-        </a>*@
+        <div class="mb-3">
+            @if (roles && !completed)
+            {
+                    <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-primary mx-2" role="button">
+                        <i class="fas fa-solid fa-pen-to-square"></i>Edytuj projekt
+                    </a>
+                    <button class="btn btn-primary mx-2" onclick="finishProject('@Model.Project.Id')">
+                        <i class="fas fa-solid fa-pen-to-square"></i>Zakończ projekt
+                    </button> 
+            }
+               <a href="/Todo/Todos?id=@Model.Project.Id" class="btn btn-success mx-2"role="button">
+                   <i class="fas fa-solid fa-list-check"></i>Zadania dla użytkowników
+               </a>
+               <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-secondary mx2"         role="button">
+                    <i class="fas fa-regular fa-comment"></i>Komentarze użytkowników
+               </a>
+        </div>
+
 
         <p class="mt-2">Status: <b>@Model.Project.ProjectStatus.GetDisplayName()</b></p>
-        @if (completed)
-        {
-            <p class="mt-2">Data zamknięcia: <b>@Model.Project.FinishedDate</b></p>
-        }
-        <h3 class="mt-2">
-            @Model.Project.Name
-        </h3>
-         <p class="mt-3">Kategoria: <b>@Model.Project.ProjectType</b></p>
-         <p class="mt-3">Klient: <b>@Model.Project.Client</b></p>
-        <p class="mt-3">Utworzył: <b>@Model.Project.User</b>, Data utworzenia: <b>@Model.Project.CreatedDate</b></p>
-        <p class="mt-3">Zmodyfikował: <b>@Model.Project.UserUpdate</b>, Data modyfikacji: <b>@Model.Project.EditDate</b></p>
-        <p class="mt-3">Kierownik projektu: <b>@Model.Project.UserPM</b></p>
-        <p class="mt-3">Link do Sharepoint: <b><a class="edit-link" href=@Model.Project.Sharepoint target="_blank"></a></b></p>
-        <p class="mt-2"><b>Uwagi:</b></p>
-        <p class="mt-0">@Model.Project.Comment</p>
+        <ul class="ul-style">
+            <li>
+                <h3 class="mt-2">@Model.Project.Name</h3> 
+            </li>
+            <li>
+                <p class="mt-3">Kategoria: <b>@Model.Project.ProjectType</b></p>
+            </li>
+            <li>
+                <p>Klient: <b>@Model.Project.Client</b></p>
+            </li>
+            <li>
+                <p >Utworzył: <b>@Model.Project.User</b>, Data utworzenia: <b>@Model.Project.CreatedDate</b></p>
+            </li>
+            <li>
+                <p>Zmodyfikował: <b>@Model.Project.UserUpdate</b>, Data modyfikacji: <b>@Model.Project.EditDate</b></p>
+            </li>
+            <li>
+                 <p>Kierownik projektu: <b>@Model.Project.UserPM</b></p>
+            </li>
+            <li>
+                <p>Link do Sharepoint: <b><a class="edit-link" href=@Model.Project.Sharepoint target="_blank"></a></b></p>
+            </li>
+            <li>
+                <p><b>Uwagi:</b></p>
+
+            </li>
+            <li>
+                <p>@Model.Project.Comment</p>
+            </li>
+            
+        </ul>
     </div>
 </div>
     
@@ -118,40 +129,25 @@
                            </td>
                            <td>
                                <a class="edit-link" href='/Project/Position?Id=@position.Id'>
-                                   <i class="fas fa-solid fa-circle-info"></i>Szczegóły</a>
+                                   <i class="fas fa-solid fa-info-circle"></i>Szczegóły</a>
                            </td>
                            <td>
-                               @if(completed || inPreparation)
+                                @if (position.IsCompleted)
                                 {
-                                    <p>@string.Empty </p>
-                                }
+                                    <p>Zakończony</p>
+                                } 
                                 else
                                 {
-                                    @if (position.IsCompleted)
-                                    {
-                                        <p>Zakończony</p>
-                                    } 
-                                    else
-                                    {
-                                        <p>W realizacji</p>
-                                    } 
+                                    <p>W realizacji</p>
                                 }
                            </td> 
                            <td>
-                               @if(!position.IsCompleted && !completed)
+                               @if(!position.IsCompleted)
                                {
-@*                                   <a class="btn btn-danger btn-sm" onclick="finishPosition('@position.Id', '@Model.Project.Id',this)">
-                                       <i class="fas fa-solid fa-pen-to-square"></i>Zakończ
-                                   </a>*@
-    
     
                                    <a class="btn btn-sm btn-success" role="button" href="/Project/EditPosition?Id=@position.Id">
                                        <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
                                    </a>
-    
-                                   @*<button class="btn btn-danger btn-sm" onclick="deletePosition('@position.Id', this)">    
-                                       <i class="fas fa-solid fa-trash-can"></i>Usuń
-                                    </button>*@
                                 }
                                 else
                                 {
@@ -162,12 +158,6 @@
                     }
                 </tbody>
             </table>
-            @if(roles && !completed)
-            {
-                @*<a href="/Project/AddPosition?Id=@Model.Divisions[i].Id&&Project=@Model.Project.Id&&Division=@Model.Divisions[i].DivisionType" class="btn btn-primary mt-2" role="button">
-                <i class="fas fa-solid fa-circle-plus"></i>Dodaj
-            </a>*@
-            }  
         </div>
     </div>
 }
@@ -175,16 +165,16 @@
 @section Scripts {
 <partial name="Scripts/_DataTablesScripts" />
 
-
 <script>
     var selectedRow;
-    var projectId;
+    var projectId = 0;
     var selectedPositionId = 0;
     var positionsDesign;
     var positionsElectric;
     var positionsAutomatic;
 
     $(document).ready(function () {
+
 
         positionsDesign = $('#Design').DataTable({
             info: false,
@@ -227,46 +217,37 @@
                 url: `/lib/datatables/lang/${'@locale'}.json`
             }
         });
-
     });
 
-    //    function deletePosition(id, btn) {
-    //    selectedRow = btn.parentNode.parentNode;
-    //    selectedPositiontId = id;
-    //    $('#modal-confirm-delete').modal('show');
-    //}
+        function finishProject(id) {
+            projectId = id;
+            $('#modal-confirm-finish').modal('show');
+        }
 
+        $('#modal-confirm-finish-btn').on('click', function (e) {
 
-    //$('#modal-confirm-delete-btn').on('click', function (e) {
+            $('#modal-confirm-finish').modal('hide');
 
-    //    $('#modal-confirm-delete').modal('hide');
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/Project/DeletePosition",
-    //        data: {
-    //            id: selectedPositiontId
-    //        },
-    //        success: function (data) {
-    //            if (data.success) {
-    //                positionsDesign.rows(selectedRow).remove().draw();
-    //                positionsElectric.rows(selectedRow).remove().draw();
-    //                positionsAutomatic.rows(selectedRow).remove().draw();
-    //                toastr.success('Projekt został zaktualizowany.')
-    //            } 
-    //            else 
-    //                toastr.error('Błąd. ' + data.message);
-    //        },
-    //        error: function (data) {
-    //            toastr.error('Błąd. Nie udało się usunąć wybranej pozycji. Spróbuj ponownie lub skontaktuj sie z administratorem.');
-    //        },
-    //        dataType: "json"
-    //    });
-
-    });
-
-    });
-
+            $.ajax({
+                type: "POST",
+                url: "/Project/FinishProject",
+                data: {
+                    id: projectId
+                },
+                success: function (data) {
+                    if (data.success) {
+                        location.reload();
+                        toastr.success('Projekt został pomyślnie zakończony.')
+                    } 
+                    else 
+                        toastr.error('Błąd. ' + data.message);
+                },
+                error: function (data) {
+                    toastr.error('Błąd. Nie udało się zamknąć wybranego projektu. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+                },
+                dataType: "json"
+            });
+        });
 </script>
 }
 

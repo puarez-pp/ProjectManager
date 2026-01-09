@@ -83,14 +83,14 @@
     $(document).ready(function () {
 
         subContractors = $('#subContractors').DataTable({
+            columnDefs: [
+                    ],
             paging: true,
-            ordering: false,
+            ordering: true,
             info: true,
             responsive: true,
             autoWidth: false,
             lengthChange: true,
-             columnDefs: [
-            ],
             language: {
                 url: `/lib/datatables/lang/${'@locale'}.json`
             },

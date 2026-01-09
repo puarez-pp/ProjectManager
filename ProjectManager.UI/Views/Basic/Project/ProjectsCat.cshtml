@@ -88,14 +88,11 @@
 
 
         projects = $('#projects').DataTable({
+            columnDefs: [
+                    ],
             paging: true,
             ordering: true,
             info: true,
-             columnDefs: [
-                { width: "100px", targets: [0]},
-                { width: "200px", targets: [1]},
-                { width: "100px", targets: [2]},
-                { width: "50px", targets: [3]}],
             responsive: true,
             autoWidth: false,
             lengthChange: true,

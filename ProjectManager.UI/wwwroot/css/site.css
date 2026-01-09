@@ -161,7 +161,10 @@ small, .small {
 .fileBrowse:hover {
     cursor: pointer;
 }
-
+.ul-style {
+    list-style-type: none;
+    font-size: 1rem;
+}
 #calendar a {
     color: black;
 }
