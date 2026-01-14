@@ -15,7 +15,5 @@ class GasCounterConfiguration : IEntityTypeConfiguration<GasCounter>
            .WithMany(x => x.GasCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
-        builder.Property(x => x.Used)
-            .HasDefaultValue(true);
     }
 }

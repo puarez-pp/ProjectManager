@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Projects.Extensions;
+using ProjectManager.Application.Projects.Commands.EditProject;
 using ProjectManager.Application.Users.Extensions;
 
 namespace ProjectManager.Application.Projects.Queries.GetEditProject;
@@ -18,13 +18,25 @@ public class GetEditProjectQueryHandler : IRequestHandler<GetEditProjectQuery, E
     {
         var vm = new EditProjectVm();
 
-        vm.Project = (await _context
+        var project = await _context
             .Projects
-            .Include(x=>x.User)
-            .Include(x=>x.Client)
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.Id))
-            .ToEditProject();
+            .Include(x => x.User)
+            .Include(x => x.Client)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == request.Id);
+        vm.Project = new EditProjectCommand
+        {
+            Id = project.Id,
+            ProjectType = project.ProjectType,
+            ProjectStatus = project.Status,
+            Comment = project.Comment,
+            Number = project.Number,
+            Name = project.Name,
+            ClientId = project.ClientId,
+            UserPMId = project.UserPMId,
+            Sharepoint = project.Sharepoint
+        };
 
         vm.AvailableManagers = await _context
             .Users

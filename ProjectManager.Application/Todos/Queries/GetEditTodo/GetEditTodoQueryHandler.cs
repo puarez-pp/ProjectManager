@@ -2,14 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Extensions;
-using ProjectManager.Application.Todos.Commands.AddTodo;
 using ProjectManager.Application.Todos.Commands.EditTodo;
 using ProjectManager.Application.Users.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectManager.Application.Todos.Queries.GetEditTodo;
 

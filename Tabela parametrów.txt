@@ -1,0 +1,130 @@
+na widoku razor pages w aplikacji asp.net core MVC jest tabela gdzie w jednej z kolumn jest tyb boolean reprezentowany przez checkbox. Użytkownik może na widoku wybrać tylko wybrane checkbox i zatwierdzić razem wszystkie zmiany i odświeżyć widok tabeli. Jak to wykonac za pomocą AJAX
+Rozwiązanie:
+
+1. Widok Razor Pages
+Tabela generuje wiersze z checkboxami.
+
+Każdy checkbox ma:
+
+data-id — identyfikator rekordu
+
+class="status-checkbox" — do selekcji JS
+
+Przycisk „Zapisz zmiany” wywołuje AJAX.
+
+2. AJAX (jQuery lub fetch)
+Zbiera wszystkie zaznaczone checkboxy.
+
+Tworzy listę obiektów { id, value }.
+
+Wysyła JSON do endpointu OnPostUpdateStatuses.
+
+3. PageModel
+Metoda OnPostUpdateStatuses przyjmuje listę DTO.
+
+Aktualizuje rekordy w bazie.
+
+Zwraca JSON z informacją o powodzeniu.
+
+4. Odświeżenie tabeli
+Po sukcesie AJAX:
+
+albo przeładowujesz fragment HTML (partial),
+
+albo tylko aktualizujesz UI.
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Aktywny</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>
+                <input type="checkbox"
+                       class="status-checkbox"
+                       data-id="@item.Id"
+                       @(item.IsActive ? "checked" : "") />
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<button id="saveChanges" class="btn btn-primary">Zapisz zmiany</button>
+
+
+$("#saveChanges").on("click", function () {
+
+    const data = [];
+
+    $(".status-checkbox").each(function () {
+        data.push({
+            id: $(this).data("id"),
+            value: $(this).is(":checked")
+        });
+    });
+
+    $.ajax({
+        url: "/Items?handler=UpdateStatuses",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            alert("Zapisano zmiany");
+            location.reload(); // lub odświeżenie fragmentu
+        },
+        error: function () {
+            alert("Błąd podczas zapisu");
+        }
+    });
+});
+
+
+Dto
+
+public class StatusUpdateDto
+{
+    public int Id { get; set; }
+    public bool Value { get; set; }
+}
+
+
+Akcja
+public async Task<IActionResult> OnPostUpdateStatuses([FromBody] List<StatusUpdateDto> updates)
+{
+    if (updates == null || !updates.Any())
+        return new JsonResult(new { success = false });
+
+    foreach (var update in updates)
+    {
+        var entity = await _context.Items.FindAsync(update.Id);
+        if (entity != null)
+        {
+            entity.IsActive = update.Value;
+        }
+    }
+
+    await _context.SaveChangesAsync();
+
+    return new JsonResult(new { success = true });
+}
+
+Odświeżenie
+Najprostsza
+javascript
+location.reload();
+✔️ Lepsza — przeładowanie partiala
+Tworzysz partial _ItemsTable.cshtml
+
+Po zapisie robisz AJAX GET i podmieniasz HTML
+
+✔️ Najbardziej elegancka — aktualizacja tylko zmienionych wierszy
+Zwracasz listę zmienionych ID
+
+Podmieniasz UI bez przeładowania

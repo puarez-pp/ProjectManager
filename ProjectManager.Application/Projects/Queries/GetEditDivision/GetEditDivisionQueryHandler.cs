@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Projects.Commands.EditDivision;
 using ProjectManager.Application.Projects.Extensions;
 using ProjectManager.Application.Users.Extensions;
 
@@ -18,6 +20,7 @@ public class GetEditDivisionQueryHandler : IRequestHandler<GetEditDivisionQuery,
     {
         var project = await _context
             .Projects
+            .AsNoTracking()
             .Include(x => x.Client)
             .Include(x => x.User)
             .ThenInclude(x => x.Employee)
@@ -25,21 +28,21 @@ public class GetEditDivisionQueryHandler : IRequestHandler<GetEditDivisionQuery,
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Divisions.Any(y => y.Id == request.Id));
 
-
         var vm = new EditDivisionVm();
-
-        vm.Division = project.Divisions.FirstOrDefault(x => x.Id == request.Id)
-            .ToEditDivisionCommand();
-
+        var division = project.Divisions.FirstOrDefault(x => x.Id == request.Id);
+        vm.Division = new EditDivisionCommand
+        {
+            Id = request.Id,
+            UserId = division.UserId,
+            DivisionType = division.DivisionType.GetDisplayName()
+        };
 
         vm.Project = project.ToBasicsProjectDto();
-
         vm.AvailableEmployees = await _context
             .Users
             .Include(x => x.Employee)
             .Select(x => x.ToUserDto())
             .ToListAsync();
-
         return vm;
     }
 }

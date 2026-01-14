@@ -15,7 +15,6 @@ class EngineConfiguration : IEntityTypeConfiguration<Engine>
            .WithMany(x => x.Engines)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
-        builder.Property(x => x.Used)
-            .HasDefaultValue(true);
+
     }
 }

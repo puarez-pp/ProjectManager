@@ -1,6 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Plants.Commands.AddPlant;
+using ProjectManager.Application.Plants.Commands.DeletePlant;
+using ProjectManager.Application.Plants.Commands.EditPlant;
+using ProjectManager.Application.Plants.Queries.GetEditPlant;
+using ProjectManager.Application.Plants.Queries.GetPlant;
+using ProjectManager.Application.Plants.Queries.GetPlantsBasic;
 
 namespace ProjectManager.UI.Controllers
 {
@@ -19,7 +25,7 @@ namespace ProjectManager.UI.Controllers
         public async Task<IActionResult> Plant(int Id)
         {
             return View(await Mediator.Send(new GetPlantQuery { Id = Id}));
- Get       }
+}
         public async Task<IActionResult> Plants()
         {
             return View(await Mediator.Send(new GetPlantsBasicQuery()));
@@ -28,7 +34,7 @@ namespace ProjectManager.UI.Controllers
         public async Task<IActionResult> AddPlant()
         {
 
-            return View(new AddPlantCommand ());
+            return View(new AddPlantCommand());
         }
 
         [HttpPost]
@@ -52,16 +58,16 @@ namespace ProjectManager.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPlant(EditPlantVm viewModel)
+        public async Task<IActionResult> EditPlant(EditPlantCommand command)
         {
-            var result = await MediatorSendValidate(viewModel.Plant);
+            var result = await MediatorSendValidate(command);
 
             if (!result.IsValid)
-                return View(viewModel);
+                return View(command);
 
             TempData["Success"] = "Dane instalacji zostały zaktualizowane.";
 
-            return RedirectToAction("Plant", new { @id = viewModel.Plant.Id });
+            return RedirectToAction("Plant", new { @id = command.Id });
         }
 
         [HttpPost]

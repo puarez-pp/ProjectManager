@@ -11,5 +11,5 @@ public class PositionDto
     public bool IsCompleted { get; set; }
     public DateTime? PerformedData { get; set; }
     public string SubContractor { get; set; }
-    public List<PositionPost> PositionPosts { get; set; } = new List<PositionPost>();
+    public List<PositionPostDto> PositionPosts { get; set; } = new List<PositionPostDto>();
 }

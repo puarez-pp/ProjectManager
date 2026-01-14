@@ -15,7 +15,6 @@ class HeatCounterConfiguration : IEntityTypeConfiguration<HeatCounter>
            .WithMany(x => x.HeatCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
-        builder.Property(x => x.Used)
-            .HasDefaultValue(true);
+
     }
 }

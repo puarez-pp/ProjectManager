@@ -15,7 +15,5 @@ class ElectricCounterConfiguration : IEntityTypeConfiguration<ElectricCounter>
            .WithMany(x => x.ElectricCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
-        builder.Property(x => x.Used)
-            .HasDefaultValue(true);
     }
 }

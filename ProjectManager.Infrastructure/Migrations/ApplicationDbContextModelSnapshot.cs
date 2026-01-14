@@ -259,6 +259,35 @@ namespace ProjectManager.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Alarm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AlarmType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("Alarms", (string)null);
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -401,6 +430,84 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("Costs", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Device", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("DeviceType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<bool>("IsConfigured")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("PlantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlantId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Devices", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceHeader", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Used")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("DeviceHeaders", (string)null);
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Division", b =>
                 {
                     b.Property<int>("Id")
@@ -467,6 +574,87 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasIndex("SubContractorId");
 
                     b.ToTable("DivisionPositions", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr11")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr12")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr13")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr14")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr15")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr16")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr17")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr18")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr19")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr20")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("ElectricCounters", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Employee", b =>
@@ -541,6 +729,387 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("EmployeeEvents", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr100")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr101")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr102")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr103")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr104")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr105")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr106")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr107")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr108")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr109")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr11")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr110")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr111")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr112")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr113")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr114")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr115")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr116")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr117")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr118")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr119")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr12")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr120")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr13")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr14")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr15")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr16")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr17")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr18")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr19")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr20")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr21")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr22")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr23")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr24")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr25")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr26")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr27")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr28")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr29")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr30")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr31")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr32")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr33")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr34")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr35")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr36")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr37")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr38")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr39")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr40")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr41")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr42")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr43")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr44")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr45")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr46")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr47")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr48")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr49")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr50")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr51")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr52")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr53")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr54")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr55")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr56")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr57")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr58")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr59")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr60")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr61")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr62")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr63")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr64")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr65")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr66")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr67")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr68")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr69")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr70")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr71")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr72")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr73")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr74")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr75")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr76")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr77")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr78")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr79")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr80")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr81")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr82")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr83")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr84")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr85")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr86")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr87")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr88")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr89")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr90")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr91")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr92")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr93")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr94")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr95")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr96")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr97")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr98")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr99")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("Engines", (string)null);
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.File", b =>
                 {
                     b.Property<int>("Id")
@@ -564,6 +1133,189 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Files", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<long>("Parametr10")
+                        .HasColumnType("bigint");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<long>("Parametr6")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Parametr7")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Parametr8")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Parametr9")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("GasCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("HeatCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("OtherCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Plant", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
@@ -1075,6 +1827,1441 @@ namespace ProjectManager.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Template", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Templates", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeviceType = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DeviceType = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DeviceType = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DeviceType = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DeviceType = 4
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.TemplatePosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
+
+                    b.ToTable("TemplatePositions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Olej smarowy przed filtrem",
+                            Name = "P196",
+                            Order = 1,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Olej smarowy za filtrem A",
+                            Name = "P302",
+                            Order = 2,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Olej smarowy",
+                            Name = "T208",
+                            Order = 3,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Poziom oleju smarnego w misie olejowej",
+                            Name = "L234",
+                            Order = 4,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Skrzynia korbowa",
+                            Name = "P145",
+                            Order = 5,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Odbiornik B",
+                            Name = "P270",
+                            Order = 6,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Napięcie akumulatora",
+                            Name = "UAKUM",
+                            Order = 7,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Powietrze rozruchowe",
+                            Name = "P371",
+                            Order = 8,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Powietrze zasysane",
+                            Name = "T203",
+                            Order = 9,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Powietrze zasysane B",
+                            Name = "T377",
+                            Order = 10,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Odbiornik",
+                            Name = "T201",
+                            Order = 11,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Odbiornik B",
+                            Name = "T378",
+                            Order = 12,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Odbiornik",
+                            Name = "P232",
+                            Order = 13,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "TEM CU napięcie zasilania",
+                            Name = "E149",
+                            Order = 14,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Położenie przepustnicy",
+                            Name = "G197",
+                            Order = 15,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Prędkość obrotowa silnika",
+                            Name = "S200",
+                            Order = 16,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Moc rzeczywista",
+                            Name = "E198.2",
+                            Order = 17,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Dopuszczalna moc",
+                            Name = "E198.6",
+                            Order = 18,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "żądanie aktywne",
+                            Name = "E199.7",
+                            Order = 19,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "spaliny za AWT",
+                            Name = "T288",
+                            Order = 20,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "Woda chłodz.wylot silnika",
+                            Name = "T206",
+                            Order = 21,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Woda chłodząca wlot silnika",
+                            Name = "T207",
+                            Order = 22,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Ciśnienie doładowania",
+                            Name = "P268",
+                            Order = 23,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "Woda chłodząca wlot GK",
+                            Name = "T202",
+                            Order = 24,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "GK-chłodnica stołowa wylot",
+                            Name = "T405",
+                            Order = 25,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "NK-chłodnica stołowa wylot",
+                            Name = "T419",
+                            Order = 26,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "Dopływ wody grzewczej",
+                            Name = "T291",
+                            Order = 27,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "Powrót wody grzewczej",
+                            Name = "T289",
+                            Order = 28,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "Woda chłodząca przed chłod. awar.",
+                            Name = "T384",
+                            Order = 29,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "Woda grzewcza przed KWT",
+                            Name = "T290",
+                            Order = 30,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "Woda grzewcza przed AWT",
+                            Name = "T385",
+                            Order = 31,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "Łożysko generatora A",
+                            Name = "T459",
+                            Order = 32,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "Łożysko generatora B",
+                            Name = "T460",
+                            Order = 33,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Description = "Uzwojenie generatora U",
+                            Name = "T209",
+                            Order = 34,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "Uzwojenie generatora V",
+                            Name = "T210",
+                            Order = 35,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Uzwojenie generatora W",
+                            Name = "T211",
+                            Order = 36,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Description = "Komora spalania A1",
+                            Name = "T461",
+                            Order = 37,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Description = "Komora spalania A2",
+                            Name = "T462",
+                            Order = 38,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Description = "Komora spalania A3",
+                            Name = "T463",
+                            Order = 39,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Description = "Komora spalania A4",
+                            Name = "T464",
+                            Order = 40,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Description = "Komora spalania A5",
+                            Name = "T465",
+                            Order = 41,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Description = "Komora spalania A6",
+                            Name = "T466",
+                            Order = 42,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Description = "Komora spalania A7",
+                            Name = "T467",
+                            Order = 43,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Description = "Komora spalania A8",
+                            Name = "T468",
+                            Order = 44,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Description = "Komora spalania A9",
+                            Name = "T469",
+                            Order = 45,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Description = "Komora spalania A10",
+                            Name = "T470",
+                            Order = 46,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Description = "Komora spalania B1",
+                            Name = "T471",
+                            Order = 47,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Description = "Komora spalania B2",
+                            Name = "T472",
+                            Order = 48,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Description = "Komora spalania B3",
+                            Name = "T473",
+                            Order = 49,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Description = "Komora spalania B4",
+                            Name = "T474",
+                            Order = 50,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Description = "Komora spalania B5",
+                            Name = "T475",
+                            Order = 51,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Description = "Komora spalania B6",
+                            Name = "T476",
+                            Order = 52,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Description = "Komora spalania B7",
+                            Name = "T477",
+                            Order = 53,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Description = "Komora spalania B8",
+                            Name = "T478",
+                            Order = 54,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Description = "Komora spalania B9",
+                            Name = "T479",
+                            Order = 55,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Description = "Komora spalania B10",
+                            Name = "T480",
+                            Order = 56,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Description = "Łożysko podstawowe",
+                            Name = "T501",
+                            Order = 57,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Description = "Wylot spalin ETC A",
+                            Name = "T494",
+                            Order = 58,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Description = "Wylot spalin ETC B",
+                            Name = "T495",
+                            Order = 59,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Description = "Prędkość obrotowa ATL A",
+                            Name = "S492",
+                            Order = 60,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Description = "Prędkość obrotowa ATL b",
+                            Name = "S493",
+                            Order = 61,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Description = "Woda chłodz.wylot silnika",
+                            Name = "P497",
+                            Order = 62,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Description = "Olej smarowy za filtrem B",
+                            Name = "P318",
+                            Order = 63,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Description = "Położenie zaworu upustowego",
+                            Name = "G273",
+                            Order = 64,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Description = "wysterowanie",
+                            Name = "GKS",
+                            Order = 65,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 66,
+                            Description = "Wysterowanie",
+                            Name = "NKS",
+                            Order = 66,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 67,
+                            Description = "Częstotliwość generatora",
+                            Name = "FGEN",
+                            Order = 67,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 68,
+                            Description = "Moc czynna generatora (kW)",
+                            Name = "PGEN",
+                            Order = 68,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 69,
+                            Description = "Moc bierna generatora (kvar)",
+                            Name = "QGEN",
+                            Order = 69,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 70,
+                            Description = "Generator współczynnik mocy",
+                            Name = "PF",
+                            Order = 70,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 71,
+                            Description = "Napięcie generatora L1-2",
+                            Name = "UL12G",
+                            Order = 71,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 72,
+                            Description = "Napięcie generatora L2-3",
+                            Name = "UL23G",
+                            Order = 72,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 73,
+                            Description = "generatora L3-1",
+                            Name = "UL31GNapięcie",
+                            Order = 73,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 74,
+                            Description = "Napięcie generatora L1-N",
+                            Name = "UL1G",
+                            Order = 74,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 75,
+                            Description = "Napięcie generatora L2-N",
+                            Name = "UL2G",
+                            Order = 75,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 76,
+                            Description = "Napięcie generatora L3-N",
+                            Name = "UL2G",
+                            Order = 76,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 77,
+                            Description = "Prąd generatora L1",
+                            Name = "IL1G",
+                            Order = 77,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 78,
+                            Description = "generatora L2",
+                            Name = "IL1G2Prąd",
+                            Order = 78,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 79,
+                            Description = "Prąd generatora L3",
+                            Name = "IL3G",
+                            Order = 79,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 80,
+                            Description = "Częstotliwość sieci",
+                            Name = "FM",
+                            Order = 80,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 81,
+                            Description = "Napięcie sieci L1-2",
+                            Name = "UL12M",
+                            Order = 81,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 82,
+                            Description = "Napięcie sieci L2-3",
+                            Name = "UL23M",
+                            Order = 82,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 83,
+                            Description = "Napięcie sieci L3-1",
+                            Name = "UL31M",
+                            Order = 83,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 84,
+                            Description = "Napięcie sieci L1-N",
+                            Name = "UL1M",
+                            Order = 84,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 85,
+                            Description = "Napięcie sieci L2-N",
+                            Name = "UL2M",
+                            Order = 85,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 86,
+                            Description = "Napięcie sieci L3-N",
+                            Name = "UL3M",
+                            Order = 86,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 87,
+                            Description = "Zadana moc czynna aktualna",
+                            Name = "PSET",
+                            Order = 87,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 88,
+                            Description = "Zadany wspólczynnik mocy aktualny",
+                            Name = "PFSET",
+                            Order = 88,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 89,
+                            Description = "Zadana moc czynna z SCADA",
+                            Name = "PSCADA",
+                            Order = 89,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 90,
+                            Description = "Zadany wspólczynnik mocy z SCADA",
+                            Name = "PFSCADA",
+                            Order = 90,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 91,
+                            Description = "Zadana wartość mocy czynnej - OSD",
+                            Name = "POSD",
+                            Order = 91,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 92,
+                            Description = "Zadana wartość mocy biernej  - OSD",
+                            Name = "QOSD",
+                            Order = 92,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 93,
+                            Description = "Zadana wartość współczynnika mocy  - OSD",
+                            Name = "PFOSD",
+                            Order = 93,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 94,
+                            Description = "Zadana wartość napięcia - OSD",
+                            Name = "UOSD",
+                            Order = 94,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 95,
+                            Description = "Woda grzewcza przed KWT",
+                            Name = "T290",
+                            Order = 95,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 96,
+                            Description = "Woda grzewcza przed AWT",
+                            Name = "T385",
+                            Order = 96,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 97,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 97,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 98,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 98,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 99,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 99,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 100,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 100,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 101,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 101,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 102,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 103,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 104,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 105,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 106,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 106,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 107,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 107,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 108,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 108,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 109,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 109,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 110,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 110,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 111,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 111,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 112,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 112,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 113,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 113,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 114,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 114,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 115,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 115,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 116,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 116,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 117,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 117,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 118,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 118,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 119,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 119,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 120,
+                            Description = "Description",
+                            Name = "Rezerwa",
+                            Order = 120,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 121,
+                            Description = "Przepływ chwilowy",
+                            Name = "Licznik ciepła",
+                            Order = 1,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 122,
+                            Description = "Moc",
+                            Name = "Licznik ciepła",
+                            Order = 2,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 123,
+                            Description = "Stan licznika",
+                            Name = "Licznik ciepła",
+                            Order = 3,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 124,
+                            Description = "Energia",
+                            Name = "Licznik ciepła",
+                            Order = 4,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 125,
+                            Description = "Rezerwa",
+                            Name = "Licznik ciepła",
+                            Order = 5,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 126,
+                            Description = "Rezerwa",
+                            Name = "Licznik ciepła",
+                            Order = 6,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 127,
+                            Description = "Rezerwa",
+                            Name = "Licznik ciepła",
+                            Order = 7,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 128,
+                            Description = "Rezerwa",
+                            Name = "Licznik ciepła",
+                            Order = 8,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 129,
+                            Description = "Rezerwa",
+                            Name = "Licznik ciepła",
+                            Order = 9,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 130,
+                            Description = "Powietrze zasysane B",
+                            Name = "Licznik ciepła",
+                            Order = 10,
+                            TemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 131,
+                            Description = "Temperatura",
+                            Name = "Licznik gazu",
+                            Order = 1,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 132,
+                            Description = "Licznik Gazu Ciśnienie P1",
+                            Name = "Licznik gazu",
+                            Order = 2,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 133,
+                            Description = "Ciśnienie Pb",
+                            Name = "Licznik gazu",
+                            Order = 3,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 134,
+                            Description = "Przepływ Qm",
+                            Name = "Licznik gazu",
+                            Order = 4,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 135,
+                            Description = "Przepływ Qb",
+                            Name = "Licznik gazu",
+                            Order = 5,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 136,
+                            Description = "Licznik Vm",
+                            Name = "Licznik gazu",
+                            Order = 6,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 137,
+                            Description = "Licznik Vb",
+                            Name = "Licznik gazu",
+                            Order = 7,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 138,
+                            Description = "Licznik energii",
+                            Name = "Licznik gazu",
+                            Order = 8,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 139,
+                            Description = "Rezerwa",
+                            Name = "Licznik gazu",
+                            Order = 9,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 140,
+                            Description = "Powietrze zasysane B",
+                            Name = "Licznik gazu",
+                            Order = 10,
+                            TemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 141,
+                            Description = "Napięcie UL1",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 1,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 142,
+                            Description = "Napięcie UL2",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 2,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 143,
+                            Description = "Napięcie UL3",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 3,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 144,
+                            Description = "Napięcie UL12",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 4,
+                            TemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 145,
+                            Description = "Napięcie UL23",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 5,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 146,
+                            Description = "Napięcie UL31",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 6,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 147,
+                            Description = "Prąd IL1",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 7,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 148,
+                            Description = "Prąd IL2",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 8,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 149,
+                            Description = "Prąd IL3",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 9,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 150,
+                            Description = "Częstotliwość",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 10,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 151,
+                            Description = "Moc czynna",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 11,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 152,
+                            Description = "Moc bierna",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 12,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 153,
+                            Description = "Moc pozorna",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 13,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 154,
+                            Description = "Współczynnik mocy",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 14,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 155,
+                            Description = "Energia czynna",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 15,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 156,
+                            Description = "Energia bierna",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 15,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 157,
+                            Description = "Energia pozorna",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 17,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 158,
+                            Description = "Rezerwa",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 18,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 159,
+                            Description = "Rezerwa",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 19,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 160,
+                            Description = "Rezerwa",
+                            Name = "Licznik energi elektrycznej",
+                            Order = 20,
+                            TemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 161,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 1,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 162,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 2,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 163,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 3,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 164,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 4,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 165,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 5,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 166,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 6,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 167,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 7,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 168,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 8,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 169,
+                            Description = "Rezerwa",
+                            Name = "Inny",
+                            Order = 9,
+                            TemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 170,
+                            Description = "Powietrze zasysane B",
+                            Name = "Inny",
+                            Order = 10,
+                            TemplateId = 5
+                        });
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.Property<int>("Id")
@@ -1330,6 +3517,17 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Alarm", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("Alarms")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.ApplicationUser", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Schedule", null)
@@ -1346,6 +3544,35 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Device", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Plant", "Plant")
+                        .WithMany("Devices")
+                        .HasForeignKey("PlantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Devices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Plant");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceHeader", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("DeviceHeaders")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Division", b =>
@@ -1385,6 +3612,17 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("SubContractor");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("ElectricCounters")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Employee", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
@@ -1403,6 +3641,60 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("Engines")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("GasCounters")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("HeatCounters")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("OtherCounters")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Plants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });
@@ -1544,6 +3836,17 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Settings");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.TemplatePosition", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Template", "Template")
+                        .WithMany("TemplatePositions")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Project", "Project")
@@ -1636,11 +3939,15 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     b.Navigation("Activities");
 
+                    b.Navigation("Devices");
+
                     b.Navigation("Divisions");
 
                     b.Navigation("Employee");
 
                     b.Navigation("EmployeeEvents");
+
+                    b.Navigation("Plants");
 
                     b.Navigation("PositionPosts");
 
@@ -1676,6 +3983,23 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Projects");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Device", b =>
+                {
+                    b.Navigation("Alarms");
+
+                    b.Navigation("DeviceHeaders");
+
+                    b.Navigation("ElectricCounters");
+
+                    b.Navigation("Engines");
+
+                    b.Navigation("GasCounters");
+
+                    b.Navigation("HeatCounters");
+
+                    b.Navigation("OtherCounters");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Division", b =>
                 {
                     b.Navigation("Positions");
@@ -1684,6 +4008,11 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.DivisionPosition", b =>
                 {
                     b.Navigation("PositionPosts");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
+                {
+                    b.Navigation("Devices");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Post", b =>
@@ -1724,6 +4053,11 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.SubContractor", b =>
                 {
                     b.Navigation("DivisionItems");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Template", b =>
+                {
+                    b.Navigation("TemplatePositions");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>

@@ -18,6 +18,7 @@ public class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, GetProjec
     {
         var project = await _context
            .Projects
+           .AsNoTracking()
            .Include(x => x.Client)
            .Include(x => x.User)
            .ThenInclude(x => x.Employee)
@@ -28,7 +29,6 @@ public class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, GetProjec
            .Include(x=>x.Divisions)
            .ThenInclude(x=>x.User)
            .ThenInclude(x=>x.Employee)
-           .AsNoTracking()
            .FirstOrDefaultAsync(x => x.Id ==request.Id);
 
         var positions = await _context

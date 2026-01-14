@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "GymManager.UI": {
+    "ProjectManager.UI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

@@ -45,26 +45,6 @@
                 <li>
                     <p>Branża: <b>@Model.DivisionType.GetDisplayName() </b></p>
                 </li>
-                <li>
-                    <p>Status: @if (Model.Position.IsCompleted)
-                        {
-                            <b>Zakończony</b>
-                        }
-                        else
-                        {
-                            <b>W realizacji</b>
-                        }
-                    </p>
-                </li>
-                <li>
-                    <p>Etap: <b>@Model.Position.Name.GetDisplayName()</b></p>
-                </li>
-                  <li>
-                    <p>Wykonawca: <b>@Model.Position.SubContractor</b></p>
-                </li>
-                <li>
-                    <p><b>Uwaga: </b>@Model.Position.Comment</p>
-                </li>
             </ul>
 
         </div>
@@ -100,7 +80,7 @@
                                @post.CreatedDate
                            </td>
                            <td>
-                               @post.User.FirstName @post.User.LastName
+                               @post.User
                            </td>
                            <td>
                                 @post.Content

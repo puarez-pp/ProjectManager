@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Devices.Commands.DeleteDevice;
+using ProjectManager.Application.Devices.Queries.GetAddDevice;
+using ProjectManager.Application.Devices.Queries.GetAlarms;
+using ProjectManager.Application.Devices.Queries.GetDevice;
+using ProjectManager.Application.Devices.Queries.GetEditDevice;
 
 namespace ProjectManager.UI.Controllers
 {
-    [Authorize()]
     public class DeviceController : BaseController
     {
         private readonly IDateTimeService _dateTimeService;
@@ -17,49 +20,47 @@ namespace ProjectManager.UI.Controllers
         }
 
  
-        public async Task<IActionResult> Devices(int Id)
+        public async Task<IActionResult> Device(int id)
         {
-            return View(await Mediator.Send(new GetDevicesQuery { Id = Id }));
+            return View(await Mediator.Send(new GetDeviceQuery { Id = id }));
         }
 
-        public async Task<IActionResult> AddDevice(int Id)
+        public async Task<IActionResult> AddDevice(int id)
         {
-            ViewData["Plant"] = Plant;
-            return View(new AddDevicesCommand { PlantId = Id});
+            return View(await Mediator.Send(new GetAddDeviceQuery { Id = id }));
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddDevice(AddDeviceCommand command)
+        public async Task<IActionResult> AddDevice(AddDeviceVm viewModel)
         {
-            var result = await MediatorSendValidate(command);
+            var result = await MediatorSendValidate(viewModel.Device);
 
             if (!result.IsValid)
-                return View(command);
-                TempData["Success"] = "Dane zostały zaktualizowane.";
+                return View(viewModel);
 
-            return RedirectToAction("Devices", new { @id = result.Model});
+            TempData["Success"] = "Urządzenie zostało dodane.";
+
+            return RedirectToAction("Devices", new { @id = viewModel.Plant.Id });
         }
 
-        public async Task<IActionResult> EditDevice(int Id)
+        public async Task<IActionResult> EditDevice(int id)
         {
-            return View(await Mediator.Send(new GetEditDeviceQuery { Id = Id }));
-         }
+            return View(await Mediator.Send(new GetEditDeviceQuery { Id = id }));
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditDevice(EditDeviceCommand commnad)
+        public async Task<IActionResult> EditDevice(EditDeviceVm viewModel)
         {
-            
-            var result = await MediatorSendValidate(commnad.Position);
+            var result = await MediatorSendValidate(viewModel.Device);
 
             if (!result.IsValid)
-                return View(commnad);
+                return View(viewModel);
 
-            TempData["Success"] = "Dane urządzenia zostały zaktualizowane.";
+            TempData["Success"] = "Dane zostały zaktualizowane .";
 
-            return RedirectToAction("Devices", new { @id = commnad.PlantId});
+            return RedirectToAction("Devices", new { @id = viewModel.Plant.Id });
         }
 
         [HttpPost]
@@ -82,53 +83,6 @@ namespace ProjectManager.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> Headers(int Id)
-        {
-            return View(await Mediator.Send(new GetHeadersQuery { Id = Id }));
-        }
-
-
-        public async Task<IActionResult> EditHeader(int Id)
-        {
-            return View(await Mediator.Send(new GetEditHeaderQuery { Id = Id }));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditHeader(EditHeaderCommand command)
-        {
-
-            var result = await MediatorSendValidate(command);
-
-            if (!result.IsValid)
-                return View(command);
-
-            TempData["Success"] = "Nazwa nagłówka została zaktualizowana.";
-
-            return RedirectToAction("Headers", new { @id = command.DeviceId });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditHeaders(EditHeadersCommand command)
-        {
-
-            try
-            {
-                await Mediator.Send(
-                    new EditHeadersCommand
-                    {
-                        Id = command.id
-                    });
-
-                return Json(new { success = true });
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, null);
-                return Json(new { success = false });
-            }
-        }
         public async Task<IActionResult> Alarms(int Id)
         {
             return View(await Mediator.Send(new GetAlarmsQuery { Id = Id }));

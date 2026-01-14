@@ -15,7 +15,5 @@ class OtherCounterConfiguration : IEntityTypeConfiguration<OtherCounter>
            .WithMany(x => x.OtherCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
-        builder.Property(x => x.Used)
-            .HasDefaultValue(true);
     }
 }

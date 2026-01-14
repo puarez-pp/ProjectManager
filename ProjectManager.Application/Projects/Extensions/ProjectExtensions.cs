@@ -1,8 +1,5 @@
 ﻿using ProjectManager.Application.Common.Extensions;
-using ProjectManager.Application.Projects.Commands.EditDivision;
-using ProjectManager.Application.Projects.Commands.EditPosition;
-using ProjectManager.Application.Projects.Commands.EditPositionPost;
-using ProjectManager.Application.Projects.Commands.EditProject;
+using ProjectManager.Application.Projects.Queries.GetCommnents;
 using ProjectManager.Application.Projects.Queries.GetPosition;
 using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
@@ -53,68 +50,21 @@ public static class ProjectExtensions
         };
     }
 
-    public static ProjectBasicsDto ToEditDivision(this Project project)
-    {
-        if (project == null)
-        {
-            return null;
-        }
-        return new ProjectBasicsDto
-        {
-            Id = project.Id,
-            ProjectType = (project.ProjectType).GetDisplayName(),
-            Number = project.Number,
-            Name = project.Name,
-        };
-    }
 
-    public static EditProjectCommand ToEditProject(this Project project)
+    public static PositionPostDto ToPositionPostDto(this PositionPost post)
     {
-        if (project == null)
+        if (post == null)
         {
             return null;
         }
-        return new EditProjectCommand
+        return new PositionPostDto
         {
-            Id = project.Id,
-            ProjectType = project.ProjectType,
-            ProjectStatus = project.Status,
-            Number = project.Number,
-            Name = project.Name,
-            Comment = project.Comment,
-            Sharepoint = project.Sharepoint,
-            UserPMId = project.UserPMId,
-            ClientId = project.ClientId
-        };
-    }
-
-    public static EditDivisionCommand ToEditDivisionCommand(this Division division)
-    {
-        if (division == null)
-        {
-            return null;
-        }
-        return new EditDivisionCommand
-        {
-            Id = division.Id,
-            UserId = division.UserId,
-            DivisionType = (division.DivisionType).GetDisplayName()
-        };
-    }
-
-    public static EditPositionCommand ToEditPositionCommand(this DivisionPosition position)
-    {
-        if (position == null)
-        {
-            return null;
-        }
-        return new EditPositionCommand
-        {
-            Id = position.Id,
-            DivisionPositionType = position.DivisionPositionType,
-            Comment = position.Comment,
-            IsCompleted = position.IsCompleted,
-            SubContractorId = position.SubContractorId
+            Id = post.Id,
+            PositionId = post.PositionId,
+            Content = post.Content,
+            CreatedDate = post.CreatedDate,
+            UserId = post.UserId,
+            User = post.User.ToUserDto().FullName
         };
     }
 
@@ -132,22 +82,43 @@ public static class ProjectExtensions
             IsCompleted = position.IsCompleted,
             PerformedData = position.PerformedData,
             SubContractor = position.SubContractor.Name,
-            PositionPosts = position.PositionPosts.OrderByDescending(x=>x.CreatedDate).ToList()
+            PositionPosts = position.PositionPosts.Select(x=>x.ToPositionPostDto()).OrderByDescending(x=>x.CreatedDate).ToList()
         };
     }
 
-    public static EditPostCommand ToEditPostCommand(this PositionPost post)
+    public static PostDto ToPostDto(this Post post)
     {
         if (post == null)
         {
             return null;
         }
-        return new EditPostCommand
+        return new PostDto
         {
             Id = post.Id,
-            PositionId = post.PositionId,
-            Content = post.Content
+            Title = post.Title,
+            Content = post.Content,
+            CreatedDate = post.CreatedDate,
+            UserId = post.UserId,
+            User = post.User.ToUserDto().FullName
         };
     }
+
+    public static PostReplyDto ToPostReplyDto(this PostReply post)
+    {
+        if (post == null)
+        {
+            return null;
+        }
+        return new PostReplyDto
+        {
+            Id = post.Id,
+            PostId = post.PostId,
+            Content = post.Content,
+            CreatedDate = post.CreatedDate,
+            UserId = post.UserId,
+            User = post.User.ToUserDto().FullName
+        };
+    }
+
 
 }

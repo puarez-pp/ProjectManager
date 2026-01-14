@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rotativa.AspNetCore;
+using ProjectManager.Infrastructure.Services.SignalR;
+using ProjectManager.Infrastructure.Encryption;
+
 
 namespace ProjectManager.Infrastructure;
 public static class DependencyInjection
@@ -20,6 +23,12 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        //"Sw6o00uMZuSWCgv/W3yuSY5tAKYbXxGCo2YKHpVASGM="
+        //"Wy9syH0GLrOpHoYchOXgDg=="
+        var keyInfo = new KeyInfo();
+        var encryptionService = new EncryptionService(new KeyInfo("Sw6o00uMZuSWCgv/W3yuSY5tAKYbXxGCo2YKHpVASGM=", "Wy9syH0GLrOpHoYchOXgDg=="));
+        services.AddSingleton<IEncryptionService>(encryptionService);
+
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
 
@@ -63,6 +72,9 @@ public static class DependencyInjection
         services.AddScoped<IPdfFileGenerator, RotativaPdfGenerator>();
         services.AddScoped<IRandomService, RandomService>();
         services.AddScoped<IJwtService, JwtService>();
+        services.AddSignalR();
+        services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
+        services.AddSingleton<IUserNotification, UserNotification>();
 
         return services;
     }

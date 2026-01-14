@@ -9,10 +9,10 @@ static class ModelBuilderExtensionsTemplatePosition
 {
     public static void SeedTemplatePositions(this ModelBuilder modelBuilder)
     {
-        var heatCounter = DeviceType.HeatCounter.GetDisplayName();
-        var gasCounter = DeviceType.GasCounter.GetDisplayName();
-        var electricCounter = DeviceType.ElectricCounter.GetDisplayName();
-        var otherCounter = DeviceType.Other.GetDisplayName();
+        string heatCounter = DeviceType.HeatCounter.GetDisplayName();
+        string gasCounter = DeviceType.GasCounter.GetDisplayName();
+        string electricCounter = DeviceType.ElectricCounter.GetDisplayName();
+        string otherCounter = DeviceType.Other.GetDisplayName();
 
         modelBuilder.Entity<TemplatePosition>().HasData(
             new TemplatePosition

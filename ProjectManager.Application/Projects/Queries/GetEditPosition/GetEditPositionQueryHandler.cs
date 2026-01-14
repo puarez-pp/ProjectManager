@@ -1,8 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Projects.Commands.EditPosition;
 using ProjectManager.Application.Projects.Extensions;
 using ProjectManager.Application.SubContractors.Extension;
+using ProjectManager.Domain.Enums;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.Application.Projects.Queries.GetEditPosition;
 
@@ -36,11 +41,20 @@ public class GetEditPositionQueryHandler : IRequestHandler<GetEditPositionQuery,
             .FirstOrDefault();
 
 
-        vm.Position = (await _context
+        var position = await _context
             .DivisionPositions
-            .Include(x=>x.SubContractor)
-            .FirstOrDefaultAsync(x=>x.Id == request.Id))
-            .ToEditPositionCommand();
+            .Include(x => x.SubContractor)
+            .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+        vm.Position = new EditPositionCommand
+        {
+            Id = request.Id,
+            DivisionPositionType = position.DivisionPositionType,
+            SubContractorId = position.SubContractorId,
+            DivisionType = position.DivisionPositionType.GetDisplayName(),
+            Comment = position.Comment,
+            IsCompleted = position.IsCompleted,
+        };
 
 
         vm.AvaiableSubContractors = await _context

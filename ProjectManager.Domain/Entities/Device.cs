@@ -10,11 +10,10 @@ public class Device
     public Plant Plant { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    //public int DeviceHeaderId { get; set; }
-    //public DeviceHeader DeviceHeader { get; set; }
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
     public DateTime CreatedDate { get; set; }
+    public bool IsConfigured { get; set; }
     public ICollection<Engine> Engines { get; set; } = new HashSet<Engine>();
     public ICollection<GasCounter> GasCounters { get; set; } = new HashSet<GasCounter>();
     public ICollection<HeatCounter> HeatCounters { get; set; } = new HashSet<HeatCounter>();

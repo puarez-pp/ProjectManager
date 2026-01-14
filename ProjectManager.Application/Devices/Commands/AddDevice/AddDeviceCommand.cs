@@ -1,0 +1,27 @@
+﻿using MediatR;
+using ProjectManager.Domain.Entities;
+using ProjectManager.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjectManager.Application.Devices.Commands.AddDevice;
+
+public class AddDeviceCommand : IRequest
+{
+    public int PlantId { get; set; }
+
+    [Required(ErrorMessage = "Pole 'Nazwa urządzenia' jest wymagane")]
+    [DisplayName("Nazwa urządzenia")]
+    public string Name { get; set; }
+    [DisplayName("Opis")]
+    public string Description { get; set; }
+
+    [Required(ErrorMessage = "Pole 'Typ urządzenia' jest wymagane")]
+    [DisplayName("Typ urządzenia")]
+    public DeviceType DeviceType { get; set; }
+}

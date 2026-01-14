@@ -16,10 +16,16 @@ public class GetEditPositionPostQueryHandler : IRequestHandler<GetEditPositionPo
     }
     public async Task<EditPostCommand> Handle(GetEditPositionPostQuery request, CancellationToken cancellationToken)
     {
-        return (await _context
+        var post = await _context
             .PositionPosts
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.Id))
-            .ToEditPostCommand();
+            .FirstOrDefaultAsync(x => x.Id == request.Id);
+        return new EditPostCommand
+        {
+            Id = post.Id,
+            PositionId = post.PositionId,
+            Content = post.Content
+        };  
+
     }
 }
