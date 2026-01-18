@@ -1,43 +1,28 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManager.Application.Clients.Commands.DeleteClient;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Projects.Commands.AddComment;
-using ProjectManager.Application.Projects.Commands.AddCommentReply;
-using ProjectManager.Application.Projects.Commands.AddPosition;
-using ProjectManager.Application.Projects.Commands.AddPositionPost;
-using ProjectManager.Application.Projects.Commands.AddProject;
-using ProjectManager.Application.Projects.Commands.ClosePosition;
-using ProjectManager.Application.Projects.Commands.DeletePosition;
-using ProjectManager.Application.Projects.Commands.DeletePost;
-using ProjectManager.Application.Projects.Commands.EditPositionPost;
-using ProjectManager.Application.Projects.Commands.FinishProject;
-using ProjectManager.Application.Projects.Queries.GetCatProjectBasics;
-using ProjectManager.Application.Projects.Queries.GetCommnents;
-using ProjectManager.Application.Projects.Queries.GetEditDivision;
-using ProjectManager.Application.Projects.Queries.GetEditPosition;
-using ProjectManager.Application.Projects.Queries.GetEditPositionPost;
-using ProjectManager.Application.Projects.Queries.GetEditProject;
-using ProjectManager.Application.Projects.Queries.GetPosition;
-using ProjectManager.Application.Projects.Queries.GetProject;
-using ProjectManager.Application.Projects.Queries.GetProjectBasics;
-using ProjectManager.Application.Todos.Commands.FinishTodo;
+using ProjectManager.Application.Posts.Commands.AddComment;
+using ProjectManager.Application.Posts.Commands.AddCommentReply;
+using ProjectManager.Application.Posts.Commands.AddPositionPost;
+using ProjectManager.Application.Posts.Commands.DeletePost;
+using ProjectManager.Application.Posts.Commands.EditPositionPost;
+using ProjectManager.Application.Posts.Queries.GetCommnents;
+using ProjectManager.Application.Posts.Queries.GetEditPositionPost;
 using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.UI.Controllers
 {
     [Authorize()]
-    public class PostController : BaseController
+    public class ToolController : BaseController
     {
         private readonly IDateTimeService _dateTimeService;
-        private readonly ILogger<PostController> _logger;
-        public PostController(IDateTimeService dateTimeService,
-            ILogger<PostController> logger)
+        private readonly ILogger<ToolController> _logger;
+        public ToolController(IDateTimeService dateTimeService,
+            ILogger<ToolController> logger)
         {
             _dateTimeService = dateTimeService;
             _logger = logger;
         }
-
         public async Task<IActionResult> AddPost(int Id, DivisionType Division, string Position)
         {
             ViewData["Division"] = Division;

@@ -24,10 +24,11 @@ public class ApplicationUser : IdentityUser
     public ICollection<TodoPost> TodoPosts { get; set; } = new HashSet<TodoPost>();
     public ICollection<TodoPost> TodoPostsRedirect { get; set; } = new HashSet<TodoPost>();
     public ICollection<PositionPost> PositionPosts { get; set; } = new HashSet<PositionPost>();
-    public ICollection<ToolRental> ToolRentals { get; set; } = new HashSet<ToolRental>();
+    public ICollection<ToolRent> Rents { get; set; } = new HashSet<ToolRent>();
     public ICollection<TodoToUser> TodoToUsers { get; set; } = new HashSet<TodoToUser>();
     public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
     public ICollection<Activity> Activities { get; set; } = new HashSet<Activity>();
     public ICollection<Plant> Plants { get; set; } = new HashSet<Plant>();
     public ICollection<Device> Devices { get; set; } = new HashSet<Device>();
+    public ICollection<Settlement> Settlements { get; set; } = new HashSet<Settlement>();
 }

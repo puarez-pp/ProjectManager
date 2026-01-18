@@ -6,9 +6,9 @@ namespace ProjectManager.Application.Common.Interfaces
     public interface IApplicationDbContext : IDisposable
     {
         DbSet<Address> Addresses { get; set; }
+        DbSet<SubConAddress> SubConAddresses { get; set; }
         DbSet<ApplicationUser> Users { get; set; }
         DbSet<Client> Clients { get; set; }
-        DbSet<Cost> Costs { get; set; }
         DbSet<Division> Divisions { get; set; }
         DbSet<DivisionPosition> DivisionPositions { get; set; }
         DbSet<PositionPost> PositionPosts { get; set; }
@@ -26,7 +26,7 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<Todo> Todos { get; set; }
         DbSet<TodoPost> TodoPosts { get; set; }
         DbSet<Tool> Tools { get; set; }
-        DbSet<ToolRental> ToolRentals { get; set; }
+        DbSet<ToolRent> Rents { get; set; }
         DbSet<Plant> Plants { get; set; }
         DbSet<Device> Devices { get; set; }
         DbSet<Template> Templates { get; set; }
@@ -38,6 +38,15 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<HeatCounter> HeatCounters { get; set; }
         DbSet<GasCounter> GasCounters { get; set; }
         DbSet<Engine> Engines { get; set; }
+        DbSet<Assumption> Assumptions { get; set; }
+        DbSet<Invoice> Invoices { get; set; }
+        DbSet<Settlement> Settlements { get; set; }
+        DbSet<WorkScope> WorkScopes { get; set; }
+        DbSet<WorkScopeCost> WorkScopeCosts { get; set; }
+        DbSet<WorkScopeOffer> WorkScopeOffers { get; set; }
+        DbSet<WorkScopePositionTemplate> WorkScopePositionTemplates { get; set; }
+        DbSet<WorkScopeTemplate> WorkScopeTemplates { get; set; }
+
 
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

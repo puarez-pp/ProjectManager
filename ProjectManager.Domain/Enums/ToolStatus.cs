@@ -16,5 +16,5 @@ public enum ToolStatus
     Servis,
 
     [Display(Name = "Wycofany")]
-    Withdrawn,
+    Retired,
 }

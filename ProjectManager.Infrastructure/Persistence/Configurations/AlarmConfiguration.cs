@@ -9,7 +9,6 @@ class AlarmConfiguration : IEntityTypeConfiguration<Alarm>
     public void Configure(EntityTypeBuilder<Alarm> builder)
     {
         builder.ToTable("Alarms");
-        builder.HasKey(x => x.Id);
         builder
            .HasOne(x => x.Device)
            .WithMany(x => x.Alarms)

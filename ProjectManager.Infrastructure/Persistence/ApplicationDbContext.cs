@@ -16,8 +16,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     }
 
     public DbSet<Address> Addresses { get; set; }
+    public DbSet<SubConAddress> SubConAddresses { get; set; }
     public DbSet<Client> Clients { get; set; }
-    public DbSet<Cost> Costs { get; set; }
     public DbSet<Division> Divisions { get; set; }
     public DbSet<SettingsPosition> SettingsPositions { get; set; }
     public DbSet<Settings> Settings { get; set; }
@@ -33,10 +33,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<TodoPost> TodoPosts { get; set; }
     public DbSet<DivisionPosition> DivisionPositions { get; set; }
     public DbSet<PostReply> PostReplies { get; set; }
-
     public DbSet<PositionPost> PositionPosts { get; set; }
     public DbSet<Tool> Tools { get; set; }
-    public DbSet<ToolRental> ToolRentals { get; set; }
+    public DbSet<ToolRent> Rents { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Activity> Activities { get; set; }
     public DbSet<Predecessor> Predecessors { get; set; }
@@ -51,6 +50,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<HeatCounter> HeatCounters { get; set; }
     public DbSet<GasCounter> GasCounters { get; set; }
     public DbSet<Engine> Engines { get; set; }
+    public DbSet<Assumption> Assumptions { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
+    public DbSet<Settlement> Settlements { get; set; }
+    public DbSet<WorkScope> WorkScopes { get; set; }
+    public DbSet<WorkScopeCost> WorkScopeCosts { get; set; }
+    public DbSet<WorkScopeOffer> WorkScopeOffers { get; set; }
+    public DbSet<WorkScopePositionTemplate> WorkScopePositionTemplates { get; set; }
+    public DbSet<WorkScopeTemplate> WorkScopeTemplates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -64,6 +71,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         modelBuilder.SeedSubContractor();
         modelBuilder.SeedTemplates();
         modelBuilder.SeedTemplatePositions();
+        modelBuilder.SeedWorkScopeTemplates();
+        modelBuilder.SeedWorkScopePositionTemplates();
 
         base.OnModelCreating(modelBuilder);
     }

@@ -7,9 +7,9 @@ public class SubContractor
     public string ContactPerson { get; set; }
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
-    public string City { get; set; }
-    public string Street { get; set; }
-    public string StreetNumber { get; set; }
-    public string ZipCode { get; set; }
+    public SubConAddress Address { get; set; }
     public ICollection<DivisionPosition> DivisionItems { get; set; } = new HashSet<DivisionPosition>();
+    public ICollection<WorkScopeOffer> WorkScopeOffers { get; set; } = new HashSet<WorkScopeOffer>();
+    public ICollection<WorkScopeCost> WorkScopeCosts { get; set; } = new HashSet<WorkScopeCost>();
+    public ICollection<Invoice> Invoices { get; set; } = new HashSet<Invoice>();
 }

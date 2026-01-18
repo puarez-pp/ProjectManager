@@ -9,7 +9,6 @@ class ElectricCounterConfiguration : IEntityTypeConfiguration<ElectricCounter>
     public void Configure(EntityTypeBuilder<ElectricCounter> builder)
     {
         builder.ToTable("ElectricCounters");
-        builder.HasKey(x => x.Id);
         builder
            .HasOne(x => x.Device)
            .WithMany(x => x.ElectricCounters)

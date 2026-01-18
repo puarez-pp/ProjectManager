@@ -37,3 +37,4 @@ static class ModelBuilderExtensionsTemplate
             });
     }
 }
+ 

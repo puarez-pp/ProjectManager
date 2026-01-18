@@ -11,6 +11,12 @@ class DivisionPositionConfiguration : IEntityTypeConfiguration<DivisionPosition>
         builder.ToTable("DivisionPositions");
 
         builder
+            .HasOne(x => x.SubContractor)
+            .WithMany(x => x.DivisionItems)
+            .HasForeignKey(x => x.SubContractorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
            .HasOne(x => x.Division)
            .WithMany(x => x.Positions)
            .HasForeignKey(x => x.DivisionId)

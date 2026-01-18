@@ -9,7 +9,6 @@ class GasCounterConfiguration : IEntityTypeConfiguration<GasCounter>
     public void Configure(EntityTypeBuilder<GasCounter> builder)
     {
         builder.ToTable("GasCounters");
-        builder.HasKey(x => x.Id);
         builder
            .HasOne(x => x.Device)
            .WithMany(x => x.GasCounters)

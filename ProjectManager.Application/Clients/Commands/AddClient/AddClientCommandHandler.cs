@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Clients.Commands.AddClient;
 public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
@@ -12,7 +13,7 @@ public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
     }
     public async Task<Unit> Handle(AddClientCommand request, CancellationToken cancellationToken)
     {
-        var client = new Domain.Entities.Client();
+        var client = new Client();
         client.Name = request.Name;
         client.ContactPerson = request.ContactPerson;
         client.Email = request.Email;
@@ -21,12 +22,14 @@ public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
         await _context.SaveChangesAsync(cancellationToken);
         var clientid = client.Id;
 
-        client.Address = new Domain.Entities.Address();
-        client.Address.ClientId = clientid;
-        client.Address.City = request.City;
-        client.Address.Street = request.Street;
-        client.Address.StreetNumber = request.StreetNumber;
-        client.Address.ZipCode = request.ZipCode;
+        client.Address = new Address
+        {
+            ClientId = clientid,
+            City = request.City,
+            Street = request.Street,
+            StreetNumber = request.StreetNumber,
+            ZipCode = request.ZipCode
+        };
         await _context.Addresses.AddAsync(client.Address);
         await _context.SaveChangesAsync(cancellationToken);
 

@@ -22,10 +22,10 @@ public class EditSubContractorCommandHandler : IRequestHandler<EditSubContractor
         subContractor.ContactPerson = request.ContactPerson;
         subContractor.Email = request.Email;
         subContractor.PhoneNumber = request.PhoneNumber;
-        subContractor.City = request.City;
-        subContractor.Street = request.Street;
-        subContractor.StreetNumber = request.StreetNumber;
-        subContractor.ZipCode = request.ZipCode;
+        subContractor.Address.City = request.City;
+        subContractor.Address.Street = request.Street;
+        subContractor.Address.StreetNumber = request.StreetNumber;
+        subContractor.Address.ZipCode = request.ZipCode;
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

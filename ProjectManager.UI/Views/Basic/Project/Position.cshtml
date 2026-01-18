@@ -57,7 +57,7 @@
 <div class="card card-primary card-border-top mt-2">
     <div class="card-body">
         <div class="mt-2">
-            <a href="/Project/AddPost?Id=@Model.Position.Id&&Division=@Model.DivisionType&&Position=@Model.Position.Name" class="btn btn-primary mb-1" role="button">
+            <a href="/Post/AddPost?Id=@Model.Position.Id&&Division=@Model.DivisionType&&Position=@Model.Position.Name" class="btn btn-primary mb-1" role="button">
                 <i class="fas fa-regular fa-comment"></i>Dodaj komentarz
             </a>
         </div>
@@ -158,7 +158,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/Project/DeletePost",
+            url: "/Post/DeletePost",
             data: {
                 id: selectedPostId
             },

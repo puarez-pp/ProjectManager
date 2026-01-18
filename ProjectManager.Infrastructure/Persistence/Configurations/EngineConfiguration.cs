@@ -9,7 +9,6 @@ class EngineConfiguration : IEntityTypeConfiguration<Engine>
     public void Configure(EntityTypeBuilder<Engine> builder)
     {
         builder.ToTable("Engines");
-        builder.HasKey(x => x.Id);
         builder
            .HasOne(x => x.Device)
            .WithMany(x => x.Engines)

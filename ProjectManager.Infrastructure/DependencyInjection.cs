@@ -75,6 +75,7 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
         services.AddSingleton<IUserNotification, UserNotification>();
+        services.AddSingleton<IFinanceService, FinanceService>();
 
         return services;
     }

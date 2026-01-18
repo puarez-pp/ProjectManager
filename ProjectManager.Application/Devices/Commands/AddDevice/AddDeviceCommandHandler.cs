@@ -39,7 +39,7 @@ public class AddDeviceCommandHandler : IRequestHandler<AddDeviceCommand>
             UserId = _userService.UserId,
             CreatedDate = _timeService.Now
         };
-        _context.Devices.Add(device);
+        await _context.Devices.AddAsync(device);
         await _context.SaveChangesAsync(cancellationToken);
         var devicetId = device.Id;
         await AddDeviceHeaders(devicetId, device.DeviceType);
@@ -63,7 +63,7 @@ public class AddDeviceCommandHandler : IRequestHandler<AddDeviceCommand>
                 Description = header.Select(x => x.Description).ToString(),
                 Order = header.Select(x => x.Order).FirstOrDefault()
             };
-            _context.DeviceHeaders.Add(deviceHeader);
+            await _context.DeviceHeaders.AddAsync(deviceHeader);
         }
         await _context.SaveChangesAsync();
     }

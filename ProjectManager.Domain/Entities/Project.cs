@@ -24,9 +24,9 @@ public class Project
     public int ClientId { get; set; }
     public Client Client{ get; set; }
     public bool IsCompleted { get; set; }
+    public Settlement Settlement { get; set; }
     public ICollection<Division> Divisions { get; set; } = new HashSet<Division>();
     public ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     public ICollection<Todo> Todos { get; set; } = new HashSet<Todo>();
-    public ICollection<Cost> Costs { get; set; } = new HashSet<Cost>();
     public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
 }

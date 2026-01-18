@@ -9,7 +9,6 @@ class DeviceHeaderConfiguration : IEntityTypeConfiguration<DeviceHeader>
     public void Configure(EntityTypeBuilder<DeviceHeader> builder)
     {
         builder.ToTable("DeviceHeaders");
-        builder.HasKey(x => x.Id);
         builder
            .HasOne(x => x.Device)
            .WithMany(x => x.DeviceHeaders)

@@ -9,7 +9,6 @@ class HeatCounterConfiguration : IEntityTypeConfiguration<HeatCounter>
     public void Configure(EntityTypeBuilder<HeatCounter> builder)
     {
         builder.ToTable("HeatCounters");
-        builder.HasKey(x => x.Id);
         builder
            .HasOne(x => x.Device)
            .WithMany(x => x.HeatCounters)

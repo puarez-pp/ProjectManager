@@ -5,7 +5,7 @@ using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.SubContractors.Extension;
 
-public static class SubContractorExtension
+public static class ToolExtensions
 {
     public static SubContractorBasicsDto ToSubContractorBasicsDto(this SubContractor subContractor)
     {
@@ -33,10 +33,10 @@ public static class SubContractorExtension
             ContactPerson = subContractor.ContactPerson,
             Email = subContractor.Email,
             PhoneNumber = subContractor.PhoneNumber,
-            City = subContractor.City,
-            Street = subContractor.Street,
-            StreetNumber = subContractor.StreetNumber,
-            ZipCode = subContractor.ZipCode
+            City = subContractor.Address.City,
+            Street = subContractor.Address.Street,
+            StreetNumber = subContractor.Address.StreetNumber,
+            ZipCode = subContractor.Address.ZipCode
         };
     }
 }

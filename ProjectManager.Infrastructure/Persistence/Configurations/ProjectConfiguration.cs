@@ -10,8 +10,12 @@ class ProjectConfiguration : IEntityTypeConfiguration<Project>
     public void Configure(EntityTypeBuilder<Project> builder)
     {
         builder.ToTable("Projects");
+        builder
+            .HasOne(x => x.Settlement)
+            .WithOne(x => x.Project)
+            .HasForeignKey<Settlement>(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-         builder.HasKey(x => x.Id);
 
         builder
             .HasOne(x => x.Client)
@@ -26,16 +30,16 @@ class ProjectConfiguration : IEntityTypeConfiguration<Project>
            .OnDelete(DeleteBehavior.Restrict);
 
         builder
-         .HasOne(x => x.UserPM)
-         .WithMany(x => x.ProjectsPM)
-         .HasForeignKey(x => x.UserPMId)
-         .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(x => x.UserPM)
+            .WithMany(x => x.ProjectsPM)
+            .HasForeignKey(x => x.UserPMId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
-         .HasOne(x => x.UserUpdator)
-         .WithMany(x => x.ProjectsUpdator)
-         .HasForeignKey(x => x.UserUpdatorId)
-         .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(x => x.UserUpdator)
+            .WithMany(x => x.ProjectsUpdator)
+            .HasForeignKey(x => x.UserUpdatorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.ProjectType)
             .IsRequired()

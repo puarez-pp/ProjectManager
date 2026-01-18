@@ -13,5 +13,4 @@ public class Activity
     public int ScheduleId { get; set; }
     public Schedule Schedule { get; set; }
     public ICollection<Predecessor> Predecessors { get; set; } = new HashSet<Predecessor>();
-
 }

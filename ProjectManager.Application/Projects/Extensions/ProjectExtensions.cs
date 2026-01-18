@@ -1,5 +1,4 @@
 ﻿using ProjectManager.Application.Common.Extensions;
-using ProjectManager.Application.Projects.Queries.GetCommnents;
 using ProjectManager.Application.Projects.Queries.GetPosition;
 using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
@@ -51,23 +50,6 @@ public static class ProjectExtensions
     }
 
 
-    public static PositionPostDto ToPositionPostDto(this PositionPost post)
-    {
-        if (post == null)
-        {
-            return null;
-        }
-        return new PositionPostDto
-        {
-            Id = post.Id,
-            PositionId = post.PositionId,
-            Content = post.Content,
-            CreatedDate = post.CreatedDate,
-            UserId = post.UserId,
-            User = post.User.ToUserDto().FullName
-        };
-    }
-
     public static PositionDto ToPositionDto(this DivisionPosition position)
     {
         if (position == null)
@@ -85,40 +67,5 @@ public static class ProjectExtensions
             PositionPosts = position.PositionPosts.Select(x=>x.ToPositionPostDto()).OrderByDescending(x=>x.CreatedDate).ToList()
         };
     }
-
-    public static PostDto ToPostDto(this Post post)
-    {
-        if (post == null)
-        {
-            return null;
-        }
-        return new PostDto
-        {
-            Id = post.Id,
-            Title = post.Title,
-            Content = post.Content,
-            CreatedDate = post.CreatedDate,
-            UserId = post.UserId,
-            User = post.User.ToUserDto().FullName
-        };
-    }
-
-    public static PostReplyDto ToPostReplyDto(this PostReply post)
-    {
-        if (post == null)
-        {
-            return null;
-        }
-        return new PostReplyDto
-        {
-            Id = post.Id,
-            PostId = post.PostId,
-            Content = post.Content,
-            CreatedDate = post.CreatedDate,
-            UserId = post.UserId,
-            User = post.User.ToUserDto().FullName
-        };
-    }
-
 
 }

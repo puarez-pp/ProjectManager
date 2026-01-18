@@ -10,7 +10,6 @@ class DeviceConfiguration : IEntityTypeConfiguration<Device>
     public void Configure(EntityTypeBuilder<Device> builder)
     {
         builder.ToTable("Devices");
-        builder.HasKey(x => x.Id);
 
         builder
            .HasOne(x => x.User)

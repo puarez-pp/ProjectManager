@@ -10,8 +10,6 @@ class PlantConfiguration : IEntityTypeConfiguration<Plant>
     {
         builder.ToTable("Plant");
 
-        builder.HasKey(x => x.Id);
-
         builder
            .HasOne(x => x.User)
            .WithMany(x => x.Plants)

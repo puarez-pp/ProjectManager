@@ -372,6 +372,46 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Assumption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<float>("CompanyCost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("CompanyGuarantee")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Discount")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Insurance")
+                        .HasColumnType("real");
+
+                    b.Property<float>("MarginGen")
+                        .HasColumnType("real");
+
+                    b.Property<float>("MarginInstall")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Maturity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettlementId")
+                        .IsUnique();
+
+                    b.ToTable("Assumptions");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -404,30 +444,6 @@ namespace ProjectManager.Infrastructure.Migrations
                             Id = 1,
                             Name = "Klient domyślny"
                         });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Cost", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CostType")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Costs", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Device", b =>
@@ -1237,6 +1253,49 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("HeatCounters", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("EuroNetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("EuroRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VendorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("Invoices", (string)null);
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
                 {
                     b.Property<int>("Id")
@@ -1777,7 +1836,34 @@ namespace ProjectManager.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.SubContractor", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Settlement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Settlements", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.SubConAddress", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1788,6 +1874,44 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<string>("City")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Street")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("StreetNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SubContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ZipCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubContractorId")
+                        .IsUnique();
+
+                    b.ToTable("SubConAddresses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            SubContractorId = 1
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.SubContractor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ContactPerson")
                         .HasColumnType("nvarchar(max)");
@@ -1802,18 +1926,6 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("StreetNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ZipCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -3405,7 +3517,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("Tools", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ToolRental", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ToolRent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3416,10 +3528,10 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("RentalData")
+                    b.Property<DateTime>("RentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ReturnData")
+                    b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ToolId")
@@ -3435,6 +3547,1221 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ToolRentals", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScope", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettlementId");
+
+                    b.ToTable("WorkScopes", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopeCost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CostStatusType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("EuroNetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("EuroRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("WorkScopeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubContractorId");
+
+                    b.HasIndex("WorkScopeId");
+
+                    b.ToTable("WorkScopeCosts", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopeOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("EuroNetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("EuroRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsUsed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("WorkScopeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubContractorId");
+
+                    b.HasIndex("WorkScopeId");
+
+                    b.ToTable("WorkScopeOffers", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopePositionTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkScopeTemplateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkScopeTemplateId");
+
+                    b.ToTable("WorkScopePositionTemplates", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Agregat",
+                            Order = 1,
+                            WorkScopeTemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Agregat - transport",
+                            Order = 2,
+                            WorkScopeTemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Fundament",
+                            Order = 1,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Zagospodarowanie terenu",
+                            Order = 2,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Przepusty przez ścianę kotłowni",
+                            Order = 3,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Kanalizacja deszczowa i technologiczna",
+                            Order = 4,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Zabudowa kontenerowa",
+                            Order = 5,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Rezerwa",
+                            Order = 6,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Rezerwa",
+                            Order = 7,
+                            WorkScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Obieg LT, chłodnica",
+                            Order = 1,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Obieg LT, zawór równoważący",
+                            Order = 2,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Obieg LT, naczynie membranowe 3 bar z zestawem przyłączeniowym",
+                            Order = 3,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Obieg LT, pompa",
+                            Order = 4,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Obieg LT, kompensatory elastyczne",
+                            Order = 5,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Obieg LT, przepustnice odcinające",
+                            Order = 6,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Obieg LT, zawór bezpieczeństwa 1915 3bar",
+                            Order = 7,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Obieg LT, filtr kołnierzowy",
+                            Order = 8,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Obieg LT, odpowietrzniki",
+                            Order = 9,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Obieg LT, czujniki, wskaźniki temperatury itp.",
+                            Order = 10,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "Obieg LT, wymiennik separacyjny płytowy",
+                            Order = 11,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "Obieg LT - rezerwa",
+                            Order = 12,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Obieg LT - rezerwa",
+                            Order = 13,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Obieg HT, chłodnica",
+                            Order = 14,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "Obieg HT, pompa obiegu",
+                            Order = 15,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "Obieg HT, wymiennik separacyjny płytowy",
+                            Order = 16,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "Obieg HT, zawór równoważący",
+                            Order = 17,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "Obieg HT, naczynie membranowe 10 bar z zestawem przyłączeniowym",
+                            Order = 18,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "Obieg HT, naczynie schładzające 10bar",
+                            Order = 19,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "Obieg HT, przepustnice odcinające",
+                            Order = 20,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "Obieg HT, zawór bezpieczeństwa 1915 10bar",
+                            Order = 21,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "Obieg HT, filtr kołnierzowy",
+                            Order = 22,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "Obieg HT, odpowietrzniki",
+                            Order = 23,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "Obieg HT, czujniki, wskaźniki temperatury itp.",
+                            Order = 24,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Description = "Obieg HT, kompensatory elastyczne",
+                            Order = 25,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "Obieg HT, zawór bezpieczeństwa 1915 3 bar",
+                            Order = 26,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Obieg HT, zawór bezpieczeństwa 1915 10 bar",
+                            Order = 27,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Description = "Obieg HT, zabezpieczenia Presostaty i Termostaty",
+                            Order = 28,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Description = "Obieg HT, odpowietrzniki",
+                            Order = 29,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Description = "Obieg HT, filtr kołnierzowy",
+                            Order = 30,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Description = "Obieg HT, Czujniki, wskaźniki temperatury itp.",
+                            Order = 31,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Description = "Rury HT / LT",
+                            Order = 32,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Description = "Izolacja, osłony rury, prace dodatkowe",
+                            Order = 33,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Description = "Automatyczny układ do oleju",
+                            Order = 34,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Description = "Zbiornik oleju",
+                            Order = 35,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Description = "Olej silnikowy",
+                            Order = 36,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Description = "Mieszanka Glikol/Woda 50/50",
+                            Order = 37,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Description = "Kable grzewcze",
+                            Order = 38,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Description = "Instalacje technologiczne: gaz, ciepło - kotłownia - kogeneracja",
+                            Order = 39,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Description = "Układ pompowy - obieg wymiennik spaliny/woda",
+                            Order = 40,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Description = "Instalacja odzysku ciepła z bloku silnika oraz spalin",
+                            Order = 41,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Description = "Instalacja odzysku ciepła - wyprowadzenie ciepła",
+                            Order = 42,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Description = "Instalacje technologiczne: gaz, ciepło - kotłownia - kogeneracja",
+                            Order = 43,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Description = "Licznik ciepła z przepływomierzem ultradźwiękowym",
+                            Order = 44,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Description = "Zawory odcinajace na obiegach grzewczych",
+                            Order = 45,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Description = "Obieg HT - rezerwa",
+                            Order = 46,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Description = "Obieg HT - rezerwa",
+                            Order = 47,
+                            WorkScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Description = "Wentylatory",
+                            Order = 1,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Description = "Klimatizator AKPiA",
+                            Order = 2,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Description = "Wentylator EX",
+                            Order = 3,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Description = "Przepustnice",
+                            Order = 4,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Description = "Kulisy tłumiące",
+                            Order = 5,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Description = "Montaż układu wentylacji",
+                            Order = 6,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Description = "Wentylacja - rezerwa",
+                            Order = 7,
+                            WorkScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Description = "Okablowanie potrzeb własnych",
+                            Order = 1,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Description = "Instalacje uziemienia i odgromowa",
+                            Order = 2,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 66,
+                            Description = "Instalacje oświetlenia i gniazd wtyczkowych",
+                            Order = 3,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 67,
+                            Description = "Szafa sterowania AX",
+                            Order = 4,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 68,
+                            Description = "Rozdzielnica GCB",
+                            Order = 5,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 69,
+                            Description = "Falowniki",
+                            Order = 6,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 70,
+                            Description = "Wyprowadzenie mocy",
+                            Order = 7,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 71,
+                            Description = "Transformator",
+                            Order = 8,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 72,
+                            Description = "Pomiary transformatora, uruchomienie",
+                            Order = 9,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 73,
+                            Description = "Okablowanie stacji",
+                            Order = 10,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 74,
+                            Description = "Wyprowadzenie mocy TR-RGSN",
+                            Order = 11,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 75,
+                            Description = "Rozbudowa istniejącej rozdzielnicy SN",
+                            Order = 12,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 76,
+                            Description = "Przeciski sterowane",
+                            Order = 13,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 77,
+                            Description = "Wyprowadzenie sygnałów - SCADA",
+                            Order = 14,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 78,
+                            Description = "System sterowania SCADA - kogeneracja",
+                            Order = 15,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 79,
+                            Description = "Dostawa stacji transformatorowej",
+                            Order = 16,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 80,
+                            Description = "Obudowa transformatora",
+                            Order = 17,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 81,
+                            Description = "Posadowienie stacji",
+                            Order = 18,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 82,
+                            Description = "Układ pomiarowy energii elektrycznej na zaciskach generatora",
+                            Order = 19,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 83,
+                            Description = "Instalacje dodatkowe komunikacja światłowodowa",
+                            Order = 20,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 84,
+                            Description = "Dostawa rozdzielnicy SN, montaż",
+                            Order = 21,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 85,
+                            Description = "Zakup i ułożenie kabla pożarowego wyłącznika prądu",
+                            Order = 22,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 86,
+                            Description = "Wykonanie mostu kablowego",
+                            Order = 23,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 87,
+                            Description = "Modyfikacja architektury systemu SCADA",
+                            Order = 24,
+                            WorkScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 88,
+                            Description = "Stacja redukcji gazu",
+                            Order = 1,
+                            WorkScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 89,
+                            Description = "Zawór kulowy",
+                            Order = 2,
+                            WorkScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 90,
+                            Description = "Gazex, zawór odcinający, instalacja bezpieczeństwa",
+                            Order = 3,
+                            WorkScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 91,
+                            Description = "Wykonanie przyłącza gazowego - od skrzynki gazowej do kontenera",
+                            Order = 4,
+                            WorkScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 92,
+                            Description = "Licznik gazu + Korektor obiętościowy ",
+                            Order = 5,
+                            WorkScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 93,
+                            Description = "Projekt wykonawczy Elektryka / Automatyka",
+                            Order = 1,
+                            WorkScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 94,
+                            Description = "Projekty wykonawcze kontener",
+                            Order = 2,
+                            WorkScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 95,
+                            Description = "Projekt budowlany",
+                            Order = 3,
+                            WorkScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 96,
+                            Description = "Odbiór UDT",
+                            Order = 4,
+                            WorkScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 97,
+                            Description = "Uruchomienie i rozruch (Eneria)",
+                            Order = 5,
+                            WorkScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 98,
+                            Description = "Szkolenie operatorów",
+                            Order = 6,
+                            WorkScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 99,
+                            Description = "Zespół prądotwórczy",
+                            Order = 1,
+                            WorkScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 100,
+                            Description = "Transport zespołu prądotwórczego",
+                            Order = 2,
+                            WorkScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 101,
+                            Description = "Dodatkowe akumulatory",
+                            Order = 3,
+                            WorkScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Description = "Instalacja zasilania potrzeb własnych ( agregat+instacja paliwowa) z zabezpieczeniami",
+                            Order = 1,
+                            WorkScopeTemplateId = 10
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Description = "Elastyczne połączenia generatora z szynoprzewodem",
+                            Order = 2,
+                            WorkScopeTemplateId = 10
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Description = "Układ chłodzenia - rezerwa",
+                            Order = 1,
+                            WorkScopeTemplateId = 11
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Description = "Tłumik spalin o tłumienności 40 db",
+                            Order = 1,
+                            WorkScopeTemplateId = 12
+                        },
+                        new
+                        {
+                            Id = 106,
+                            Description = "Instalacja wyrzutu spalin wraz z okuciem tłumika",
+                            Order = 2,
+                            WorkScopeTemplateId = 12
+                        },
+                        new
+                        {
+                            Id = 107,
+                            Description = "Zbiornik dzienny ROTH 1000 L",
+                            Order = 1,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 108,
+                            Description = "Okablowanie instalacji paliwowej",
+                            Order = 2,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 109,
+                            Description = "Zbiornik podziemny dwupłaszczowy, o poj. ..... 34 m3",
+                            Order = 3,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 110,
+                            Description = "Wykonanie ochrony katodowej zbiorników",
+                            Order = 4,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 111,
+                            Description = "Automatyka układu paliwowego",
+                            Order = 5,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 112,
+                            Description = "Rury Brugg",
+                            Order = 6,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 113,
+                            Description = "Instalacja paliwowa - rezerwa",
+                            Order = 7,
+                            WorkScopeTemplateId = 13
+                        },
+                        new
+                        {
+                            Id = 114,
+                            Description = "Instalacja olejowa - rezerwa",
+                            Order = 1,
+                            WorkScopeTemplateId = 14
+                        },
+                        new
+                        {
+                            Id = 115,
+                            Description = "Wentylatory",
+                            Order = 1,
+                            WorkScopeTemplateId = 15
+                        },
+                        new
+                        {
+                            Id = 116,
+                            Description = "Pzrepustnice",
+                            Order = 2,
+                            WorkScopeTemplateId = 15
+                        },
+                        new
+                        {
+                            Id = 117,
+                            Description = "Czerpnia",
+                            Order = 3,
+                            WorkScopeTemplateId = 15
+                        },
+                        new
+                        {
+                            Id = 118,
+                            Description = "Wyrzutnia",
+                            Order = 4,
+                            WorkScopeTemplateId = 15
+                        },
+                        new
+                        {
+                            Id = 119,
+                            Description = "Tłumniki akustyczne",
+                            Order = 5,
+                            WorkScopeTemplateId = 15
+                        },
+                        new
+                        {
+                            Id = 120,
+                            Description = "Montaż instalacji wentylacyjnej",
+                            Order = 6,
+                            WorkScopeTemplateId = 15
+                        },
+                        new
+                        {
+                            Id = 121,
+                            Description = "Prace budowlano-konstrukcyjne - rezerwa",
+                            Order = 1,
+                            WorkScopeTemplateId = 16
+                        },
+                        new
+                        {
+                            Id = 122,
+                            Description = "Prace budowlano-konstrukcyjne - rezerwa",
+                            Order = 2,
+                            WorkScopeTemplateId = 16
+                        },
+                        new
+                        {
+                            Id = 123,
+                            Description = "Prace budowlano-konstrukcyjne - rezerwa",
+                            Order = 3,
+                            WorkScopeTemplateId = 16
+                        },
+                        new
+                        {
+                            Id = 124,
+                            Description = "Testy agregatu w fabryce (FAT)",
+                            Order = 1,
+                            WorkScopeTemplateId = 17
+                        },
+                        new
+                        {
+                            Id = 125,
+                            Description = "Wynajem kontenera socjalnego na czas budowy",
+                            Order = 2,
+                            WorkScopeTemplateId = 17
+                        },
+                        new
+                        {
+                            Id = 126,
+                            Description = "Dokumentacja",
+                            Order = 3,
+                            WorkScopeTemplateId = 17
+                        },
+                        new
+                        {
+                            Id = 127,
+                            Description = "Uruchomienie i szkolenie",
+                            Order = 4,
+                            WorkScopeTemplateId = 17
+                        },
+                        new
+                        {
+                            Id = 128,
+                            Description = "Testy z obciążalnikiem",
+                            Order = 5,
+                            WorkScopeTemplateId = 17
+                        },
+                        new
+                        {
+                            Id = 129,
+                            Description = "Paliwo",
+                            Order = 6,
+                            WorkScopeTemplateId = 17
+                        },
+                        new
+                        {
+                            Id = 130,
+                            Description = "Rezerwa",
+                            Order = 7,
+                            WorkScopeTemplateId = 17
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopeTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkScopeTemplates", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Agregat",
+                            Order = 1,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Prace budowlano-konstrukcyjne",
+                            Order = 2,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Układ chłodzenia i wyprowadzenia ciepła",
+                            Order = 3,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Wentylacja",
+                            Order = 4,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Instalacje elektryczne",
+                            Order = 5,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Instalacja gazowa",
+                            Order = 6,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Zarządzenie projektem, dokumenetacja techniczna, rozruchy",
+                            Order = 7,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Zespół prądotwórczy",
+                            Order = 1,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Zespół prądotwórczy - Logistyka",
+                            Order = 2,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Instalacje elektryczne",
+                            Order = 3,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Układ chłodzenia silnika",
+                            Order = 4,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Układ odprowadzenia spalin",
+                            Order = 5,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Instalacja paliwowa",
+                            Order = 6,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Instalacja olejowa",
+                            Order = 7,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Wentylacja",
+                            Order = 8,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Prace budowlano-konstrukcyjne",
+                            Order = 9,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Zarządzenie projektem, dokumenetacja techniczna, rozruchy",
+                            Order = 10,
+                            ProjectType = 1
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -3535,15 +4862,15 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasForeignKey("ScheduleId");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Cost", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Assumption", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.Project", "Project")
-                        .WithMany("Costs")
-                        .HasForeignKey("ProjectId")
+                    b.HasOne("ProjectManager.Domain.Entities.Settlement", "Settlement")
+                        .WithOne("Assumption")
+                        .HasForeignKey("ProjectManager.Domain.Entities.Assumption", "SettlementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Project");
+                    b.Navigation("Settlement");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Device", b =>
@@ -3604,7 +4931,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasOne("ProjectManager.Domain.Entities.SubContractor", "SubContractor")
                         .WithMany("DivisionItems")
                         .HasForeignKey("SubContractorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Division");
@@ -3676,6 +5003,25 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Settlement", "Settlement")
+                        .WithMany("Invoices")
+                        .HasForeignKey("SettlementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", "Vendor")
+                        .WithMany("Invoices")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Settlement");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
@@ -3836,6 +5182,35 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Settings");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Settlement", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Project", "Project")
+                        .WithOne("Settlement")
+                        .HasForeignKey("ProjectManager.Domain.Entities.Settlement", "ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Settlements")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.SubConAddress", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", "SubContractor")
+                        .WithOne("Address")
+                        .HasForeignKey("ProjectManager.Domain.Entities.SubConAddress", "SubContractorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SubContractor");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.TemplatePosition", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Template", "Template")
@@ -3912,22 +5287,82 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ToolRental", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ToolRent", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Tool", "Tool")
-                        .WithMany("ToolRentals")
+                        .WithMany("Rents")
                         .HasForeignKey("ToolId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("ToolRentals")
+                        .WithMany("Rents")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Tool");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScope", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Settlement", "Settlement")
+                        .WithMany("WorkScopes")
+                        .HasForeignKey("SettlementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Settlement");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopeCost", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", "SubContractor")
+                        .WithMany("WorkScopeCosts")
+                        .HasForeignKey("SubContractorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.WorkScope", "WorkScope")
+                        .WithMany("WorkScopeCosts")
+                        .HasForeignKey("WorkScopeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SubContractor");
+
+                    b.Navigation("WorkScope");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopeOffer", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", "SubContractor")
+                        .WithMany("WorkScopeOffers")
+                        .HasForeignKey("SubContractorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.WorkScope", "WorkScope")
+                        .WithMany("WorkScopeOffers")
+                        .HasForeignKey("WorkScopeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SubContractor");
+
+                    b.Navigation("WorkScope");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopePositionTemplate", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.WorkScopeTemplate", "WorkScopeTemplate")
+                        .WithMany("WorkScopePositions")
+                        .HasForeignKey("WorkScopeTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("WorkScopeTemplate");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Activity", b =>
@@ -3961,7 +5396,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("ProjectsUpdator");
 
+                    b.Navigation("Rents");
+
                     b.Navigation("Schedules");
+
+                    b.Navigation("Settlements");
 
                     b.Navigation("TodoPosts");
 
@@ -3972,8 +5411,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("TodosFrom");
 
                     b.Navigation("TodosTo");
-
-                    b.Navigation("ToolRentals");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Client", b =>
@@ -4022,13 +5459,13 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Project", b =>
                 {
-                    b.Navigation("Costs");
-
                     b.Navigation("Divisions");
 
                     b.Navigation("Posts");
 
                     b.Navigation("Schedules");
+
+                    b.Navigation("Settlement");
 
                     b.Navigation("Todos");
                 });
@@ -4050,9 +5487,26 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Positions");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Settlement", b =>
+                {
+                    b.Navigation("Assumption");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("WorkScopes");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.SubContractor", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("DivisionItems");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("WorkScopeCosts");
+
+                    b.Navigation("WorkScopeOffers");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Template", b =>
@@ -4069,7 +5523,19 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Tool", b =>
                 {
-                    b.Navigation("ToolRentals");
+                    b.Navigation("Rents");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScope", b =>
+                {
+                    b.Navigation("WorkScopeCosts");
+
+                    b.Navigation("WorkScopeOffers");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScopeTemplate", b =>
+                {
+                    b.Navigation("WorkScopePositions");
                 });
 #pragma warning restore 612, 618
         }

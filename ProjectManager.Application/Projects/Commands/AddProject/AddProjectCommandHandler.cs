@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
 using ProjectManager.Domain.Enums;
-using System.Threading;
 
 namespace ProjectManager.Application.Projects.Commands.AddProject;
 

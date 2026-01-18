@@ -11,5 +11,5 @@ public class Tool
     public ToolStatus ToolStatus { get; set; }
     public DateTime? DateOfPurchase { get; set; }
     public DateTime ValidDate { get; set; }
-    public ICollection<ToolRental> ToolRentals { get; set; } = new HashSet<ToolRental>();
+    public ICollection<ToolRent> Rents { get; set; } = new HashSet<ToolRent>();
 }

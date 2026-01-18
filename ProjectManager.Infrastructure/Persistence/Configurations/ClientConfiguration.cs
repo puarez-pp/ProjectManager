@@ -21,3 +21,4 @@ class ClientConfiguration : IEntityTypeConfiguration<Client>
             .HasMaxLength(200);
     }
 }
+

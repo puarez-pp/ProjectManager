@@ -13,6 +13,12 @@ static class ModelBuilderExtensionsSubContractor
                 Id = 1,
                 Name = "Bergerat Monnoyeur"
             });
+        modelBuilder.Entity<SubConAddress>().HasData(
+            new SubConAddress
+            {
+                Id = 1,
+                SubContractorId = 1,
+            });
     }
 }
 
