@@ -22,7 +22,20 @@
   <ItemGroup>
     <Folder Include="Finances\" />
     <Folder Include="Projects\Schedules\" />
-    <Folder Include="Settlements\Extensions\" />
+    <Folder Include="Settlements\Commands\EditWorkScopeOffer\" />
+    <Folder Include="Settlements\Commands\AddWorkScopeCost\" />
+    <Folder Include="Settlements\Commands\EditWorkScopeCost\" />
+    <Folder Include="Settlements\Commands\DeleteWorkScopeCost\" />
+    <Folder Include="Settlements\Commands\AddInvoice\" />
+    <Folder Include="Settlements\Commands\EditInvoice\" />
+    <Folder Include="Settlements\Commands\DeleteInvoice\" />
+    <Folder Include="Settlements\Queries\GetEditWorkScopeCost\" />
+    <Folder Include="Settlements\Queries\GetEditInvoice\" />
+    <Folder Include="Settlements\Queries\GetAddWorkScopeOffer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Settlements\Commands\AddWorkScopeOffer\AddWorkScopeOfferCommand.cs" />
   </ItemGroup>
 
 </Project>

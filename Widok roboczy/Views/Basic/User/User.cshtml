@@ -1,0 +1,38 @@
+﻿@using ProjectManager.Application.Users.Queries.GetUser
+
+@model UserDto
+
+@{
+    ViewData["Title"] = "Moje dane";
+}
+
+<div class="card card-primary card-border-top">
+    
+     <div class="card-body">
+
+        <a href="/User/EditUser" class="btn btn-primary mb-3" role="button">
+            <i class="fas fa-solid fa-circle-plus"></i>Aktualizuj swoje dane
+        </a>
+
+        @if (string.IsNullOrWhiteSpace(Model.FirstName))
+        {
+            <p class="text-danger mt-2"><b>Uzupełnij proszę swoje dane.</b></p>
+
+            <p>Adres e-mail: <b>@Model.Email</b></p>
+        }
+        else
+        {
+            <h3 class="mt-2">
+                @Model.FirstName @Model.LastName
+            </h3>
+
+            <p class="mt-4">Adres e-mail: <b>@Model.Email</b></p>
+            <p class="mt-3">Numer telefonu: <b>@Model.Phone</b></p>
+            <p class="mt-3">Stanowisko: <b>@Model.Position</b></p>
+            <p class="mt-3">Data rejestracji: <b>@Model.RegisterDateTime</b></p>
+        }
+
+
+    </div>
+
+</div>

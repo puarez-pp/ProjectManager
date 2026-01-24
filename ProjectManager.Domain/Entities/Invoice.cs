@@ -12,5 +12,8 @@ public class Invoice
     public Settlement Settlement { get; set; }
     public int VendorId { get; set; }
     public SubContractor Vendor { get; set; }
+    public int WorkScopeId { get; set; }
+    public WorkScope WorkScope { get; set; }
+
     public string OrderNumber { get; set; }
 }

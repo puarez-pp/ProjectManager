@@ -1,0 +1,180 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Projects.Queries.GetPosition
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+@inject ICurrentUserService currentUserService
+
+@model GetPositiontVm
+
+@{
+    ViewData["Title"] = "Podgląd";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var user = currentUserService.UserId;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+<partial 
+    name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybrany komentarz?"
+    })" 
+/>
+
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+        <div class="mt-2">
+            <ul class="ul-style">
+                <li>
+                    <p class="mt-3">Nazwa projektu: <b>@Model.Project.Name</b></p>
+                </li>
+                <li>
+                    <p>Nazwa klienta: <b>@Model.Project.ClientName</b></p>
+                </li>
+                <li>
+                    <p >Typ projektu: <b>@Model.Project.ProjectType</b></p>
+                </li>
+                <li>
+                    <p>Branża: <b>@Model.DivisionType.GetDisplayName() </b></p>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<a class="edit-link mt-2" href='/Project/Project?Id=@Model.Project.Id'>
+    <i class="fas fa-solid fa-circle-chevron-left"></i>Powrót do projektu
+</a>
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+        <div class="mt-2">
+            <a href="/Post/AddPost?Id=@Model.Position.Id&&Division=@Model.DivisionType&&Position=@Model.Position.Name" class="btn btn-primary mb-1" role="button">
+                <i class="fas fa-regular fa-comment"></i>Dodaj komentarz
+            </a>
+        </div>
+         <h6 class="mt-2"><b>Komentarze</b></h6>
+         <table id="posts" class="table table-bordered table-hover mt-1">
+            <thead>
+                <tr> 
+                    <th class="desktop">Data utworzenia</th>
+                    <th class="desktop">Utworzył</th>
+                    <th class="desktop">Treść</th>
+                    <th class="desktop"></th>
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach (var post in Model.Position.PositionPosts)
+                    {
+                        <tr>
+                           <td>
+
+                               @post.CreatedDate
+                           </td>
+                           <td>
+                               @post.User
+                           </td>
+                           <td>
+                                @post.Content
+                           </td>
+                           <td>
+                               @if(!Model.Position.IsCompleted && post.UserId==user)
+                               {
+@*                                   <a class="btn btn-success btn-sm" role="button" href="/Project/EditPost?Id=@post.Id">
+                                       <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                                   </a>*@
+
+                                   <button class="btn btn-danger btn-sm" onclick="deletePost('@post.Id', this)">    
+                                       <i class="fas fa-solid fa-trash-can"></i>Usuń
+                                   </button>   
+                               }       
+                           </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+@section Scripts {
+<partial name="Scripts/_DataTablesScripts" />
+
+<script>
+    var selectedRow;
+    var selectedPostId = 0;
+    var posts;
+
+    $(document).ready(function () {
+        project = $('#project').DataTable({
+            info: false,
+            columnDefs: [
+                    ],
+            paging: true,
+            ordering: true,
+            info: true,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+
+        posts = $('#posts').DataTable({
+            info: true,
+            columnDefs: [
+                    ],
+            paging: true,
+            ordering: true,
+            info: true,
+            responsive: true,
+            autoWidth: false,
+            lengthChange: true,
+            language: {
+                url: `/lib/datatables/lang/${'@locale'}.json`
+            }
+        });
+    });
+
+        function deletePost(id, btn) {
+        selectedRow = btn.parentNode.parentNode;
+        selectedPostId = id;
+        $('#modal-confirm-delete').modal('show');
+    }
+
+    $('#modal-confirm-delete-btn').on('click', function (e) {
+
+        $('#modal-confirm-delete').modal('hide');
+
+        $.ajax({
+            type: "POST",
+            url: "/Post/DeletePost",
+            data: {
+                id: selectedPostId
+            },
+            success: function (data) {
+                if (data.success) {
+                    posts.rows(selectedRow).remove().draw();
+                    toastr.success('Komentarz został pomyślnie usunięty.')
+                } 
+                else 
+                    toastr.error('Błąd. ' + data.message);
+            },
+            error: function (data) {
+                toastr.error('Błąd. Nie udało się usunąć wybranej pozycji. Spróbuj ponownie lub skontaktuj sie z administratorem.');
+            },
+            dataType: "json"
+        });
+    });
+</script>
+}  

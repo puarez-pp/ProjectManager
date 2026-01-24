@@ -6,6 +6,7 @@ public class FinanceService : IFinanceService
 {
     private const int DecimalPlaces = 2;
     private const MidpointRounding RoundingStrategy = MidpointRounding.AwayFromZero;
+    private decimal _amount;
 
     private decimal RoundAmountTo2Places(decimal amount) => Math.Round(amount, DecimalPlaces, RoundingStrategy);
     public decimal ApplyDiscount(decimal amount, decimal discountRate)
@@ -55,5 +56,35 @@ public class FinanceService : IFinanceService
     public decimal CalculateDifferenceAmounts(decimal amount1, decimal amount2)
     {
         return RoundAmountTo2Places(amount1 - amount2);
+    }
+
+    public decimal CalculatePercentage(decimal amount, decimal rate)
+    {
+        return RoundAmountTo2Places(amount * rate / 100);
+    }
+
+    public decimal CalculateMarginRate(decimal netAmount, decimal grossAmount)
+    {
+        return RoundAmountTo2Places((grossAmount-netAmount)/netAmount);
+    }
+
+    public decimal CalculatePercentageOfRates(decimal amount, IEnumerable<decimal> rates)
+    {
+        _amount = 0;
+        foreach (var rate in rates)
+        {
+            _amount += rate*amount;
+        }
+        return RoundAmountTo2Places(_amount);
+    }
+
+    public decimal CalculatePercentageOfAmounts(decimal rate, IEnumerable<decimal> amounts)
+    {
+        _amount = 0;
+        foreach (var amount in amounts)
+        {
+            _amount += rate * amount;
+        }
+        return RoundAmountTo2Places(_amount);
     }
 }

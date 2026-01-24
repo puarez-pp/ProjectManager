@@ -1,0 +1,111 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Projects.Queries.GetEditPosition
+@using ProjectManager.Application.Projects.Queries.GetProject
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+
+@model EditPositionVm
+
+@{
+    ViewData["Title"] = "Edycja projektu";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DataTablesStyles" />
+<link rel="stylesheet" href="~/lib/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css" />
+}
+
+<div class="card card-primary card-border-top mt-2">
+    <div class="card-body">
+        <div class="mt-2">
+            <ul class="ul-style">
+                <li>
+                    <p class="mt-3">Nazwa projektu: <b>@Model.Project.Name</b></p>
+                </li>
+                <li>
+                    <p>Nazwa klienta: <b>@Model.Project.ClientName</b></p>
+                </li>
+                <li>
+                    <p >Typ projektu: <b>@Model.Project.ProjectType</b></p>
+                </li>
+                <li>
+                    <p>Branża: <b> @Model.DivisionType.GetDisplayName()</b></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("EditPosition", "Project"))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Position.Id)
+        @Html.HiddenFor(x => x.Project.Id)
+        
+        @for (int i = 0; i < Model.AvaiableSubContractors.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvaiableSubContractors[i].Id)
+            @Html.HiddenFor(x => x.AvaiableSubContractors[i].Name)
+        }
+        <div class="card-body">
+
+            <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Position.SubContractorId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Position.SubContractorId", @Model.AvaiableSubContractors.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class="form-control select2-SubContractorId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Position.SubContractorId)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Position.Comment)
+                @Html.TextAreaFor(x => x.Position.Comment, new { @class = "form-control", placeholder="Wprowadź komentarz"})
+                @Html.ValidationMessageFor(x => x.Position.Comment)
+            </div>
+        </div>
+
+        <div class="form-check">
+            @Html.CheckBoxFor(x=>x.Position.IsCompleted)
+            @Html.Label("Zakończony", null, new { @class = "form-check-label font-weight-bold" })
+        </div>
+
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_EditorScripts" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DataTablesScripts" />
+
+
+    <script>
+
+        $(document).ready(function() {
+            
+            $('.select2-SubContractorId').select2({
+                theme: 'bootstrap-5'
+            });
+
+        });
+    </script>
+}

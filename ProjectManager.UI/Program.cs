@@ -1,14 +1,16 @@
 using AspNetCore.ReCaptcha;
 using DataTables.AspNet.AspNetCore;
-using ProjectManager.Application;
-using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Infrastructure;
-using ProjectManager.UI.Extensions;
-using ProjectManager.UI.Middlewares;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using NLog.Web;
+using ProjectManager.Application;
+using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Settlements.Commands.AddSettlement;
+using ProjectManager.Infrastructure;
 using ProjectManager.Infrastructure.Services.SignalR;
+using ProjectManager.UI.Extensions;
+using ProjectManager.UI.Middlewares;
 
 
 internal class Program
@@ -31,6 +33,7 @@ internal class Program
         builder.Services.AddInfrastructure(builder.Configuration);
 
         builder.Services.RegisterDataTables();
+
 
         builder.Services.DefineViewLocation(builder.Configuration);
 

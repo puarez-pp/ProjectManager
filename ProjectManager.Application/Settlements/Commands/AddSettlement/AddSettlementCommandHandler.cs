@@ -67,6 +67,7 @@ public class AddSettlementCommandHandler : IRequestHandler<AddSettlementCommand,
             {
                 SettlementId = _createdSettlementId,
                 Description = workScopePos.First().WorkScopeTemplate.Description,
+                WorkScopeType = workScopePos.First().WorkScopeTemplate.WorkScopeType,
                 Order = workScopePos.First().WorkScopeTemplate.Order,
             };
             await _context.WorkScopes.AddAsync(workScope, cancellationToken);

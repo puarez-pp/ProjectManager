@@ -22,6 +22,12 @@ class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             .HasForeignKey(x => x.SettlementId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder
+           .HasOne(x => x.WorkScope)
+           .WithMany(x => x.Invoices)
+           .HasForeignKey(x => x.WorkScopeId)
+           .OnDelete(DeleteBehavior.Restrict);
+
         builder.Property(x => x.Number)
             .IsRequired()
             .HasMaxLength(100);

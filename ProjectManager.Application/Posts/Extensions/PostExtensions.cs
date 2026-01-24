@@ -39,7 +39,6 @@ public static class PostExtensions
             Title = post.Title,
             Content = post.Content,
             CreatedDate = post.CreatedDate,
-            UserId = post.UserId,
             User = post.User.ToUserDto().FullName
         };
     }
@@ -56,7 +55,6 @@ public static class PostExtensions
             PostId = post.PostId,
             Content = post.Content,
             CreatedDate = post.CreatedDate,
-            UserId = post.UserId,
             User = post.User.ToUserDto().FullName
         };
     }

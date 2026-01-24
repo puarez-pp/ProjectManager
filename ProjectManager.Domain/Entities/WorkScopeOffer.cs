@@ -8,6 +8,7 @@ public class WorkScopeOffer
     public int WorkScopeId { get; set; }
     public WorkScope WorkScope { get; set; }
     public string Description { get; set; }
+    public string Comment { get; set; }
     public int Order { get; set; }
     public bool IsUsed { get; set; }
     public UnitType UnitType { get; set; }

@@ -27,6 +27,10 @@ class WorkScopeOfferConfiguration : IEntityTypeConfiguration<WorkScopeOffer>
             .IsRequired()
             .HasMaxLength(200);
 
+        builder.Property(x => x.Comment)
+            .IsRequired()
+            .HasMaxLength(200);
+
         builder.Property(x => x.IsUsed)
             .HasDefaultValue(true);
 

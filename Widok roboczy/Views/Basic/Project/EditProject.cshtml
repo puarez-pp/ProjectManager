@@ -1,0 +1,144 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Projects.Queries.GetEditProject
+@using ProjectManager.Domain.Enums
+
+@model EditProjectVm
+
+@{
+    ViewData["Title"] = "Edycja projektu";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+}
+
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("EditProject", "Project"))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.Project.Id)
+
+        @for (int i = 0; i < Model.AvailableManagers.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvailableManagers[i].Id)
+            @Html.HiddenFor(x => x.AvailableManagers[i].FullName)
+        }
+
+        @for (int i = 0; i < Model.AvaiableClients.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.AvaiableClients[i].Id)
+            @Html.HiddenFor(x => x.AvaiableClients[i].Name)
+        }
+
+        <div class="card-body">
+            <div class="form-group"> 
+                @Html.LabelFor(x => x.Project.ProjectType)
+                <div class="select2-blue">
+                    @Html.DropDownList("Project.ProjectType", Html.GetEnumSelectList<ProjectType>(), null, htmlAttributes: new { @class="form-control select2-ProjectType", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.ProjectType)
+                </div>
+            </div>
+
+            <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Project.ClientId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Project.ClientId", @Model.AvaiableClients.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class="form-control select2-ClientId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.ClientId)
+                </div>
+            </div>
+
+            <div class="form-group"> 
+
+                @Html.LabelFor(x => x.Project.UserPMId)
+
+                <div class="select2-blue">
+
+                    @Html.DropDownList("Project.UserPMId", @Model.AvailableManagers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-UserPMId", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.UserPMId)
+                </div>
+            </div>
+
+             <div class="form-group">
+                @Html.LabelFor(x => x.Project.Number)
+                @Html.TextBoxFor(x => x.Project.Number, new { @class = "form-control", placeholder="Wprowadź numer projektu"})
+                @Html.ValidationMessageFor(x => x.Project.Number)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Project.Name)
+                @Html.TextBoxFor(x => x.Project.Name, new { @class = "form-control", placeholder="Wprowadź nazwę projektu"})
+                @Html.ValidationMessageFor(x => x.Project.Name)
+            </div> 
+
+            <div class="form-group"> 
+                @Html.LabelFor(x => x.Project.ProjectStatus)
+                <div class="select2-blue">
+                    @Html.DropDownList("Project.ProjectStatus", Html.GetEnumSelectList<ProjectStatus>(), null, htmlAttributes: new { @class="form-control select2-ProjectStatus", style="width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.ProjectStatus)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Project.Comment)
+                @Html.TextAreaFor(x => x.Project.Comment, new { @class = "form-control", placeholder="Wprowadź uwagę do  projektu"})
+                @Html.ValidationMessageFor(x => x.Project.Comment)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Project.Sharepoint)
+                @Html.TextBoxFor(x => x.Project.Sharepoint, new { @class = "form-control", placeholder="Wklej link do Sharepoint"})
+                @Html.ValidationMessageFor(x => x.Project.Sharepoint)
+            </div> 
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_EditorScripts" />
+    <partial name="Scripts/_SelectScripts" />
+
+
+    <script>
+
+        $(document).ready(function() {
+            
+            $('.select2-ProjectType').select2({
+                theme: 'bootstrap-5'
+            });
+
+             $('.select2-ProjectStatus').select2({
+                theme: 'bootstrap-5'
+            });
+
+            $('.select2-ClientId').select2({
+                theme: 'bootstrap-5'
+            });
+
+            $('.select2-UserPMId').select2({
+                theme: 'bootstrap-5'
+            });
+
+        });
+    </script>
+}
