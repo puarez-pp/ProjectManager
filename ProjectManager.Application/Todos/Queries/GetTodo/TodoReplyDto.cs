@@ -9,5 +9,5 @@ public class TodoReplyDto
     public string UserId { get; set; }
     public string User { get; set; }
     public int TodoId { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

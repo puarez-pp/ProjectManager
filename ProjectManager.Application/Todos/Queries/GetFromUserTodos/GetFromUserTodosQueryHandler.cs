@@ -28,7 +28,7 @@ namespace ProjectManager.Application.Todos.Queries.GetFromUserTodos
             .ThenInclude(x => x.Employee)
             .AsNoTracking()
             .Where(x => x.UserFromId == _currentUser.UserId)
-            .OrderByDescending(x => x.CreatedDate)
+            .OrderByDescending(x => x.CreatedAt)
             .Select(x => x.ToTodoDto())
             .ToListAsync();
 

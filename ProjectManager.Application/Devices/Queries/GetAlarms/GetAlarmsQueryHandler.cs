@@ -20,15 +20,14 @@ public class GetAlarmsQueryHandler : IRequestHandler<GetAlarmsQuery, GetAlarmsVm
         var device = await _context
             .Devices
             .AsNoTracking()
-            .Include(x => x.Alarms)
-            .Where(x => x.Id == request.Id)
-            .ToListAsync();
-
+            .Include(x => x.LogAlarms)
+            .FirstOrDefaultAsync(x => x.Id == request.Id);
+ 
         var alarms = new GetAlarmsVm
         {
-            Plant = device.FirstOrDefault()?.Plant.ToPlantDto(),
-            Device = device.FirstOrDefault()?.ToDeviceDto(),
-            Alarms = device.FirstOrDefault()?.Alarms.Select(x => x.ToAlarmDto()).ToList()
+            Plant = device.Plant.ToPlantDto(),
+            Device = device.ToDeviceDto(),
+            Alarms = device.LogAlarms.Select(x=>x.ToAlarmDto()).ToList(),
         };
         return alarms;
     }

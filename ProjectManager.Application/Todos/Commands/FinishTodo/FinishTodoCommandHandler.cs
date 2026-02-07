@@ -45,7 +45,7 @@ namespace ProjectManager.Application.Todos.Commands.FinishTodo
                     Content = $"Zadanie zostało zakończone przez użytkownika {user.FirstName} {user.LastName}.",
                     UserId = _currentUser.UserId,
                     TodoId = request.Id,
-                    CreatedDate = _dateTime.Now
+                    CreatedAt = _dateTime.Now
                 };
                 await _context.TodoPosts.AddAsync(post);
                 await _context.SaveChangesAsync(cancellationToken);

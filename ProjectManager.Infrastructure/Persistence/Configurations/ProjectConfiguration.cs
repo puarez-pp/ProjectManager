@@ -36,6 +36,18 @@ class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
+            .HasOne(x => x.DesignEng)
+            .WithMany(x => x.DesignEng)
+            .HasForeignKey(x => x.DesignEngId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasOne(x => x.ElectricEng)
+            .WithMany(x => x.ElectricEng)
+            .HasForeignKey(x => x.ElectricEngId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
             .HasOne(x => x.UserUpdator)
             .WithMany(x => x.ProjectsUpdator)
             .HasForeignKey(x => x.UserUpdatorId)

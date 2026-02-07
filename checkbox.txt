@@ -1,0 +1,56 @@
+jak wywowałąc akcję post w ajax po zdarzeniu kliknięcia na checkbox:
+wartość zmiennej IsCOmpleted zależy od stanu chcecbox
+                                        <div class="form-group mt-0">
+                                            <div class="form-check form-check-inline form-switch mt-0">
+                                                <div class="custom-control custom-switch">
+                                                    <input asp-for="@pos.IsCompleted"
+                                                           class="form-check-input" />
+                                                </div>
+                                            </div>
+                                        
+
+
+<input asp-for="pos.IsCompleted"
+       class="form-check-input"
+       data-pos-id="@pos.Id"
+       id="isCompleted_@pos.Id" />
+
+
+$(document).on('change', '.form-check-input', function () {
+    const isCompleted = $(this).is(':checked');
+    const posId = $(this).data('pos-id');
+
+    $.ajax({
+        url: '/YourController/UpdateCompletion',
+        type: 'POST',
+        data: {
+            id: posId,
+            isCompleted: isCompleted
+        },
+        success: function (response) {
+            console.log('Zaktualizowano status:', response);
+        },
+        error: function () {
+            console.error('Błąd podczas aktualizacji statusu');
+        }
+    });
+});
+
+[HttpPost]
+public IActionResult UpdateCompletion(int id, bool isCompleted)
+{
+    var pos = _context.Positions.FirstOrDefault(x => x.Id == id);
+    if (pos == null)
+        return NotFound();
+
+    pos.IsCompleted = isCompleted;
+    _context.SaveChanges();
+
+    return Json(new { success = true });
+}
+
+                                            <button class="btn btn-secondary btn-sm load-posts"
+                                                    data-position="@pos.Id"
+                                                    data-target="#@postsId">
+                                                <i class="fas fa-solid fa-circle-plus"></i>Rozwiń
+                                            </button>

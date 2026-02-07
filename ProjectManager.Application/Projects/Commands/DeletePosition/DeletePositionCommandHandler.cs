@@ -22,29 +22,24 @@ public class DeletePositionCommandHandler : IRequestHandler<DeletePositionComman
     public async Task<Unit> Handle(DeletePositionCommand request, CancellationToken cancellationToken)
     {
         var position = await _context
-            .DivisionPositions
+            .ProjectScopePositions
+            .AsNoTracking ()
+            .Include(x=>x.ProjectScope)
+            .ThenInclude(x=>x.Project)
             .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-        var project = await _context
-            .Projects
-            .Include(x => x.Divisions)
-            .ThenInclude(x => x.Positions)
-            .Where(x => x.Divisions.Any(y => y.Positions.Any(c => c.Id == request.Id)))
-            .FirstOrDefaultAsync();
-
-        if (project != null)
+        if (position.ProjectScope.Project != null)
         {
-            project.EditDate = _dateTimeService.Now;
-            project.UserUpdatorId = _currentUser.UserId;
-            await _context.SaveChangesAsync(cancellationToken);
+            position.ProjectScope.Project.EditAt = _dateTimeService.Now;
+            position.ProjectScope.Project.UserUpdatorId = _currentUser.UserId;
         }
 
         if (position != null)
         {
-            _context.DivisionPositions.Remove(position);
-            await _context.SaveChangesAsync(cancellationToken);
+            _context.PositionPosts.RemoveRange(_context.PositionPosts.Where(x => x.Id == request.Id));
+            _context.ProjectScopePositions.Remove(position);
         }
-
+        await _context.SaveChangesAsync();
 
         return Unit.Value;
             

@@ -1,4 +1,4 @@
-﻿using ProjectManager.Domain.Enums;
+﻿using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
 
 namespace ProjectManager.Application.Users.Queries.GetUser;
 
@@ -10,7 +10,6 @@ public  class UserDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string FullName { get; set; }
-    public string Position { get; set; }
-    public string Manager { get; set; }
+    public EmployeeDto Employee { get; set; }
     public DateTime RegisterDateTime { get; set; }
 }

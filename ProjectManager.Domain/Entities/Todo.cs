@@ -8,7 +8,7 @@ public class Todo
     public string Title { get; set; }
     public string Content { get; set; }
     public bool IsCompleted { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
     public DateTime? FinishDate { get; set; }
     public DateTime? CompletionDate { get; set; }
     public string UserFromId { get; set; }

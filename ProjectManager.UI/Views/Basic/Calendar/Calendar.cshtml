@@ -67,8 +67,7 @@
         $.ajax({
             type: "GET",
             url: "/Calendar/GetEmployeeEvents",
-            success: function (data) {
-                
+            success: function (data) {        
                 $.each(data, function (i, v) {
 
                     events.push({
@@ -80,19 +79,14 @@
                         id: v.id,
                         userId: v.userId
                     });
-
                 });
-
                 renderEvents(events);
-
-
             },
             error: function (data) {
                 toastr.error('Błąd. Nie udało się wygenerować kalendarza. Spróbuj ponownie lub skontaktuj się z administratorem.');
             },
             dataType: "json"
         });
-
     }
 
     function renderEvents(events) {

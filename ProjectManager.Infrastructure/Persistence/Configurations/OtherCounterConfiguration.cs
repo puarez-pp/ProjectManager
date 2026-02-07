@@ -11,7 +11,7 @@ class OtherCounterConfiguration : IEntityTypeConfiguration<OtherCounter>
         builder.ToTable("OtherCounters");
         builder
            .HasOne(x => x.Device)
-           .WithMany(x => x.OtherCounters)
+           .WithMany(x => x.LogOtherCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
     }

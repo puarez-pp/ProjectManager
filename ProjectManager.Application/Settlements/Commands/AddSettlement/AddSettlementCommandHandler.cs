@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
+using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Settlements.Commands.AddSettlement;
-public class AddSettlementCommandHandler : IRequestHandler<AddSettlementCommand, int>
+public class AddSettlementCommandHandler : IRequestHandler<AddSettlementCommand>
 {
     private readonly IApplicationDbContext _context;
     private readonly IDateTimeService _dateTimeService;
     private readonly ICurrentUserService _currentUser;
-    private int _createdSettlementId;
 
     public AddSettlementCommandHandler(
         IApplicationDbContext context,
@@ -21,78 +21,88 @@ public class AddSettlementCommandHandler : IRequestHandler<AddSettlementCommand,
         _currentUser = currentUser;
     }
 
-    public async Task<int> Handle(AddSettlementCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddSettlementCommand request, CancellationToken cancellationToken)
     {
-        var projectType = _context
+        var projectType = await _context
             .Projects
             .Where(p => p.Id == request.Id).Select(x => x.ProjectType)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
 
+        // 1. Pobranie szablonów
+        var templates = await _context
+            .WorkScopeTemplates
+            .Include(x => x.WorkScopePositions)
+            .Where(x => x.ProjectType == projectType)
+            .OrderBy(x => x.Order)
+            .ToListAsync();
+
+        if (!templates.Any())
+            throw new InvalidOperationException("Brak szablonów dla podanego typu projektu.");
+
+        // 2. Utworzenie Settlement
         var settlement = new Settlement
         {
             ProjectId = request.Id,
             UserId = _currentUser.UserId,
-            CreatedDate = _dateTimeService.Now,
+            CreatedAt = _dateTimeService.Now,
+            Assumption = new Assumption
+            {
+                MarginGen = request.MarginGen,
+                MarginInstall = request.MarginInstall,
+                Discount = request.Discount,
+                Maturity = request.Maturity,
+                CompanyCost = request.CompanyCost,
+                CompanyGuarantee = request.CompanyGuarantee,
+                Insurance = request.Insurance,
+            }
         };
-        await _context.Settlements.AddAsync(settlement, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
 
-        _createdSettlementId = _context.Settlements.Where(s => s.ProjectId == request.Id).Select(x => x.Id).FirstOrDefault();
-        settlement.Assumption = new Assumption
-        {
-            SettlementId = _createdSettlementId,
-            MarginGen = request.MarginGen,
-            MarginInstall = request.MarginInstall,
-            Discount = request.Discount,
-            Maturity = request.Maturity,
-            CompanyCost = request.CompanyCost,
-            CompanyGuarantee = request.CompanyGuarantee,
-            Insurance = request.Insurance,
-        };
-        await _context.Assumptions.AddAsync(settlement.Assumption, cancellationToken);
-
-        var workScopePositions = await _context
-                    .WorkScopeTemplates
-                    .AsNoTracking()
-                    .OrderBy(x => x.Order)
-                    .Where(x => x.ProjectType == projectType)
-                    .Include(x => x.WorkScopePositions.OrderBy(x=>x.Order))
-                    .Select(x => x.WorkScopePositions.ToList())
-                    .ToListAsync(cancellationToken);
-
-
-        foreach (var workScopePos in workScopePositions)
+        // 3. Tworzenie WorkScope na podstawie szablonów
+        foreach (var template in templates)
         {
             var workScope = new WorkScope
             {
-                SettlementId = _createdSettlementId,
-                Description = workScopePos.First().WorkScopeTemplate.Description,
-                WorkScopeType = workScopePos.First().WorkScopeTemplate.WorkScopeType,
-                Order = workScopePos.First().WorkScopeTemplate.Order,
+                WorkScopeType = template.WorkScopeType,
+                Description = template.Description,
+                Order = template.Order
             };
-            await _context.WorkScopes.AddAsync(workScope, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-            foreach (var position in workScopePos)
+
+            // 4. Tworzenie pozycji WorkScope (Offer/Cost)
+            foreach (var pos in template.WorkScopePositions.OrderBy(p => p.Order))
             {
-                var workScopeOffer = new WorkScopeOffer
+                workScope.WorkScopeOffers.Add(new WorkScopeOffer
                 {
-                    WorkScopeId = workScope.Id,
-                    Description = position.Description,
-                    Order = position.Order,
-                };
-                await _context.WorkScopeOffers.AddAsync(workScopeOffer, cancellationToken);
+                    Description = pos.Description,
+                    Comment = string.Empty,
+                    Order = pos.Order,
+                    IsUsed = true,
+                    UnitType = UnitType.Set, 
+                    Quantity = 1,
+                    NetAmount = 0,
+                    EuroNetAmount = 0,
+                    EuroRate = 0,
+                    SubContractorId = 1
+                });
 
-                var workScopeCost = new WorkScopeCost
+                workScope.WorkScopeCosts.Add(new WorkScopeCost
                 {
-                    WorkScopeId = workScope.Id,
-                    Description = position.Description,
-                    Order = position.Order,
-                };
-                await _context.WorkScopeCosts.AddAsync(workScopeCost, cancellationToken);
+                    Description = pos.Description,
+                    Order = pos.Order,
+                    CostStatusType = CostStatusType.Invoice,
+                    UnitType = UnitType.Set,
+                    Quantity = 1,
+                    NetAmount = 0,
+                    EuroNetAmount = 0,
+                    EuroRate = 0,
+                    SubContractorId = 1
+                });
             }
+            settlement.WorkScopes.Add(workScope);
         }
-        await _context.SaveChangesAsync(cancellationToken);
-        return _createdSettlementId;
+        // 5. Zapis do bazy
+        _context.Settlements.Add(settlement);
+        await _context.SaveChangesAsync();
+        return Unit.Value;
     }
-
 }
+

@@ -11,7 +11,7 @@ class AlarmConfiguration : IEntityTypeConfiguration<Alarm>
         builder.ToTable("Alarms");
         builder
            .HasOne(x => x.Device)
-           .WithMany(x => x.Alarms)
+           .WithMany(x => x.LogAlarms)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
         builder.Property(x => x.Description)

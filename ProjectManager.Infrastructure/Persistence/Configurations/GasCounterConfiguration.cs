@@ -11,7 +11,7 @@ class GasCounterConfiguration : IEntityTypeConfiguration<GasCounter>
         builder.ToTable("GasCounters");
         builder
            .HasOne(x => x.Device)
-           .WithMany(x => x.GasCounters)
+           .WithMany(x => x.LogGasCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
     }

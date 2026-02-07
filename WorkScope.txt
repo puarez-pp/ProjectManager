@@ -1,0 +1,60 @@
+public class WorkScopeDto
+{
+    public int Id { get; set; }
+    public string Description { get; set; }
+    public WorkScopeType WorkScopeType { get; set; }
+    public int Order { get; set; }
+    public decimal Total { get; set; }
+    public List<WorkScopeOfferDto> Offers { get; set; } = new();
+}
+
+public class WorkScopeOfferDto
+{
+    public int Id { get; set; }
+    public string Description { get; set; }
+    public int Order { get; set; }
+    public bool IsUsed { get; set; }
+    public UnitType UnitType { get; set; }
+    public int Quantity { get; set; }
+    public decimal NetAmount { get; set; }
+    public decimal Total { get; set; }
+    public string SubContractor { get; set; }
+}
+
+@model IEnumerable<WorkScopeDto>
+
+@foreach (var scope in Model.OrderBy(x => x.Order))
+{
+    <h3 class="mt-4">
+        @scope.Description (@scope.WorkScopeType) — Razem: @scope.Total
+    </h3>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Opis</th>
+                <th>Ilość</th>
+                <th>Jednostka</th>
+                <th>Netto</th>
+                <th>Razem</th>
+                <th>Podwykonawca</th>
+                <th>Użyte?</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var offer in scope.Offers.OrderBy(o => o.Order))
+        {
+            <tr>
+                <td>@offer.Description</td>
+                <td>@offer.Quantity</td>
+                <td>@offer.UnitType</td>
+                <td>@offer.NetAmount</td>
+                <td>@offer.Total</td>
+                <td>@offer.SubContractor</td>
+                <td>@offer.IsUsed</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

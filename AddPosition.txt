@@ -1,0 +1,328 @@
+mamy:
+widok główny wywoływany akcją:
+ public async Task<IActionResult> Project(int id)
+ {
+     return View(await Mediator.Send(new GetProjectQuery { Id = id}));
+ }
+
+Z widoku głównego otwieramy modala do dodawania nowej pozycji.
+KIedy zamykamy modala na widoku gównym visual studio wywala błąd null reference. Zauważyłem że w adresie URL widoku głównego pojawia się:
+https://localhost:7182/Project/Project?ProjectScopeId=23&Description=Dostawa+do+klienta
+
+Gdzie ProjectScopeId=23&Description=Dostawa+do+klienta to serializowana wartość z formualrza modala.
+Powinno być:
+https://localhost:7182/Project/Project?3
+
+Jak to naprawić
+
+MOdal:
+@using ProjectManager.Application.Projects.Commands.AddPosition
+
+@model AddPositionCommand
+
+
+
+<div class="modal" id="modal-add-position">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-position-form">
+                <input type="hidden" asp-for="ProjectScopeId" />
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodawanie nowej pozycji</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"> 
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Description)
+                        @Html.TextBoxFor(x => x.Description, new { @class = "form-control", placeholder = "Wprowadź nazwę" })
+                        @Html.ValidationMessageFor(x => x.Description)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button id="modal-add-position-btn" type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+Widok główny:
+
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Projects.Commands.AddPosition
+@using ProjectManager.Application.Projects.Queries.GetProject
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+
+@model GetProjectVm
+
+@{
+    ViewData["Title"] = "Przegląd projektu";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var completed = Model.Project.ProjectStatus == ProjectStatus.Completed;
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+<input type="hidden" id="Id" name="Id" />
+
+<div class="card card-primary card-border-top">
+    <div class="card-body">
+        <div class="mb-3">
+            @if (roles)
+            {
+                <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-primary mx-2 " role="button">
+                    <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                </a>
+                <button class="btn btn-danger mx-2" onclick="finishProject('@Model.Project.Id')">
+                    <i class="fas fa-solid fa-pen-to-square"></i>Zakończ
+                </button>
+                <a class="btn btn-primary mx-2" role="button">
+                    <i class="fas fa-regular fa-coins"></i>Rozliczenie
+                </a>
+
+                <a href="/Todo/Todos?id=@Model.Project.Id" class="btn btn-success mx-2"role="button">
+                    <i class="fas fa-solid fa-list-check"></i>Zadania
+                </a>
+                <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-success mx-2"         role="button">
+                    <i class="fas fa-regular fa-comment"></i>Komentarze
+                </a>
+            }
+
+        </div>
+
+
+        <p class="mt-2">Status: <b>@Model.Project.ProjectStatus.GetDisplayName()</b></p>
+        <ul class="ul-style">
+            <li>
+                <h3 class="mt-2">@Model.Project.Name</h3> 
+            </li>
+            <li>
+                <p class="mt-3">Kategoria: <b>@Model.Project.ProjectType</b></p>
+            </li>
+            <li>
+                <p>Klient: <b>@Model.Project.Client</b></p>
+            </li>
+            <li>
+                <p >Utworzył: <b>@Model.Project.User.FullName</b>, Data utworzenia: <b>@Model.Project.CreatedAt</b></p>
+            </li>
+            <li>
+                <p>Zmodyfikował: <b>@Model.Project.UserUpd.FullName</b>, Data modyfikacji: <b>@Model.Project.EditdAt</b></p>
+            </li>
+            <li>
+                 <p>Kierownik projektu: <b>@Model.Project.ProjectManager.FullName</b></p>
+            </li>
+            <li>
+                <p>Link do Sharepoint: <b><a class="edit-link" href=@Model.Project.Sharepoint target="_blank"></a></b></p>
+            </li>
+            <li>
+                <p><b>Uwagi:</b></p>
+
+            </li>
+            <li>
+                <p>@Model.Project.Comment</p>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+<div class="m-2">
+    <h4>Realizacja projektu</h4>
+</div>
+<div id="modal-container"></div>
+
+<div class="accordion" id="scopesAccordion">
+
+    @foreach (var scope in Model.Project.Scopes)
+    {
+        var scopeId = $"scope-{scope.Id}";
+
+        <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="heading-@scopeId">
+                <button class="accordion-button collapsed" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse-@scopeId">
+                    @scope.Description
+                </button>
+            </h2>
+
+            <div id="collapse-@scopeId" class="accordion-collapse collapse">
+
+                <div class="accordion-body">
+
+                    <button class="btn btn-primary btn-sm mb-2 open-add-position-modal"
+                            data-scope="@scope.Id">
+                        <i class="fas fa-solid fa-circle-plus"></i>Dodaj pozycję
+                    </button>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Zakończony</th>
+                                <th>Opis</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var pos in scope.Positions)
+                            {
+                                var postsId = $"posts-{pos.Id}";
+                                var isCompletedCb = $"isCompletedCb-{pos.Id}";
+                                <tr>
+
+                                    <td>
+                                        <div class="form-group mt-0">
+                                            <div class="form-check form-check-inline form-switch mt-0">
+                                                <div class="custom-control custom-switch">
+                                                    <input asp-for="@pos.IsCompleted"
+                                                           class="form-check-input" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@pos.Description</td>
+
+                                    <td>
+                                        <div>
+                                            <button class="btn btn-success btn-sm open-edit-position-modal"
+                                                    data-id="@pos.Id">
+                                                <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                                            </button>
+
+                                            <button class="btn btn-secondary btn-sm load-posts"
+                                                    data-position="@pos.Id"
+                                                    data-target="#@postsId">
+                                                <i class="fas fa-solid fa-circle-plus"></i>Rozwiń
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="p-0">
+                                        <div id="@postsId" class="collapse">
+                                            <div class="posts-container">
+                                                @* @await Html.PartialAsync("_PositionsList", Model.Project.Scopes.Select(p=>p.Positions)) *@
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="Scripts/_DataTablesScripts" />
+<script>
+
+
+
+    $(".load-posts").on("click", function () {
+
+        var positionId = $(this).data("position");
+        console.log("Jestem nr " + positionId);
+        var target = $(this).data("target");
+        var container = $(target).find(".posts-container");
+                    
+
+        if ($(target).hasClass("show")) {
+            $(target).collapse("hide");
+            return;
+        }
+
+        $.ajax({
+            url: "/Project/PositionPosts",
+            type: "GET",
+            data: { id: positionId },
+            success: function (result) {
+                container.html(result);
+                $(target).collapse("show");
+                }
+            });
+    });
+        $(".open-add-position-modal").on("click", function () {
+            var scopeId = $(this).data("scope");
+                console.log("Jestem nr " + scopeId);
+            $.ajax({
+                url: "/Project/AddPosition",
+                type: "GET",
+                data: { id: scopeId },
+                success: function (result) {
+                    $("#modal-container").html(result);
+                    $("#modal-add-position").modal('show');
+                }
+            });
+        });
+
+            $(document).on("click", "#modal-add-position-btn", function (){
+            const errorMessage = "Błąd. Nie udało się dodać nowej pozycji.";
+            console.log($("#add-position-form").serialize());
+            $.ajax({
+                type: "POST",
+                url: "/Project/AddPosition",
+                data: $("#add-position-form").serialize(),
+                success: function (data) {
+                    if (data.success) {
+                            toastr.success('Dane zostały zaktualizowane.');
+                    } else {
+                        toastr.error(errorMessage);
+                    }
+                    $('#modal-add-position').modal('hide');
+                    console.log("#Id");
+                    refreshProject();
+                },
+                error: function () {
+                    toastr.error(errorMessage);
+                },
+                dataType: "json"
+            });
+        });
+
+        function reloadPositions() {
+        const projectScopeId = $("#ProjectScopeId").val(); // 
+
+        $.ajax({
+            url: '/Projects/GetPositions',
+            type: 'GET',
+            data: { id: projectScopeId },
+            success: function (html) {
+                $("#positions-container").html(html);
+            }
+        });
+    }
+</script>
+}
+
+        
+KOntroler:
+ public async Task<IActionResult> AddPosition(int id)
+ {
+     return PartialView("_AddPositionModal", new AddPositionCommand { ProjectScopeId = id});
+  
+ }
+
+
+ [HttpPost]
+ public async Task<IActionResult> AddPosition(AddPositionCommand command)
+ {
+     await Mediator.Send(command);
+
+     return Json(new
+     {
+         success = true
+     });
+ }

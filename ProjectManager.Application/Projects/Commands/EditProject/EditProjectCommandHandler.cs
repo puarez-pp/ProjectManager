@@ -1,11 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectManager.Application.Projects.Commands.EditProject;
 
@@ -38,9 +33,11 @@ public class EditProjectCommandHandler : IRequestHandler<EditProjectCommand>
             project.Status = request.ProjectStatus;
             project.ClientId = request.ClientId;
             project.Sharepoint = request.Sharepoint;
-            project.EditDate = _dateTime.Now;
+            project.EditAt = _dateTime.Now;
             project.UserUpdatorId = _currentUser.UserId;
             project.UserPMId = request.UserPMId;
+            project.DesignEngId = request.DesignEngId;
+            project.ElectricEngId = request.ElectricEngId;
             await _context.SaveChangesAsync(cancellationToken);
         }
         return Unit.Value;

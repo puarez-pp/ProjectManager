@@ -27,7 +27,7 @@ public class GetEditSettlementQueryHandler : IRequestHandler<GetEditSettlementQu
         var assumption = settlement.Settlement.Assumption;
         var vm = new EditSettlementVm
         {
-            Project = settlement.ToProjectDto(),
+            Project = new Projects.Queries.GetProject.ProjectDto(),
             Settlement = new EditSettlementCommand
             {
                 Id = settlement.Settlement.Id,

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.Application.Settlements.Commands.AddSettlement;
 
-public class AddSettlementCommand : IRequest<int>
+public class AddSettlementCommand : IRequest
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Pole 'GP - Agregat' jest wymagane")]

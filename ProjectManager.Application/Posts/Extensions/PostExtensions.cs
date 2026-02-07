@@ -1,6 +1,8 @@
-﻿using ProjectManager.Application.Posts.Queries.GetCommnents;
-using ProjectManager.Application.Projects.Queries.GetPosition;
+﻿using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
+using ProjectManager.Application.Posts.Queries.GetCommnents;
+using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Users.Extensions;
+using ProjectManager.Application.Users.Queries.GetUser;
 using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Projects.Extensions;
@@ -19,10 +21,19 @@ public static class PostExtensions
         {
             Id = post.Id,
             PositionId = post.PositionId,
-            Content = post.Content,
-            CreatedDate = post.CreatedDate,
+            Body = post.Body,
+            CreatedAt = post.CreatedAt,
             UserId = post.UserId,
-            User = post.User.ToUserDto().FullName
+            User = new UserDto
+            {
+                Id = post.User.Id,
+                Email = post.User.Email,
+                Phone = post.User.PhoneNumber,
+                FirstName = post.User.FirstName,
+                LastName = post.User.LastName,
+                FullName = post.User.FirstName + " " + post.User.LastName,
+                Employee = new EmployeeDto()
+            }
         };
     }
 
@@ -37,8 +48,8 @@ public static class PostExtensions
         {
             Id = post.Id,
             Title = post.Title,
-            Content = post.Content,
-            CreatedDate = post.CreatedDate,
+            Body = post.Body,
+            CreatedAt = post.CreatedAt,
             User = post.User.ToUserDto().FullName
         };
     }
@@ -53,8 +64,8 @@ public static class PostExtensions
         {
             Id = post.Id,
             PostId = post.PostId,
-            Content = post.Content,
-            CreatedDate = post.CreatedDate,
+            Content = post.Body,
+            CreatedAt = post.CreatedAt,
             User = post.User.ToUserDto().FullName
         };
     }

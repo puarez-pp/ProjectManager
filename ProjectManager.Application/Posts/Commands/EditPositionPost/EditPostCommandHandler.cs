@@ -17,7 +17,7 @@ public class EditPostCommandHandler : IRequestHandler<EditPostCommand>
         var post = await _context
             .PositionPosts
             .FirstOrDefaultAsync(x => x.Id == request.Id);
-        post.Content = request.Content;
+        post.Body = request.Body;
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
     }

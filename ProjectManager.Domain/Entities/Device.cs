@@ -12,13 +12,13 @@ public class Device
     public string Description { get; set; }
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
     public bool IsConfigured { get; set; }
-    public ICollection<Engine> Engines { get; set; } = new HashSet<Engine>();
-    public ICollection<GasCounter> GasCounters { get; set; } = new HashSet<GasCounter>();
-    public ICollection<HeatCounter> HeatCounters { get; set; } = new HashSet<HeatCounter>();
-    public ICollection<ElectricCounter> ElectricCounters { get; set; } = new HashSet<ElectricCounter>();
-    public ICollection<OtherCounter> OtherCounters { get; set; } = new HashSet<OtherCounter>();
+    public ICollection<Engine> LogEngines { get; set; } = new HashSet<Engine>();
+    public ICollection<GasCounter> LogGasCounters { get; set; } = new HashSet<GasCounter>();
+    public ICollection<HeatCounter> LogHeatCounters { get; set; } = new HashSet<HeatCounter>();
+    public ICollection<ElectricCounter> LogElectricCounters { get; set; } = new HashSet<ElectricCounter>();
+    public ICollection<OtherCounter> LogOtherCounters { get; set; } = new HashSet<OtherCounter>();
     public ICollection<DeviceHeader> DeviceHeaders { get; set; } = new HashSet<DeviceHeader>();
-    public ICollection<Alarm> Alarms { get; set; } = new HashSet<Alarm>();
+    public ICollection<Alarm> LogAlarms { get; set; } = new HashSet<Alarm>();
 }

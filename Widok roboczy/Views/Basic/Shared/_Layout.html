@@ -76,6 +76,61 @@
                     <div class="container-fluid">
                         <div class="row">
                             <h2>Tytuł</h2>
+                            <div class="card card-primary card-border-top">
+
+                                <div class="card-body">
+
+                                    <a class="btn btn-primary mb-3" role="button">
+                                        <i class="fas fa-solid fa-circle-plus"></i>Dodaj pracownika
+                                    </a>
+
+                                    <div class="form-group mt-0">
+                                        <div class="form-check form-check-inline form-switch mt-0">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="form-check-input" id="isActiveUserCb" onclick="refreshTable();" />
+                                                <label class="form-check-label custom-control-label" for="isActiveUserCb">
+                                                    Wszyscy
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <table id="employees" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Nazwa pracownika</th>
+                                                <th class="desktop">Email</th>
+                                                <th class="desktop">Numer telefonu</th>
+                                                <th class="desktop"></th>
+                                                <th class="desktop"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <a class="edit-link" href='/Employee/EditEmployee?employeeId=@employee.Id'>@employee.Name</a>
+                                                    </td>
+                                                    <td>
+                                                        @employee.Email
+                                                    </td>
+                                                    <td>
+                                                        @employee.PhoneNumber
+                                                    </td>
+                                                    <td>
+                                                        <span>1</span>
+                                                    </td>
+                                                    <td>
+
+                                                        <p>Nie pracuje</p>
+                                                    </td>
+                                                </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>

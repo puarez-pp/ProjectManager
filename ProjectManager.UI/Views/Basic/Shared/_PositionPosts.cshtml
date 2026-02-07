@@ -1,0 +1,32 @@
+@using ProjectManager.Application.Projects.Queries.GetProject
+@model List<PositionPostDto>
+
+<input type="hidden" id="position-id" value="@ViewBag.Id" />
+<div class="card card-primary card-border">
+    <div class="card-body">
+        <div class="d-flex justify-content-start mb-1">
+            <button class="btn btn-primary btn-sm open-add-post-modal"
+                data-position="@ViewBag.Id">
+                <i class="fas fa-solid fa-circle-plus"></i>Dodaj komentarz
+            </button>
+        </div>
+
+        @if (Model.Any())
+        {
+            <ul class="list-group mb-1">
+                @foreach (var post in Model)
+                {
+                    <li class="list-group-item">
+                        <strong>@post.User.FullName</strong>
+                        <span class="text-muted">(@post.CreatedAt.ToShortDateString())</span>
+                        <p>@post.Body</p>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">Brak komentarzy.</p>
+        }
+    </div>
+</div>

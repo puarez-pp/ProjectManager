@@ -1,13 +1,12 @@
-﻿
+﻿﻿
 @using System.Globalization
 @using ProjectManager.Application.Common.Extensions
 @using ProjectManager.Application.Common.Interfaces
-@using ProjectManager.Application.Projects.Queries.GetPosition
 @using ProjectManager.Application.Users.Extensions
 @using ProjectManager.Domain.Enums
 @inject ICurrentUserService currentUserService
 
-@model GetPositiontVm
+@model Position
 
 @{
     ViewData["Title"] = "Podgląd";
@@ -34,16 +33,16 @@
         <div class="mt-2">
             <ul class="ul-style">
                 <li>
-                    <p class="mt-3">Nazwa projektu: <b>@Model.Project.Name</b></p>
+                    <p class="mt-3">Nazwa projektu: <b>@Model</b></p>
                 </li>
                 <li>
-                    <p>Nazwa klienta: <b>@Model.Project.ClientName</b></p>
+                    <p>Nazwa klienta: <b>@Model</b></p>
                 </li>
                 <li>
-                    <p >Typ projektu: <b>@Model.Project.ProjectType</b></p>
+                    <p >Typ projektu: <b>@Model</b></p>
                 </li>
                 <li>
-                    <p>Branża: <b>@Model.DivisionType.GetDisplayName() </b></p>
+                    <p>Branża: <b>@Model</b></p>
                 </li>
             </ul>
 
@@ -51,13 +50,13 @@
     </div>
 </div>
 
-<a class="edit-link mt-2" href='/Project/Project?Id=@Model.Project.Id'>
+<a class="edit-link mt-2" href='/Project/Project?Id=1'>
     <i class="fas fa-solid fa-circle-chevron-left"></i>Powrót do projektu
 </a>
 <div class="card card-primary card-border-top mt-2">
     <div class="card-body">
         <div class="mt-2">
-            <a href="/Post/AddPost?Id=@Model.Position.Id&&Division=@Model.DivisionType&&Position=@Model.Position.Name" class="btn btn-primary mb-1" role="button">
+            @* <a href="/Post/AddPost?Id=@Model.Position.Id&&Division=@Model.DivisionType&&Position=@Model.Position.Name" class="btn btn-primary mb-1" role="button"> *@
                 <i class="fas fa-regular fa-comment"></i>Dodaj komentarz
             </a>
         </div>
@@ -72,27 +71,27 @@
                 </tr>
             </thead>
             <tbody>
-                    @foreach (var post in Model.Position.PositionPosts)
-                    {
+                @foreach (var i in new List<int>{1,2,3})
+                {
                         <tr>
                            <td>
 
-                               @post.CreatedDate
+                               Test
                            </td>
                            <td>
-                               @post.User
+                               Test
                            </td>
                            <td>
-                                @post.Content
+                                Test
                            </td>
                            <td>
-                               @if(!Model.Position.IsCompleted && post.UserId==user)
+                               @if(true)
                                {
 @*                                   <a class="btn btn-success btn-sm" role="button" href="/Project/EditPost?Id=@post.Id">
                                        <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
                                    </a>*@
 
-                                   <button class="btn btn-danger btn-sm" onclick="deletePost('@post.Id', this)">    
+                                   <button class="btn btn-danger btn-sm" onclick="deletePost('Id', this)">    
                                        <i class="fas fa-solid fa-trash-can"></i>Usuń
                                    </button>   
                                }       

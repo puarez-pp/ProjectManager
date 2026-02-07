@@ -4,7 +4,7 @@ using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Enums;
 using System.Linq.Dynamic.Core;
 
-namespace ProjectManager.Application.Settlements.Queries.GetGenerator;
+namespace ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 
 public class GetScopeTypeOfferQueryHandler : IRequestHandler<GetScopeTypeOfferQuery, WorkScopeTypeVm>
 {
@@ -31,7 +31,7 @@ public class GetScopeTypeOfferQueryHandler : IRequestHandler<GetScopeTypeOfferQu
             .WorkScopes
             .AsNoTracking()
             .Where(x => x.SettlementId == request.Id && x.WorkScopeType == request.ScopeType)
-            .Select(s => new WorkScopDto
+            .Select(s => new WorkScopeDto
             {
                 Id = s.Id,
                 Description = s.Description,

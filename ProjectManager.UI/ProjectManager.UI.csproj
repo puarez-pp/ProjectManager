@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="F:\Przemek\ProjectManager\Project.cshtml" Link="Project.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.ReCaptcha" Version="1.5.1" />
     <PackageReference Include="DataTables.AspNet.AspNetCore" Version="2.0.2" />
     <PackageReference Include="DataTables.AspNet.Core" Version="2.0.2" />
@@ -44,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Basic\Project\Modals\" />
     <Folder Include="Views\Basic\Settlement\" />
   </ItemGroup>
 

@@ -26,7 +26,7 @@ public class GetAddTodoQueryHandler : IRequestHandler<GetAddTodoQuery, AddTodoVm
             .FirstOrDefaultAsync(x => x.Id == request.Id);
 
         var vm = new AddTodoVm();
-        vm.Project = project.ToProjectDto();
+        vm.Project = new Projects.Queries.GetProject.ProjectDto();
         vm.Todo = new AddTodoCommand
         {
             ProjectId = request.Id,

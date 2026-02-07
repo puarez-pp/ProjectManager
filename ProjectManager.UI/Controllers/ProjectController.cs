@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Posts.Commands.AddComment;
 using ProjectManager.Application.Posts.Commands.AddPositionPost;
-using ProjectManager.Application.Posts.Commands.DeletePost;
-using ProjectManager.Application.Posts.Commands.EditPositionPost;
-using ProjectManager.Application.Posts.Queries.GetCommnents;
+using ProjectManager.Application.Posts.Queries.GetPositionPosts;
 using ProjectManager.Application.Projects.Commands.AddPosition;
 using ProjectManager.Application.Projects.Commands.AddProject;
-using ProjectManager.Application.Projects.Commands.ClosePosition;
 using ProjectManager.Application.Projects.Commands.DeletePosition;
+using ProjectManager.Application.Projects.Commands.EditPosition;
+using ProjectManager.Application.Projects.Commands.FinishPosition;
 using ProjectManager.Application.Projects.Commands.FinishProject;
 using ProjectManager.Application.Projects.Queries.GetCatProjectBasics;
-using ProjectManager.Application.Projects.Queries.GetEditDivision;
 using ProjectManager.Application.Projects.Queries.GetEditPosition;
 using ProjectManager.Application.Projects.Queries.GetEditProject;
-using ProjectManager.Application.Projects.Queries.GetPosition;
 using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Domain.Enums;
@@ -34,19 +30,30 @@ namespace ProjectManager.UI.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Project(int Id)
+        public async Task<IActionResult> Project(int id)
         {
-            return View(await Mediator.Send(new GetProjectQuery { Id = Id}));
+            return View(await Mediator.Send(new GetProjectQuery { Id = id}));
         }
+        public async Task<IActionResult> Scopes(int id)
+        {
+            return PartialView("_ScopesAccordion", await Mediator.Send(new GetProjectQuery { Id = id }));
+        }
+
         public async Task<IActionResult> Projects()
         {
             return View(await Mediator.Send(new GetProjectBasicsQuery()));
         }
-
-        public async Task<IActionResult> ProjectsCat(ProjectType Id)
+        [HttpGet]
+        public async Task<IActionResult> PositionPosts(int id)
         {
-            ViewData["projectType"] = Id;
-            return View(await Mediator.Send(new GetCatProjectBasicsQuery { ProjectTypeId = Id }));
+            ViewBag.Id = id;
+            return PartialView("_PositionPosts", await Mediator.Send(new GetPositionPostsQuery { Id = id }));
+        }
+
+        public async Task<IActionResult> ProjectsCat(ProjectType id)
+        {
+            ViewData["projectType"] = id;
+            return View(await Mediator.Send(new GetCatProjectBasicsQuery { ProjectTypeId = id }));
             
         }
 
@@ -70,9 +77,9 @@ namespace ProjectManager.UI.Controllers
             return RedirectToAction("Projects");
         }
 
-        public async Task<IActionResult> EditProject(int Id)
+        public async Task<IActionResult> EditProject(int id)
         {
-            return View(await Mediator.Send(new GetEditProjectQuery { Id = Id }));
+            return View(await Mediator.Send(new GetEditProjectQuery { Id = id }));
         }
 
         [HttpPost]
@@ -109,89 +116,72 @@ namespace ProjectManager.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> EditDivision(int Id)
+        public async Task<IActionResult> AddPosition(int id)
         {
-            return View(await Mediator.Send(new GetEditDivisionQuery { Id = Id }));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditDivision(EditDivisionVm viewModel)
-        {
-            var result = await MediatorSendValidate(viewModel.Division);
-
-            if (!result.IsValid)
-                return View(viewModel);
-
-            TempData["Success"] = "Dane projektu zostały zaktualizowane.";
-
-            return RedirectToAction("Project", new { @id = viewModel.Project.Id });
-        }
-
-        public async Task<IActionResult> Position(int Id)
-        {
-            return View(await Mediator.Send(new GetPositionQuery { Id = Id }));
-        }
-
-        public async Task<IActionResult> AddPosition(int Id, int Project, DivisionType Division)
-        {
-            ViewData["Project"] = Project;
-            ViewData["Division"] = Division;
-            return  View(new AddPositionCommand { DivisionId = Id});
+            return PartialView("_AddPositionModal", new AddPositionCommand { ProjectScopeId = id});
+  
         }
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPosition(AddPositionCommand command)
         {
-            var result = await MediatorSendValidate(command);
+            await Mediator.Send(command);
 
-            if (!result.IsValid)
-                return View(command);
-                TempData["Success"] = "Dane projektu zostały zaktualizowane.";
-
-            return RedirectToAction("Project", new { @id = result.Model});
+            return Json(new
+            {
+                success = true
+            });
         }
 
-        public async Task<IActionResult> EditPosition(int Id)
+        public async Task<IActionResult> EditPosition(int id)
         {
-            return View(await Mediator.Send(new GetEditPositionQuery { Id = Id }));
-         }
+            var command = await Mediator.Send(new GetEditPositionQuery { Id = id});
+            return PartialView("_EditPositionModal", command);
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPosition(EditPositionVm viewModel)
-        {
-            
-            var result = await MediatorSendValidate(viewModel.Position);
-
-            if (!result.IsValid)
-                return View(viewModel);
-
-            TempData["Success"] = "Dane projektu zostały zaktualizowane.";
-
-            return RedirectToAction("Project", new { @id = viewModel.Project.Id});
         }
 
         [HttpPost]
-        public async Task<IActionResult> FinishPosition(int id)
+        public async Task<IActionResult> EditPosition(EditPositionCommand command)
         {
-            try
-            {
-                await Mediator.Send(
-                    new ClosePositionCommand
-                    {
-                        Id = id
-                    });
+            await Mediator.Send(command);
 
-                return Json(new { success = true});
-            }
-            catch (Exception exception)
+            return Json(new
             {
-                _logger.LogError(exception, null);
-                return Json(new { success = false });
-            }
+                success = true
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FinishPosition(int id, bool isCompleted)
+        {
+
+            await Mediator.Send(
+                new FinishPositionCommand
+                {
+                    Id = id,
+                    IsCompleted = isCompleted
+                });
+
+            return Json(new { success = true});
+        }
+
+        public async Task<IActionResult> AddPositionPost(int id)
+        {
+            return PartialView("_AddPositionPostModal", new AddPostCommand { PositionId = id });
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddPositionPost(AddPostCommand command)
+        {
+            await Mediator.Send(command);
+
+            return Json(new
+            {
+                success = true
+            });
         }
 
         [HttpPost]

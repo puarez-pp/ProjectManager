@@ -104,9 +104,9 @@ public class GetUserDashboardQueryHandler : IRequestHandler<GetUserDashboardQuer
         };
     }
 
-    private static DateTime? GetTicketCreatedDate(Todo todo)
+    private static DateTime? GetTicketCreatedAt(Todo todo)
     {
-        return todo == null ? null : todo.CreatedDate;
+        return todo == null ? null : todo.CreatedAt;
     }
 
     private Todo GetActiveTodo(ApplicationUser user)

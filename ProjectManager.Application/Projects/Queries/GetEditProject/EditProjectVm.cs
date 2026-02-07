@@ -8,5 +8,5 @@ public class EditProjectVm
 {
     public EditProjectCommand Project { get; set; }
     public List<Client> AvaiableClients = new();
-    public List<UserDto> AvailableManagers = new();
+    public List<UserDto> AvailableEmployee = new();
 }

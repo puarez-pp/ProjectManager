@@ -11,22 +11,16 @@ class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.ToTable("Invoices");
 
         builder
-            .HasOne(x => x.Vendor)
-            .WithMany(x => x.Invoices)
-            .HasForeignKey(x => x.VendorId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
             .HasOne(x => x.Settlement)
             .WithMany(x => x.Invoices)
             .HasForeignKey(x => x.SettlementId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
-           .HasOne(x => x.WorkScope)
-           .WithMany(x => x.Invoices)
-           .HasForeignKey(x => x.WorkScopeId)
-           .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(x => x.WorkScope)
+            .WithMany(x => x.Invoices)
+            .HasForeignKey(x => x.WorkScopeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.Number)
             .IsRequired()

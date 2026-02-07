@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Settlements.Queries.GetGenerator;
+using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 
 namespace ProjectManager.Application.Settlements.Queries.GetCostDetails;
 
@@ -23,7 +23,7 @@ public class GetCostDetailsQueryHandler : IRequestHandler<GetCostDetailsQuery, C
             .WorkScopes
             .AsNoTracking()
             .Where(x => x.SettlementId == request.Id)
-            .Select(s => new WorkScopDto
+            .Select(s => new WorkScopeDto
             {
                 Id = s.Id,
                 Description = s.Description,

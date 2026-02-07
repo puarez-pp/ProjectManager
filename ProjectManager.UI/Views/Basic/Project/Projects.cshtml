@@ -120,10 +120,10 @@
                             @(project.ProjectType)
                         </td>
                         <td>
-                            @project.ClientName
+                            @project.Client
                         </td>
                         <td>
-                            @project.EditDate
+                            @project.EditAt
                         </td>
                     </tr>
                 }
@@ -151,7 +151,7 @@
             lengthChange: true,
             language: {
                 url: `/lib/datatables/lang/${'@locale'}.json`
-            }
+            },
             order: [[0, "asc"]]
         });
 
@@ -167,7 +167,7 @@
             lengthChange: true,
             language: {
                 url: `/lib/datatables/lang/${'@locale'}.json`
-            }
+            },
             order: [[0, "asc"]]
         });
     });

@@ -21,7 +21,7 @@ public static class TodoExtensions
             Title = todo.Title,
             Content = todo.Content,
             IsCompleted = todo.IsCompleted,
-            CreatedDate = todo.CreatedDate,
+            CreatedAt = todo.CreatedAt,
             FinishDate = todo.FinishDate,
             CompletionDate = todo.CompletionDate,
             UserFrom = todo.UserFrom.ToUserDto().FullName,
@@ -42,7 +42,7 @@ public static class TodoExtensions
             UserId = reply.UserId,
             User = reply.User.ToUserDto().FullName,
             TodoId = reply.TodoId,
-            CreatedDate = reply.CreatedDate
+            CreatedAt = reply.CreatedAt
         };
     }
 

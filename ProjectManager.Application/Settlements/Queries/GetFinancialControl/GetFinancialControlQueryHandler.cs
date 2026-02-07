@@ -33,7 +33,7 @@ public class GetFinancialControlQueryHandler : IRequestHandler<GetFinancialContr
                 EuroNetAmount = x.EuroNetAmount,
                 EuroRate = x.EuroRate,
                 OrderNumber = x.OrderNumber,
-                Vendor = x.Vendor.Name,
+                Vendor = x.Vendor,
                 ScopeDescription = x.WorkScope.Description
 
             })

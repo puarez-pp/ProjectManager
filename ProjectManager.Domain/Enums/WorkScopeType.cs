@@ -8,7 +8,7 @@ public enum WorkScopeType
     [Display(Name = "Agregat")]
     Agregat,
 
-    [Display(Name = "Instaalcje")]
+    [Display(Name = "Instalacje")]
     Installation,
 
     [Display(Name = "Zarządzanie projektem")]

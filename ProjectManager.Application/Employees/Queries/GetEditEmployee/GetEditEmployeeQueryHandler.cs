@@ -3,7 +3,6 @@ using ProjectManager.Application.Users.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Domain.Enums;
-using ProjectManager.Application.Users.Queries.GetUser;
 
 namespace GymManager.Application.Employees.Queries.GetEditEmployee;
 public class GetEditEmployeeQueryHandler : IRequestHandler<GetEditEmployeeQuery, EditEmployeeVm>

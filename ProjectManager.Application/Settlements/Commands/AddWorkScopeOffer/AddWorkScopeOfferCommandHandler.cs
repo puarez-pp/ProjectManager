@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
-using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Settlements.Commands.AddWorkScopeOffer;
 
@@ -30,8 +29,8 @@ public class AddWorkScopeOfferCommandHandler : IRequestHandler<AddWorkScopeOffer
             Description = request.Description,
             Comment = request.Comment,
             Order = order + 1,
-            IsUsed = false,
-            UnitType = UnitType.Set,
+            IsUsed = request.IsUsed,
+            UnitType = request.UnitType,
             Quantity = request.Quantity,
             NetAmount = request.NetAmount,
             EuroNetAmount = request.EuroNetAmount,

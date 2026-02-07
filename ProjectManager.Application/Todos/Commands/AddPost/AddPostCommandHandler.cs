@@ -25,7 +25,7 @@ public class AddPostCommandHandler : IRequestHandler<AddPostCommand>
         post.TodoId = request.TodoId;
         post.Content = request.Content;
         post.UserId = _currentUser.UserId;
-        post.CreatedDate = _dateTime.Now;
+        post.CreatedAt = _dateTime.Now;
         await _context.TodoPosts.AddAsync(post);
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

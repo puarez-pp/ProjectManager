@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
 using System;
@@ -26,14 +27,17 @@ public class EditPlantCommandHandler : IRequestHandler<EditPlantCommand>
     }
     public async Task<Unit> Handle(EditPlantCommand request, CancellationToken cancellationToken)
     {
-        var plant = new Plant
-        {
-            Id = request.Id,
-            Name = request.Name,
-            Location = request.Location,
-            UserId = _currentUser.UserId,
-            CreatedDate = _dateTime.Now
-        };
+
+        var plant = await _context
+            .Plants
+            .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+        plant.Id = request.Id;
+        plant.Name = request.Name;
+        plant.Location = request.Location;
+        plant.UserId = _currentUser.UserId;
+        plant.CreatedAt = _dateTime.Now;
+
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
 

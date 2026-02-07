@@ -20,7 +20,7 @@ public static class DeviceHeaderExtensions
             Name = plant.Name,
             Location = plant.Location,
             User = (plant.User.ToUserDto()).FullName,
-            CreatedDate = plant.CreatedDate
+            CreatedAt = plant.CreatedAt
         };
     }
     public static GetPlantsBasicDto ToPlantsBasicDto(this Plant plant)

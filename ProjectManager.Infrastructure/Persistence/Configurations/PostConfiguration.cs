@@ -26,7 +26,7 @@ class PostConfiguration : IEntityTypeConfiguration<Post>
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.Property(x => x.Content)
+        builder.Property(x => x.Body)
             .IsRequired()
             .HasMaxLength(2000);
 

@@ -1,0 +1,32 @@
+﻿@using ProjectManager.Application.Posts.Commands.AddPositionPost
+@using ProjectManager.Application.Projects.Commands.AddPosition
+
+@model AddPostCommand
+
+
+<div class="modal" id="modal-add-position-post">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-position-post-form">
+                <input type="hidden" asp-for="PositionId" />
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodawanie komentarza</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"> 
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Body)
+                        @Html.TextAreaFor(x => x.Body, new { @class = "form-control", placeholder = "Wprowadź treść" })
+                        @Html.ValidationMessageFor(x => x.Body)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button id="modal-add-position-post-btn" type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -21,10 +21,12 @@ public class GetEditProjectQueryHandler : IRequestHandler<GetEditProjectQuery, E
         var project = await _context
             .Projects
             .AsNoTracking()
-            .Include(x => x.User)
+            .Include(x => x.UserPM)
+            .Include(x => x.DesignEng)
+            .Include(x => x.ElectricEng)
             .Include(x => x.Client)
-            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id);
+
         vm.Project = new EditProjectCommand
         {
             Id = project.Id,
@@ -35,17 +37,21 @@ public class GetEditProjectQueryHandler : IRequestHandler<GetEditProjectQuery, E
             Name = project.Name,
             ClientId = project.ClientId,
             UserPMId = project.UserPMId,
+            DesignEngId = project.DesignEngId,
+            ElectricEngId = project.ElectricEngId,
             Sharepoint = project.Sharepoint
         };
 
-        vm.AvailableManagers = await _context
+        vm.AvailableEmployee = await _context
             .Users
+            .AsNoTracking ()
             .Include(x=>x.Employee)
             .Select(x=>x.ToUserDto())
             .ToListAsync();
 
         vm.AvaiableClients = await _context
             .Clients
+            .AsNoTracking()
             .ToListAsync();
         return vm;
     }

@@ -18,7 +18,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Address> Addresses { get; set; }
     public DbSet<SubConAddress> SubConAddresses { get; set; }
     public DbSet<Client> Clients { get; set; }
-    public DbSet<Division> Divisions { get; set; }
+    public DbSet<ProjectScope> ProjectScopes { get; set; }
     public DbSet<SettingsPosition> SettingsPositions { get; set; }
     public DbSet<Settings> Settings { get; set; }
     public DbSet<Project> Projects { get; set; }
@@ -31,7 +31,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Post> Posts { get; set; }
     public DbSet<Todo> Todos { get; set; }
     public DbSet<TodoPost> TodoPosts { get; set; }
-    public DbSet<DivisionPosition> DivisionPositions { get; set; }
+    public DbSet<ProjectScopePosition> ProjectScopePositions { get; set; }
     public DbSet<PostReply> PostReplies { get; set; }
     public DbSet<PositionPost> PositionPosts { get; set; }
     public DbSet<Tool> Tools { get; set; }
@@ -41,8 +41,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Predecessor> Predecessors { get; set; }
     public DbSet<Plant> Plants { get; set; }
     public DbSet<Device> Devices { get; set; }
-    public DbSet<Template> Templates { get; set; }
-    public DbSet<TemplatePosition> TemplatePositions { get; set; }
+    public DbSet<DeviceTemplate> DeviceTemplates { get; set; }
+    public DbSet<DeviceTemplatePosition> DeviceTemplatePositions { get; set; }
     public DbSet<DeviceHeader> DeviceHeaders { get; set; }
     public DbSet<Alarm> Alarms { get; set; }
     public DbSet<OtherCounter> OtherCounters { get; set; }
@@ -58,6 +58,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<WorkScopeOffer> WorkScopeOffers { get; set; }
     public DbSet<WorkScopePositionTemplate> WorkScopePositionTemplates { get; set; }
     public DbSet<WorkScopeTemplate> WorkScopeTemplates { get; set; }
+    public DbSet<ProjectScopeTemplate> ProjectScopeTemplates { get; set; }
+    public DbSet<ProjectScopePositionTemplate> ProjectScopePositionTemplates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,6 +75,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         modelBuilder.SeedTemplatePositions();
         modelBuilder.SeedWorkScopeTemplates();
         modelBuilder.SeedWorkScopePositionTemplates();
+        modelBuilder.SeedProjectScopeTemplates();
+        modelBuilder.SeedProjectScopePositionTemplates();
 
         base.OnModelCreating(modelBuilder);
     }

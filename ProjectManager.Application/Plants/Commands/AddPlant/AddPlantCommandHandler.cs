@@ -26,7 +26,7 @@ public class AddPlantCommandHandler : IRequestHandler<AddPlantCommand>
             Name = request.Name,
             Location = request.Location,
             UserId = _currentUser.UserId,
-            CreatedDate = _dateTime.Now  
+            CreatedAt = _dateTime.Now  
         };
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

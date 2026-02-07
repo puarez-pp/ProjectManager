@@ -25,11 +25,11 @@
 
         @Html.HiddenFor(x => x.Project.Id)
 
-        @for (int i = 0; i < Model.AvailableManagers.Count(); i++)
+        @* @for (int i = 0; i < Model.AvailableManagers.Count(); i++)
         {
             @Html.HiddenFor(x => x.AvailableManagers[i].Id)
             @Html.HiddenFor(x => x.AvailableManagers[i].FullName)
-        }
+        } *@
 
         @for (int i = 0; i < Model.AvaiableClients.Count(); i++)
         {
@@ -61,11 +61,11 @@
 
                 @Html.LabelFor(x => x.Project.UserPMId)
 
-                <div class="select2-blue">
+                @* <div class="select2-blue">
 
                     @Html.DropDownList("Project.UserPMId", @Model.AvailableManagers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-UserPMId", style="width: 100%;" })
                     @Html.ValidationMessageFor(x => x.Project.UserPMId)
-                </div>
+                </div> *@
             </div>
 
              <div class="form-group">

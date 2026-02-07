@@ -22,9 +22,9 @@ public class AddPostCommandHandler : IRequestHandler<AddPostCommand>
     public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
         var post = new PositionPost();
-        post.Content = request.Content;
+        post.Body = request.Body;
         post.PositionId = request.PositionId;
-        post.CreatedDate = _dateTime.Now;
+        post.CreatedAt = _dateTime.Now;
         post.UserId = _currentUser.UserId;
         await _context.PositionPosts.AddAsync(post);
         await _context.SaveChangesAsync(cancellationToken);

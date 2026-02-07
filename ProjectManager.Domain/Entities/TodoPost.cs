@@ -8,6 +8,6 @@
         public ApplicationUser User { get; set; }
         public int TodoId { get; set; }
         public Todo Todo { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

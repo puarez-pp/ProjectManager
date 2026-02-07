@@ -11,7 +11,7 @@ class ElectricCounterConfiguration : IEntityTypeConfiguration<ElectricCounter>
         builder.ToTable("ElectricCounters");
         builder
            .HasOne(x => x.Device)
-           .WithMany(x => x.ElectricCounters)
+           .WithMany(x => x.LogElectricCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
     }

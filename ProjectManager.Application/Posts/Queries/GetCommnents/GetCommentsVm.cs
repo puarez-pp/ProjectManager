@@ -1,5 +1,4 @@
-﻿using ProjectManager.Application.Projects.Queries.GetPosition;
-using ProjectManager.Application.Projects.Queries.GetProject;
+﻿using ProjectManager.Application.Projects.Queries.GetProject;
 
 namespace ProjectManager.Application.Posts.Queries.GetCommnents;
 

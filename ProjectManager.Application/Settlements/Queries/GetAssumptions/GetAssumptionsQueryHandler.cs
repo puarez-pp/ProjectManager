@@ -32,6 +32,7 @@ public class GetAssumptionsQueryHandler : IRequestHandler<GetAssumptionsQuery, A
         var assumption = await _context
             .Assumptions
             .AsNoTracking()
+            .Where(x => x.Settlement.ProjectId == request.Id)
             .Select(x=>x.ToAssumptionsDto())
             .FirstOrDefaultAsync();
 

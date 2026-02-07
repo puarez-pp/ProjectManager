@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Extensions;
+using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Todos.Extensions;
 
 namespace ProjectManager.Application.Todos.Queries.GetTodo;
@@ -37,9 +38,9 @@ public class GetTodoQueryHandler : IRequestHandler<GetTodoQuery, TodoVm>
 
         var vm = new TodoVm
         {
-            Project = project.ToProjectDto(),
+            Project = new ProjectDto(),
             Todo = todo.ToTodoDto(),
-            Replies = todo.TodoPosts.Select(x=>x.ToTodoReplyDto()).OrderByDescending(x=>x.CreatedDate  ).ToList(),
+            Replies = todo.TodoPosts.Select(x => x.ToTodoReplyDto()).OrderByDescending(x => x.CreatedAt).ToList(),
         };
 
         return vm;

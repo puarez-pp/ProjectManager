@@ -2,7 +2,6 @@
 @using System.Globalization
 @using ProjectManager.Application.Common.Extensions
 @using ProjectManager.Application.Dictionaries
-@using ProjectManager.Application.Projects.Queries.GetPosition
 @using ProjectManager.Application.Todos.Queries.GetTodo
 @using ProjectManager.Application.Users.Extensions
 @using ProjectManager.Domain.Enums
@@ -66,7 +65,7 @@
             }
         <h6 class="card-title mt-2">Temat: <b>@Model.Todo.Title</b></h6>
         <h6 class="card-title mt-2">Termin realizacji: <b>@Model.Todo.CompletionDate</b></h6>
-        <h6>Utworzył <b>@Model.Todo.UserFrom </b>w dniu @Model.Todo.CreatedDate dla <b>@Model.Todo.UserTo</b></h6>
+        <h6>Utworzył <b>@Model.Todo.UserFrom </b>w dniu @Model.Todo.CreatedAt dla <b>@Model.Todo.UserTo</b></h6>
         <b>Treść:</b>
         <p>@Model.Todo.Content</p>
         @if (Model.Replies.Count()>0)
@@ -87,7 +86,7 @@
                         <tr>
                            <td>
 
-                               @post.CreatedDate
+                               @post.CreatedAt
                            </td>
                            <td>
                                @post.User

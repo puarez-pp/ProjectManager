@@ -7,5 +7,5 @@ public class AddCommentReplyCommand : IRequest<int>
 {
     public int PostId { get; set; }
     [DisplayName("Treść")]
-    public string Content { get; set; }
+    public string Body { get; set; }
 }

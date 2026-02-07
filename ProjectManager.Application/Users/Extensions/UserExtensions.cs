@@ -21,7 +21,12 @@ public static class UserExtensions
             FirstName = user.FirstName,
             LastName = user.LastName,
             FullName = $"{user.FirstName} {user.LastName}",
-            Position = (user.Employee.Position).GetDisplayName(),
+            Employee = new EmployeeDto
+            {
+                Email = user.Email,
+                PhoneNumber = user.Employee.Phone,
+                Position = user.Employee.Position,
+            },
             RegisterDateTime = user.RegisterDateTime
         };
     }

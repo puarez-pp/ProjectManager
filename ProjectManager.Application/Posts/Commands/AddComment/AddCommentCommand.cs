@@ -12,5 +12,5 @@ public class AddCommentCommand : IRequest<int>
     [DisplayName("Tytuł")]
     public string Title { get; set; }
     [DisplayName("Treść")]
-    public string Content { get; set; }
+    public string Body { get; set; }
 }

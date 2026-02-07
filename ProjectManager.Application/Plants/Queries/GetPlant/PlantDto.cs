@@ -7,5 +7,5 @@ public class PlantDto
     public string Name { get; set; }
     public string Location { get; set; }
     public string User { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

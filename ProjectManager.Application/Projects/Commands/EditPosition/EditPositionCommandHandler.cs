@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Domain.Entities;
+using System;
 
 namespace ProjectManager.Application.Projects.Commands.EditPosition;
 
@@ -8,7 +10,7 @@ public class EditPositionCommandHandler : IRequestHandler<EditPositionCommand>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUser;
-    private readonly IDateTimeService _dateTime;
+    private readonly IDateTimeService _dateTimeService;
 
     public EditPositionCommandHandler(
         IApplicationDbContext context,
@@ -17,31 +19,28 @@ public class EditPositionCommandHandler : IRequestHandler<EditPositionCommand>
     {
         _context = context;
         _currentUser = currentUser;
-        _dateTime = dateTime;
+        _dateTimeService = dateTime;
     }
     public async Task<Unit> Handle(EditPositionCommand request, CancellationToken cancellationToken)
     {
-        var project = await _context
-            .Projects
-            .AsNoTracking()
-            .Include(x => x.Divisions)
-            .ThenInclude(x => x.Positions)
-            .FirstOrDefaultAsync(x => x.Divisions.Any(y => y.Positions.Any(x => x.Id == request.Id)));
-
         var position = await _context
-            .DivisionPositions
+            .ProjectScopePositions
+            .Include(x => x.ProjectScope)
+            .ThenInclude(x => x.Project)
             .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+        if (position.ProjectScope.Project != null)
+        {
+            position.ProjectScope.Project.EditAt = _dateTimeService.Now;
+            position.ProjectScope.Project.UserUpdatorId = _currentUser.UserId;
+        }
+
         if (position != null)
         {
-            position.DivisionPositionType = request.DivisionPositionType;
-            position.Comment = request.Comment;
-            position.SubContractorId = request.SubContractorId;
-            position.IsCompleted= request.IsCompleted;
-            
-            project.EditDate = _dateTime.Now;
-            project.UserUpdatorId = _currentUser.UserId;
-            await _context.SaveChangesAsync(cancellationToken);
+            position.Description = request.Description;
+            position.CompletionDate = request.CompletionDate;
         }
+        await _context.SaveChangesAsync();
         return Unit.Value;
     }
 }

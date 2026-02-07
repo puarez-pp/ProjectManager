@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
-using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Devices.Commands.EditDevice;
 
@@ -22,7 +21,7 @@ public class EditDeviceCommandHandler : IRequestHandler<EditDeviceCommand>
             .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
         var devType = device?.DeviceType;
         if (device != null)
-        {        
+        {
             device.Name = request.Name;
             device.Description = request.Description;
             device.DeviceType = request.DeviceType;
@@ -30,9 +29,23 @@ public class EditDeviceCommandHandler : IRequestHandler<EditDeviceCommand>
             if (devType != request.DeviceType)
             {
                 _context.DeviceHeaders.RemoveRange(GetDeviceHeaders(device.Id));
-                await AddDeviceHeaders(device.Id, request.DeviceType);
-                await _context.SaveChangesAsync();
+                var template = await _context
+                    .DeviceTemplates
+                    .AsNoTracking()
+                    .Include(t => t.TemplatePositions)
+                    .FirstOrDefaultAsync(t => t.DeviceType == devType);
+
+                foreach (var pos in template.TemplatePositions.OrderBy(p => p.Order))
+                {
+                    device.DeviceHeaders.Add(new DeviceHeader
+                    {
+                        Name = pos.Name,
+                        Description = pos.Description,
+                        Order = pos.Order
+                    });
+                }
             }
+            await _context.SaveChangesAsync();
         }
         return Unit.Value;
     }
@@ -42,26 +55,5 @@ public class EditDeviceCommandHandler : IRequestHandler<EditDeviceCommand>
         return _context
             .DeviceHeaders
             .Where(x => x.DeviceId == id).ToArray();
-    }
-    private async Task AddDeviceHeaders(int devicetId, DeviceType deviceType)
-    {
-        var temps = await _context
-            .Templates
-            .Include(x => x.TemplatePositions)
-            .Where(x => x.DeviceType == deviceType)
-            .ToListAsync();
-        var headers = temps.Select(x => x.TemplatePositions).ToArray();
-
-        foreach (var header in headers)
-        {
-            var devHeader = new DeviceHeader
-            {
-                DeviceId = devicetId,
-                Name = header.Select(x => x.Name).ToString(),
-                Description = header.Select(x => x.Description).ToString(),
-                Order = header.Select(x => x.Order).FirstOrDefault()
-            };
-            _context.DeviceHeaders.Add(devHeader);
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Enums;
 
-namespace ProjectManager.Application.Settlements.Queries.GetGenerator;
+namespace ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 
 public class WorkScopeOfferDto
 {

@@ -380,23 +380,23 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<float>("CompanyCost")
-                        .HasColumnType("real");
+                    b.Property<decimal>("CompanyCost")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("CompanyGuarantee")
-                        .HasColumnType("real");
+                    b.Property<decimal>("CompanyGuarantee")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("Discount")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("Insurance")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Insurance")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("MarginGen")
-                        .HasColumnType("real");
+                    b.Property<decimal>("MarginGen")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("MarginInstall")
-                        .HasColumnType("real");
+                    b.Property<decimal>("MarginInstall")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Maturity")
                         .HasColumnType("int");
@@ -454,7 +454,7 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -524,1422 +524,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("DeviceHeaders", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Division", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("DivisionType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Divisions", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.DivisionPosition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DivisionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DivisionPositionType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("PerformedData")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SubContractorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DivisionId");
-
-                    b.HasIndex("SubContractorId");
-
-                    b.ToTable("DivisionPositions", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr11")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr12")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr13")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr14")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr15")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr16")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr17")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr18")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr19")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr20")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("ElectricCounters", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)");
-
-                    b.Property<string>("ManagerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("WebsiteRaw")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WebsiteUrl")
-                        .HasMaxLength(200)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Employees", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.EmployeeEvent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFullDay")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EmployeeEvents", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr100")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr101")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr102")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr103")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr104")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr105")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr106")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr107")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr108")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr109")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr11")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr110")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr111")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr112")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr113")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr114")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr115")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr116")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr117")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr118")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr119")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr12")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr120")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr13")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr14")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr15")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr16")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr17")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr18")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr19")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr20")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr21")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr22")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr23")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr24")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr25")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr26")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr27")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr28")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr29")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr30")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr31")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr32")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr33")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr34")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr35")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr36")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr37")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr38")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr39")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr40")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr41")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr42")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr43")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr44")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr45")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr46")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr47")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr48")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr49")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr50")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr51")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr52")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr53")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr54")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr55")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr56")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr57")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr58")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr59")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr60")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr61")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr62")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr63")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr64")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr65")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr66")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr67")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr68")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr69")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr70")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr71")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr72")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr73")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr74")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr75")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr76")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr77")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr78")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr79")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr80")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr81")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr82")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr83")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr84")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr85")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr86")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr87")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr88")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr89")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr90")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr91")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr92")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr93")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr94")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr95")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr96")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr97")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr98")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr99")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("Engines", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.File", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<long>("Bytes")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Files", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<long>("Parametr10")
-                        .HasColumnType("bigint");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<long>("Parametr6")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Parametr7")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Parametr8")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Parametr9")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("GasCounters", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("HeatCounters", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<decimal>("EuroNetAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("EuroRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("NetAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("OrderNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VendorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SettlementId");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("Invoices", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("OtherCounters", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Plant", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PositionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PositionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PositionPosts", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Post", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Posts", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.PostReply", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PostReplies", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Predecessor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ActivityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityId");
-
-                    b.ToTable("Predecessor", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Project", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EditDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FinishedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Number")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("ProjectType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("Sharepoint")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserPMId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserUpdatorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("UserID");
-
-                    b.HasIndex("UserPMId");
-
-                    b.HasIndex("UserUpdatorId");
-
-                    b.ToTable("Projects", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ProjectType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProjectSettings", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProjectType = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProjectType = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ProjectType = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ProjectType = 3
-                        });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectSettingPosition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Key")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectSettingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectSettingId");
-
-                    b.ToTable("ProjectSettingPositions", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Schedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Schedules", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Settings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "E-mail",
-                            Order = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Ogólne",
-                            Order = 1
-                        });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.SettingsPosition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SettingsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SettingsId");
-
-                    b.ToTable("SettingsPositions", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Host",
-                            Key = "HostSmtp",
-                            Order = 1,
-                            SettingsId = 1,
-                            Type = 0,
-                            Value = "smtp.gmail.com"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Port",
-                            Key = "Port",
-                            Order = 2,
-                            SettingsId = 1,
-                            Type = 2,
-                            Value = "587"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Adres e-mail nadawcy",
-                            Key = "SenderEmail",
-                            Order = 3,
-                            SettingsId = 1,
-                            Type = 0,
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Hasło",
-                            Key = "SenderEmailPassword",
-                            Order = 4,
-                            SettingsId = 1,
-                            Type = 4,
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Nazwa nadawcy",
-                            Key = "SenderName",
-                            Order = 5,
-                            SettingsId = 1,
-                            Type = 0,
-                            Value = "Administrator"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Login nadawcy",
-                            Key = "SenderLogin",
-                            Order = 6,
-                            SettingsId = 1,
-                            Type = 0,
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Description = "Czy wyświetlać banner na stronie głównej?",
-                            Key = "BannerVisible",
-                            Order = 1,
-                            SettingsId = 2,
-                            Type = 1,
-                            Value = "True"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Description = "Folor footera strona głównej",
-                            Key = "FooterColor",
-                            Order = 2,
-                            SettingsId = 2,
-                            Type = 5,
-                            Value = "#dc3545"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Description = "Główny adres e-mail administratora",
-                            Key = "AdminEmail",
-                            Order = 3,
-                            SettingsId = 2,
-                            Type = 0,
-                            Value = "integri.pp@gmail.com"
-                        });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Settlement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Settlements", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.SubConAddress", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("City")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Street")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("StreetNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("SubContractorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ZipCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubContractorId")
-                        .IsUnique();
-
-                    b.ToTable("SubConAddresses", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            SubContractorId = 1
-                        });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.SubContractor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ContactPerson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubContractors", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Bergerat Monnoyeur"
-                        });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Template", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceTemplate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1982,7 +567,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.TemplatePosition", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceTemplatePosition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3374,6 +1959,2014 @@ namespace ProjectManager.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr11")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr12")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr13")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr14")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr15")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr16")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr17")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr18")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr19")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr20")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("ElectricCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WebsiteRaw")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WebsiteUrl")
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Employees", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.EmployeeEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFullDay")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmployeeEvents", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr100")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr101")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr102")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr103")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr104")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr105")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr106")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr107")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr108")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr109")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr11")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr110")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr111")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr112")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr113")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr114")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr115")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr116")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr117")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr118")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr119")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr12")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr120")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr13")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr14")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr15")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr16")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr17")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr18")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr19")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr20")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr21")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr22")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr23")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr24")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr25")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr26")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr27")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr28")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr29")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr30")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr31")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr32")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr33")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr34")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr35")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr36")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr37")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr38")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr39")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr40")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr41")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr42")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr43")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr44")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr45")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr46")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr47")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr48")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr49")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr50")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr51")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr52")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr53")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr54")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr55")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr56")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr57")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr58")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr59")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr60")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr61")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr62")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr63")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr64")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr65")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr66")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr67")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr68")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr69")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr70")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr71")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr72")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr73")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr74")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr75")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr76")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr77")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr78")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr79")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr80")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr81")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr82")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr83")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr84")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr85")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr86")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr87")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr88")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr89")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr90")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr91")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr92")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr93")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr94")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr95")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr96")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr97")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr98")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr99")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("Engines", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.File", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<long>("Bytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<long>("Parametr10")
+                        .HasColumnType("bigint");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<long>("Parametr6")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Parametr7")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Parametr8")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Parametr9")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("GasCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("HeatCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("EuroNetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("EuroRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Vendor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WorkScopeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("WorkScopeId");
+
+                    b.ToTable("Invoices", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Parametr1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr10")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr4")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr5")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr6")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr8")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Parametr9")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("OtherCounters", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Plant", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PositionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PositionPosts", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.PostReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostReplies", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Predecessor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.ToTable("Predecessor", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DesignEngId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EditAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ElectricEngId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Number")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ProjectType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("Sharepoint")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserPMId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserUpdatorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("DesignEngId");
+
+                    b.HasIndex("ElectricEngId");
+
+                    b.HasIndex("UserID");
+
+                    b.HasIndex("UserPMId");
+
+                    b.HasIndex("UserUpdatorId");
+
+                    b.ToTable("Projects", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScope", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectScopes", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopePosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("NotApplicable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectScopeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SubContractorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectScopeId");
+
+                    b.HasIndex("SubContractorId");
+
+                    b.ToTable("ProjectScopePositions", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopePositionTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectScopeTemplateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectScopeTemplateId");
+
+                    b.ToTable("ProjectScopePositionTemplates", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Dostawa",
+                            Order = 1,
+                            ProjectScopeTemplateId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Projekt wykonawczy elektryczny",
+                            Order = 1,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Projekt wykonawczy automatyki",
+                            Order = 2,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Projekt powykonawczy elektryczny",
+                            Order = 3,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Projekt powykonawczy automatyki",
+                            Order = 4,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Projekt wykonawczy obudowy",
+                            Order = 5,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Projekt powykonawczy obudowy",
+                            Order = 6,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Szkolenie personelu.",
+                            Order = 7,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Dokumentacja dla zespołu w języku polskim - 2 egzemplarze",
+                            Order = 8,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Rozruch i regulacja urządzeń",
+                            Order = 9,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Ośmiogodzinny ruch próbny",
+                            Order = 10,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Dokumentacja dla URE.",
+                            Order = 11,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Wsparcie w przygotowaniu dokumentów o udzielenie koncesji na wytwarzanie energii elektrycznej",
+                            Order = 12,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Wsparcie w złożeniu pierwszego wniosku o wypłatę premii gwarantowanej",
+                            Order = 13,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Wsparcie w przygotowaniu planu przeprowadzenia testów NCRfG",
+                            Order = 14,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Przeprowadzenie testów NCRfG",
+                            Order = 15,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Rezerwa",
+                            Order = 16,
+                            ProjectScopeTemplateId = 2
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Okablowanie potrzeb własnych zestawu kogeneracyjnego",
+                            Order = 2,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Dostawa szaf do sterowania zespołem kogeneracyjnym, urządzeń pomocniczych i synchronizacji z siecią elektroenergetyczną",
+                            Order = 3,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "Wykonanie połączeń elektrycznych i AKPiA do szaf sterowania zespołem kogeneracyjnym",
+                            Order = 4,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "Dostawa stacji transformatorowej",
+                            Order = 5,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Wyprowadzenie mocy – nN od generatora do transformatora",
+                            Order = 6,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Wyprowadzenie mocy – SN od tranformatora do rozdzielnicy SN",
+                            Order = 7,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "Modernizacja rozdzielni SN",
+                            Order = 8,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "Przystosowanie szaf AKPiA na potrzeby systemu SCADA - udostępnienie sygnałów",
+                            Order = 9,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "Rezerwa",
+                            Order = 10,
+                            ProjectScopeTemplateId = 3
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "Układ LT wraz z chłodnicą, orurowaniem, pompą, zaworami, armaturą,",
+                            Order = 2,
+                            ProjectScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "Układ HT wraz z chłodnicą, orurowaniem, pompą, zaworami, armaturą,",
+                            Order = 3,
+                            ProjectScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "Montaż urządzeń wchodzących w skład układu odzysku ciepła (pompy, wymiennik separacyjny, armatura odcinająca i regulacyjna, czujniki)",
+                            Order = 4,
+                            ProjectScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "Wykonanie orurowania",
+                            Order = 5,
+                            ProjectScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "Próby pomontażowe szczelności",
+                            Order = 6,
+                            ProjectScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "Rezerwa",
+                            Order = 7,
+                            ProjectScopeTemplateId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "Tłumik hałasu",
+                            Order = 2,
+                            ProjectScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Description = "Wymiennik poziomy spaliny/woda-glikol",
+                            Order = 3,
+                            ProjectScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "Wykonanie i montaż komina wyrzutu spalin",
+                            Order = 4,
+                            ProjectScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Diverter",
+                            Order = 5,
+                            ProjectScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Description = "Rezerwa",
+                            Order = 6,
+                            ProjectScopeTemplateId = 5
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Description = "Przewód elastyczny łączący ścieżkę gazową z silnikiem",
+                            Order = 2,
+                            ProjectScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Description = "Ścieżka gazowa wewnątrz maszynowni",
+                            Order = 3,
+                            ProjectScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Description = "System wykrywania niebezpiecznego stężenia gazu - MAG3",
+                            Order = 4,
+                            ProjectScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Description = "Rezerwa",
+                            Order = 5,
+                            ProjectScopeTemplateId = 6
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Description = "Instalacja olejowa - zbiornik oleju z automatycznym uzupełnieniem.",
+                            Order = 2,
+                            ProjectScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Description = "Płyn chłodniczy i olej",
+                            Order = 3,
+                            ProjectScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Description = "Dostawa i zalanie układu olejowego olejem silnikowym.",
+                            Order = 4,
+                            ProjectScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Description = "Dostawa i zalanie układu płynem chłodzącym",
+                            Order = 5,
+                            ProjectScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Description = "Rezerwa",
+                            Order = 6,
+                            ProjectScopeTemplateId = 7
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Description = "Wykonanie obudowy dźwiękochłonnej",
+                            Order = 2,
+                            ProjectScopeTemplateId = 8
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Description = "Wykonanie kompletnego układu wentylacji do obudowy",
+                            Order = 3,
+                            ProjectScopeTemplateId = 8
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Description = "Wykonanie instalacji oświetleniowej i gniazd wtyczkowych",
+                            Order = 4,
+                            ProjectScopeTemplateId = 8
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Description = "Układ pomiarowy energii elektrycznej netto",
+                            Order = 1,
+                            ProjectScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Description = "Układ pomiarowy energii elektrycznej brutto",
+                            Order = 2,
+                            ProjectScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Description = "Układ pomiarowy energii elektrycznej potrzeb własnych",
+                            Order = 3,
+                            ProjectScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Description = "Licznik gazu z korektorem objętościowym",
+                            Order = 4,
+                            ProjectScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Description = "Licznik produkcji ciepła",
+                            Order = 5,
+                            ProjectScopeTemplateId = 9
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Description = "Instalacja gazowa",
+                            Order = 1,
+                            ProjectScopeTemplateId = 10
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Description = "Instalacja odzysku ciepła ze spalin",
+                            Order = 2,
+                            ProjectScopeTemplateId = 10
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Description = "Instalacja odzysku ciepła z bloku z silnika",
+                            Order = 3,
+                            ProjectScopeTemplateId = 10
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Description = "Kable grzewcze dla dostarczanych instalacji",
+                            Order = 4,
+                            ProjectScopeTemplateId = 10
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Description = "Sterownik PLC + panel HMI",
+                            Order = 1,
+                            ProjectScopeTemplateId = 11
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Description = "System nadrzędny SCADA - licencje + komputer i monitor",
+                            Order = 2,
+                            ProjectScopeTemplateId = 11
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Description = "Okablowanie i trasy kablowe",
+                            Order = 3,
+                            ProjectScopeTemplateId = 11
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Description = "Prefabrykacja szaf",
+                            Order = 4,
+                            ProjectScopeTemplateId = 11
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Description = "Montaż tras kablowych i kabli",
+                            Order = 5,
+                            ProjectScopeTemplateId = 11
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Description = "Rozruch, uruchomienie, optymalizacja.",
+                            Order = 6,
+                            ProjectScopeTemplateId = 11
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopeTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProjectScopeTemplates", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Zestaw kogeneracyjny Caterpillar",
+                            Order = 1,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Projekt i uruchomienie",
+                            Order = 2,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Instalacja elektryczna",
+                            Order = 3,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Układ chłodzenia i produkcji ciepłej wody z bloku silnika",
+                            Order = 4,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Układ odprowadzenia spalin",
+                            Order = 5,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Ścieżka gazowa",
+                            Order = 6,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Układ gospodarki oleju silnikowego",
+                            Order = 7,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Obudowa kontenerowa zespołu prądotwórczego oraz prace budowlane",
+                            Order = 8,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Opomiarowanie",
+                            Order = 9,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Instalacje technologiczne – odzysk ciepła, instalacja gazowa",
+                            Order = 10,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Dostawa nadrzędnego systemu sterowania",
+                            Order = 11,
+                            ProjectType = 0
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ProjectType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProjectSettings", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProjectType = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProjectType = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ProjectType = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ProjectType = 3
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectSettingPosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectSettingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectSettingId");
+
+                    b.ToTable("ProjectSettingPositions", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Schedules", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Settings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "E-mail",
+                            Order = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Ogólne",
+                            Order = 1
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.SettingsPosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SettingsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettingsId");
+
+                    b.ToTable("SettingsPositions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Host",
+                            Key = "HostSmtp",
+                            Order = 1,
+                            SettingsId = 1,
+                            Type = 0,
+                            Value = "smtp.gmail.com"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Port",
+                            Key = "Port",
+                            Order = 2,
+                            SettingsId = 1,
+                            Type = 2,
+                            Value = "587"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Adres e-mail nadawcy",
+                            Key = "SenderEmail",
+                            Order = 3,
+                            SettingsId = 1,
+                            Type = 0,
+                            Value = ""
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Hasło",
+                            Key = "SenderEmailPassword",
+                            Order = 4,
+                            SettingsId = 1,
+                            Type = 4,
+                            Value = ""
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Nazwa nadawcy",
+                            Key = "SenderName",
+                            Order = 5,
+                            SettingsId = 1,
+                            Type = 0,
+                            Value = "Administrator"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Login nadawcy",
+                            Key = "SenderLogin",
+                            Order = 6,
+                            SettingsId = 1,
+                            Type = 0,
+                            Value = ""
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Czy wyświetlać banner na stronie głównej?",
+                            Key = "BannerVisible",
+                            Order = 1,
+                            SettingsId = 2,
+                            Type = 1,
+                            Value = "True"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Folor footera strona głównej",
+                            Key = "FooterColor",
+                            Order = 2,
+                            SettingsId = 2,
+                            Type = 5,
+                            Value = "#dc3545"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Główny adres e-mail administratora",
+                            Key = "AdminEmail",
+                            Order = 3,
+                            SettingsId = 2,
+                            Type = 0,
+                            Value = "integri.pp@gmail.com"
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Settlement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Settlements", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.SubConAddress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("City")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Street")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("StreetNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SubContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ZipCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubContractorId")
+                        .IsUnique();
+
+                    b.ToTable("SubConAddresses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            SubContractorId = 1
+                        });
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.SubContractor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubContractors", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Bergerat Monnoyeur"
+                        });
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.Property<int>("Id")
@@ -3389,7 +3982,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FinishDate")
@@ -3439,7 +4032,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("TodoId")
@@ -3568,6 +4161,9 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("SettlementId")
                         .HasColumnType("int");
 
+                    b.Property<int>("WorkScopeType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SettlementId");
@@ -3635,6 +4231,11 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -4638,6 +5239,9 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("ProjectType")
                         .HasColumnType("int");
 
+                    b.Property<int>("WorkScopeType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("WorkScopeTemplates", (string)null);
@@ -4648,119 +5252,136 @@ namespace ProjectManager.Infrastructure.Migrations
                             Id = 1,
                             Description = "Agregat",
                             Order = 1,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 0
                         },
                         new
                         {
                             Id = 2,
                             Description = "Prace budowlano-konstrukcyjne",
                             Order = 2,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 3,
                             Description = "Układ chłodzenia i wyprowadzenia ciepła",
                             Order = 3,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 4,
                             Description = "Wentylacja",
                             Order = 4,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 5,
                             Description = "Instalacje elektryczne",
                             Order = 5,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 6,
                             Description = "Instalacja gazowa",
                             Order = 6,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 7,
                             Description = "Zarządzenie projektem, dokumenetacja techniczna, rozruchy",
                             Order = 7,
-                            ProjectType = 0
+                            ProjectType = 0,
+                            WorkScopeType = 2
                         },
                         new
                         {
                             Id = 8,
                             Description = "Zespół prądotwórczy",
                             Order = 1,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 0
                         },
                         new
                         {
                             Id = 9,
                             Description = "Zespół prądotwórczy - Logistyka",
                             Order = 2,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 0
                         },
                         new
                         {
                             Id = 10,
                             Description = "Instalacje elektryczne",
                             Order = 3,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 11,
                             Description = "Układ chłodzenia silnika",
                             Order = 4,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 12,
                             Description = "Układ odprowadzenia spalin",
                             Order = 5,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 13,
                             Description = "Instalacja paliwowa",
                             Order = 6,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 14,
                             Description = "Instalacja olejowa",
                             Order = 7,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 15,
                             Description = "Wentylacja",
                             Order = 8,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 16,
                             Description = "Prace budowlano-konstrukcyjne",
                             Order = 9,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 1
                         },
                         new
                         {
                             Id = 17,
                             Description = "Zarządzenie projektem, dokumenetacja techniczna, rozruchy",
                             Order = 10,
-                            ProjectType = 1
+                            ProjectType = 1,
+                            WorkScopeType = 2
                         });
                 });
 
@@ -4847,7 +5468,7 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.Alarm", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("Alarms")
+                        .WithMany("LogAlarms")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4902,47 +5523,21 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Device");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Division", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceTemplatePosition", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.Project", "Project")
-                        .WithMany("Divisions")
-                        .HasForeignKey("ProjectId")
+                    b.HasOne("ProjectManager.Domain.Entities.DeviceTemplate", "Template")
+                        .WithMany("TemplatePositions")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Divisions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.DivisionPosition", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Division", "Division")
-                        .WithMany("Positions")
-                        .HasForeignKey("DivisionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", "SubContractor")
-                        .WithMany("DivisionItems")
-                        .HasForeignKey("SubContractorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Division");
-
-                    b.Navigation("SubContractor");
+                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("ElectricCounters")
+                        .WithMany("LogElectricCounters")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4975,7 +5570,7 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("Engines")
+                        .WithMany("LogEngines")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4986,7 +5581,7 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("GasCounters")
+                        .WithMany("LogGasCounters")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4997,7 +5592,7 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("HeatCounters")
+                        .WithMany("LogHeatCounters")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5013,21 +5608,21 @@ namespace ProjectManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", "Vendor")
+                    b.HasOne("ProjectManager.Domain.Entities.WorkScope", "WorkScope")
                         .WithMany("Invoices")
-                        .HasForeignKey("VendorId")
+                        .HasForeignKey("WorkScopeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Settlement");
 
-                    b.Navigation("Vendor");
+                    b.Navigation("WorkScope");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("OtherCounters")
+                        .WithMany("LogOtherCounters")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5047,7 +5642,7 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.DivisionPosition", "Position")
+                    b.HasOne("ProjectManager.Domain.Entities.ProjectScopePosition", "Position")
                         .WithMany("PositionPosts")
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5118,6 +5713,16 @@ namespace ProjectManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "DesignEng")
+                        .WithMany("DesignEng")
+                        .HasForeignKey("DesignEngId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "ElectricEng")
+                        .WithMany("ElectricEng")
+                        .HasForeignKey("ElectricEngId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
                         .WithMany("ProjectsCreator")
                         .HasForeignKey("UserID")
@@ -5135,11 +5740,56 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("Client");
 
+                    b.Navigation("DesignEng");
+
+                    b.Navigation("ElectricEng");
+
                     b.Navigation("User");
 
                     b.Navigation("UserPM");
 
                     b.Navigation("UserUpdator");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScope", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", null)
+                        .WithMany("ProjectScopes")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("ProjectManager.Domain.Entities.Project", "Project")
+                        .WithMany("ProjectScopes")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopePosition", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.ProjectScope", "ProjectScope")
+                        .WithMany("Positions")
+                        .HasForeignKey("ProjectScopeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.SubContractor", null)
+                        .WithMany("DivisionItems")
+                        .HasForeignKey("SubContractorId");
+
+                    b.Navigation("ProjectScope");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopePositionTemplate", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.ProjectScopeTemplate", "ProjectScopeTemplate")
+                        .WithMany("ProjectScopePositions")
+                        .HasForeignKey("ProjectScopeTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProjectScopeTemplate");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectSettingPosition", b =>
@@ -5209,17 +5859,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("SubContractor");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.TemplatePosition", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Template", "Template")
-                        .WithMany("TemplatePositions")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
@@ -5374,9 +6013,11 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     b.Navigation("Activities");
 
+                    b.Navigation("DesignEng");
+
                     b.Navigation("Devices");
 
-                    b.Navigation("Divisions");
+                    b.Navigation("ElectricEng");
 
                     b.Navigation("Employee");
 
@@ -5389,6 +6030,8 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("PostReplies");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("ProjectScopes");
 
                     b.Navigation("ProjectsCreator");
 
@@ -5422,29 +6065,24 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Device", b =>
                 {
-                    b.Navigation("Alarms");
-
                     b.Navigation("DeviceHeaders");
 
-                    b.Navigation("ElectricCounters");
+                    b.Navigation("LogAlarms");
 
-                    b.Navigation("Engines");
+                    b.Navigation("LogElectricCounters");
 
-                    b.Navigation("GasCounters");
+                    b.Navigation("LogEngines");
 
-                    b.Navigation("HeatCounters");
+                    b.Navigation("LogGasCounters");
 
-                    b.Navigation("OtherCounters");
+                    b.Navigation("LogHeatCounters");
+
+                    b.Navigation("LogOtherCounters");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Division", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceTemplate", b =>
                 {
-                    b.Navigation("Positions");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.DivisionPosition", b =>
-                {
-                    b.Navigation("PositionPosts");
+                    b.Navigation("TemplatePositions");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
@@ -5459,15 +6097,30 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Project", b =>
                 {
-                    b.Navigation("Divisions");
-
                     b.Navigation("Posts");
+
+                    b.Navigation("ProjectScopes");
 
                     b.Navigation("Schedules");
 
                     b.Navigation("Settlement");
 
                     b.Navigation("Todos");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScope", b =>
+                {
+                    b.Navigation("Positions");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopePosition", b =>
+                {
+                    b.Navigation("PositionPosts");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectScopeTemplate", b =>
+                {
+                    b.Navigation("ProjectScopePositions");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.ProjectSetting", b =>
@@ -5502,16 +6155,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("DivisionItems");
 
-                    b.Navigation("Invoices");
-
                     b.Navigation("WorkScopeCosts");
 
                     b.Navigation("WorkScopeOffers");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Template", b =>
-                {
-                    b.Navigation("TemplatePositions");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
@@ -5528,6 +6174,8 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.WorkScope", b =>
                 {
+                    b.Navigation("Invoices");
+
                     b.Navigation("WorkScopeCosts");
 
                     b.Navigation("WorkScopeOffers");

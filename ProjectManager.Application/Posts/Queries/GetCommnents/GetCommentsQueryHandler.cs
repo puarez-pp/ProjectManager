@@ -32,15 +32,15 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, GetComm
 
         var vm = new GetCommentsVm
         {
-            Project = project.ToProjectDto(),
-            Posts = project.Posts.OrderByDescending(x=>x.CreatedDate)
+            Project = new Projects.Queries.GetProject.ProjectDto(),
+            Posts = project.Posts.OrderByDescending(x=>x.CreatedAt)
                     .Select(x => new PostDto
                     {
                         Id = x.Id,
-                        Content = x.Content,
-                        CreatedDate = x.CreatedDate,
+                        Body = x.Body,
+                        CreatedAt = x.CreatedAt,
                         User = x.User.ToUserDto().FullName,
-                        Replies = x.PostReplies.OrderByDescending(pr => pr.CreatedDate)
+                        Replies = x.PostReplies.OrderByDescending(pr => pr.CreatedAt)
                                         .Select(pr => pr.ToPostReplyDto())
                                         .ToList()
                     }).ToList()

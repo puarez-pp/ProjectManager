@@ -7,7 +7,6 @@ using ProjectManager.Application.Posts.Commands.AddPositionPost;
 using ProjectManager.Application.Posts.Commands.DeletePost;
 using ProjectManager.Application.Posts.Commands.EditPositionPost;
 using ProjectManager.Application.Posts.Queries.GetCommnents;
-using ProjectManager.Application.Posts.Queries.GetEditPositionPost;
 using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.UI.Controllers
@@ -23,9 +22,9 @@ namespace ProjectManager.UI.Controllers
             _dateTimeService = dateTimeService;
             _logger = logger;
         }
-        public async Task<IActionResult> AddPost(int Id, DivisionType Division, string Position)
+        public async Task<IActionResult> AddPost(int Id, DivisionType ProjectScope, string Position)
         {
-            ViewData["Division"] = Division;
+            ViewData["ProjectScope"] = ProjectScope;
             ViewData["Position"] = Position;
             return View(new AddPostCommand { PositionId = Id });
         }
@@ -40,26 +39,6 @@ namespace ProjectManager.UI.Controllers
             if (!result.IsValid)
                 return View(command);
             TempData["Success"] = "Komentarz został dodany.";
-
-            return RedirectToAction("Position", new { @id = command.PositionId });
-        }
-
-        public async Task<IActionResult> EditPost(int Id)
-        {
-            return View(await Mediator.Send(new GetEditPositionPostQuery { Id = Id }));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(EditPostCommand command)
-        {
-
-            var result = await MediatorSendValidate(command);
-
-            if (!result.IsValid)
-                return View(command);
-
-            TempData["Success"] = "Komentarz został zaktualizowany.";
 
             return RedirectToAction("Position", new { @id = command.PositionId });
         }

@@ -22,7 +22,7 @@ class PostReplyConfiguration : IEntityTypeConfiguration<PostReply>
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(x => x.Content)
+        builder.Property(x => x.Body)
             .IsRequired()
             .HasMaxLength(2000);
 

@@ -2,6 +2,7 @@
 @using System.Globalization
 @using ProjectManager.Application.Common.Extensions
 @using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Projects.Commands.AddPosition
 @using ProjectManager.Application.Projects.Queries.GetProject
 @using ProjectManager.Application.Users.Extensions
 @using ProjectManager.Domain.Enums
@@ -9,251 +10,365 @@
 @model GetProjectVm
 
 @{
-    ViewData["Title"] = "Podgląd projektu";
+    ViewData["Title"] = "Przegląd projektu";
     var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-    var inPreparation = Model.Project.ProjectStatus == ProjectStatus.InPreparation;
-    var inProgres = Model.Project.ProjectStatus == ProjectStatus.InProgress;
+
     var completed = Model.Project.ProjectStatus == ProjectStatus.Completed;
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
-    var hasAllPositionsCompleted = Model.Positions.SelectMany(x => x).All(x => x.IsCompleted);
-    var description = "Czy na pewno chcesz zakończyć wybrany projekt?";
-    var title = hasAllPositionsCompleted ? description : $"Projekt zawiera niezakończone pozycje. {description}";
+
 }
 
 @section Styles {
 <partial name="Styles/_DataTablesStyles" />
 }
 
-<partial 
-    name="Modals/_ModalConfirm"
+<input type="hidden" id="Id" name="Id" value="@Model.Project.Id" />
 
-    model="@(new ModalParams
-    {
-        Id = "modal-confirm-finish",
-        Title = "Potwierdź proszę",
-        Description = title
-    })" 
-/>
+<div class="card shadow-sm mb-4 border-0">
 
-<div class="card card-primary card-border-top">
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Project.Name
+        </h4>
+
+        <button class="btn btn-light btn-sm open-edit-project-modal"
+                data-project="@Model.Project.Id"
+                type="button">
+            <i class="fas fa-edit me-1"></i> Edytuj projekt
+        </button>
+    </div>
+
+    <!-- TREŚĆ KARTY -->
     <div class="card-body">
-        <div class="mb-3">
-            @if (roles && !completed)
-            {
-                <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-primary mx-2 " role="button">
-                    <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
-                </a>
-                <button class="btn btn-danger mx-2" onclick="finishProject('@Model.Project.Id')">
-                    <i class="fas fa-solid fa-pen-to-square"></i>Zakończ
-                </button>
-                <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-primary mx-2" role="button">
-                    <i class="fas fa-regular fa-coins"></i>Rozliczenie
-                </a>
 
-                <a href="/Todo/Todos?id=@Model.Project.Id" class="btn btn-success mx-2"role="button">
-                    <i class="fas fa-solid fa-list-check"></i>Zadania
-                </a>
-                <a href="/Project/EditProject?Id=@Model.Project.Id" class="btn btn-success mx-2"         role="button">
-                    <i class="fas fa-regular fa-comment"></i>Komentarze
-                </a>
-            }
+        <div class="row">
 
+            <!-- LEWA KOLUMNA -->
+            <div class="col-md-6">
+
+                <p class="mb-2">
+                    <i class="fas fa-info-circle text-secondary me-2"></i>
+                    Status:
+                    <span class="badge bg-info text-dark ms-1">
+                        @Model.Project.ProjectStatus.GetDisplayName()
+                    </span>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-tags text-secondary me-2"></i>
+                    Kategoria:
+                    <b>@Model.Project.ProjectType</b>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-user-tie text-secondary me-2"></i>
+                    Klient:
+                    <b>@Model.Project.Client</b>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-user-check text-secondary me-2"></i>
+                    Kierownik projektu:
+                    <b>@Model.Project.ProjectManager.FullName</b>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-share-square text-secondary me-2"></i>
+                    SharePoint:
+                    <a href="@Model.Project.Sharepoint"
+                       target="_blank"
+                       class="fw-bold text-decoration-none ms-1">
+                        Otwórz dokumentację
+                    </a>
+                </p>
+
+            </div>
+
+            <!-- PRAWA KOLUMNA -->
+            <div class="col-md-6">
+
+                <p class="mb-2">
+                    <i class="fas fa-user-plus text-secondary me-2"></i>
+                    Utworzył:
+                    <b>@Model.Project.User.FullName</b>
+                    <br />
+                    <i class="fas fa-calendar-plus text-secondary me-2"></i>
+                    Data utworzenia:
+                    <b>@Model.Project.CreatedAt</b>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-user-edit text-secondary me-2"></i>
+                    Zmodyfikował:
+                    <b>@Model.Project.UserUpd.FullName</b>
+                    <br />
+                    <i class="fas fa-calendar-day text-secondary me-2"></i>
+                    Data modyfikacji:
+                    <b>@Model.Project.EditdAt</b>
+                </p>
+
+                @if (Model.Project.FinishedAt != null)
+                {
+                    <p class="mb-2">
+                        <i class="fas fa-flag-checkered text-secondary me-2"></i>
+                        Zakończono:
+                        <b>@Model.Project.FinishedAt</b>
+                    </p>
+                }
+
+            </div>
         </div>
 
+        <hr />
 
-        <p class="mt-2">Status: <b>@Model.Project.ProjectStatus.GetDisplayName()</b></p>
-        <ul class="ul-style">
-            <li>
-                <h3 class="mt-2">@Model.Project.Name</h3> 
-            </li>
-            <li>
-                <p class="mt-3">Kategoria: <b>@Model.Project.ProjectType</b></p>
-            </li>
-            <li>
-                <p>Klient: <b>@Model.Project.Client</b></p>
-            </li>
-            <li>
-                <p >Utworzył: <b>@Model.Project.User</b>, Data utworzenia: <b>@Model.Project.CreatedDate</b></p>
-            </li>
-            <li>
-                <p>Zmodyfikował: <b>@Model.Project.UserUpdate</b>, Data modyfikacji: <b>@Model.Project.EditDate</b></p>
-            </li>
-            <li>
-                 <p>Kierownik projektu: <b>@Model.Project.UserPM</b></p>
-            </li>
-            <li>
-                <p>Link do Sharepoint: <b><a class="edit-link" href=@Model.Project.Sharepoint target="_blank"></a></b></p>
-            </li>
-            <li>
-                <p><b>Uwagi:</b></p>
+        <h6 class="text-muted">
+            <i class="fas fa-comment-alt me-2"></i>
+            Uwagi:
+        </h6>
+        <p>@Model.Project.Comment</p>
 
-            </li>
-            <li>
-                <p>@Model.Project.Comment</p>
-            </li>
-            
-        </ul>
     </div>
 </div>
-    
-<h4 class="mx-4 mt-2"><b>Realizacja projektu</b></h4>
 
-@for (int i =0; i<Model.Divisions.Count(); i++)
-{
-    <div class="card card-primary card-border-top mt-2">
-        <div class="card-body">
-            <h4 class="card-title mt-2"><b>@Model.Divisions[i].DivisionType.GetDisplayName()</b></h4>
-            @if (roles && !completed)
-            {
-                <a href="/Project/EditDivision?Id=@Model.Divisions[i].Id" class="btn btn-success mb-1" role="button">
-                    <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
-                </a>
-            }
-            
-            <p>Prowadzący: <b>@Model.Divisions[i].User.ToUserDto().FullName</b></p>
-            <table id="@Model.Divisions[i].DivisionType.ToString()" class="table table-bordered table-hover mt-2">
-                <thead>
-                    <tr> 
-                        <th>Etap</th>
-                        <th class="desktop">Wykonawca</th>
-                        <th class="desktop"></th>
-                        <th class="desktop">Status</th>
-                        <th class="desktop"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var position in Model.Positions[i])
-                    {
-                        <tr>
-                           <td>
-                               @position.DivisionPositionType.GetDisplayName()
-                               
-                           </td>
-                           <td>
-                               @position.SubContractor.Name
-                           </td>
-                           <td>
-                               <a class="edit-link" href='/Project/Position?Id=@position.Id'>
-                                   <i class="fas fa-solid fa-info-circle"></i>Szczegóły</a>
-                           </td>
-                           <td>
-                                @if (position.IsCompleted)
-                                {
-                                    <p>Zakończony</p>
-                                } 
-                                else
-                                {
-                                    <p>W realizacji</p>
-                                }
-                           </td> 
-                           <td>
-                               @if(!position.IsCompleted)
-                               {
-    
-                                   <a class="btn btn-sm btn-success" role="button" href="/Project/EditPosition?Id=@position.Id">
-                                       <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
-                                   </a>
-                                }
-                                else
-                                {
-                                    @string.Empty
-                                }       
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
+
+<div class="mt-4 mb-2 d-flex align-items-center">
+    <i class="fas fa-tasks me-2 text-primary"></i>
+    <h4 class="mb-0">Realizacja projektu</h4>
+</div>
+
+
+<div id="modal-container"></div>
+
+<div id="scopesAccordionContainer">
+    <partial name="_ScopesAccordion" model="Model" />
+</div>
 
 @section Scripts {
-<partial name="Scripts/_DataTablesScripts" />
+    <partial name="Scripts/_DataTablesScripts" />
+    <script>
+        $(document).on("click", ".load-posts", function () {
+            var positionId = $(this).data("position");
+            var target = $(this).data("target");
+            var container = $(target).find(".posts-container");
 
-<script>
-    var selectedRow;
-    var projectId = 0;
-    var selectedPositionId = 0;
-    var positionsDesign;
-    var positionsElectric;
-    var positionsAutomatic;
-
-    $(document).ready(function () {
-
-
-        positionsDesign = $('#Design').DataTable({
-            info: false,
-
-            paging: false,
-            searching: false,
-            ordering: false,
-            responsive: true,
-            autoWidth: true,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
+            if ($(target).hasClass("show")) {
+                $(target).collapse("hide");
+                return;
             }
-        });
-
-        positionsElectric = $('#Electric').DataTable({
-            info: false,
-
-            paging: false,
-            searching: false,
-            ordering: false,
-            responsive: true,
-            autoWidth: true,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            }
-        });
-
-        positionsAutomatic = $('#Automatic').DataTable({
-            info: false,
-
-            paging: false,
-            searching: false,
-            ordering: false,
-            responsive: true,
-            autoWidth: true,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            }
-        });
-    });
-
-        function finishProject(id) {
-            projectId = id;
-            $('#modal-confirm-finish').modal('show');
-        }
-
-        $('#modal-confirm-finish-btn').on('click', function (e) {
-
-            $('#modal-confirm-finish').modal('hide');
-
             $.ajax({
-                type: "POST",
-                url: "/Project/FinishProject",
+                url: "/Project/PositionPosts",
+                type: "GET",
+                data: { id: positionId },
+                success: function (result) {
+                    container.html(result);
+                    $(target).collapse("show");
+                    }
+                });
+        });
+            $(document).on("click", ".open-add-position-modal", function () {
+                var scopeId = $(this).data("scope");
+                $.ajax({
+                    url: "/Project/AddPosition",
+                    type: "GET",
+                    data: { id: scopeId },
+                    success: function (result) {
+                        $("#modal-container").html(result);
+                        $("#modal-add-position").modal('show');
+                    }
+                });
+            });
+
+            $(document).on("submit", "#add-position-form", function (e) {
+                e.preventDefault(); // zatrzymanie submitu
+                const errorMessage = "Błąd. Nie udało się dodać nowej pozycji.";
+                $.ajax({
+                    type: "POST",
+                    url: "/Project/AddPosition",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success('Dane zostały zaktualizowane.');
+                            $('#modal-add-position').modal('hide');
+                            reloadScopes();
+                        } else {
+                            toastr.error(errorMessage);
+                        }
+                    },
+                    error: function (data) {
+                        toastr.error(errorMessage);
+                    },
+                    dataType: "json"
+                });
+            });
+
+            $(document).on("click", ".open-edit-position-modal", function () {
+                var positionId = $(this).data("position");
+                $.ajax({
+                    url: "/Project/EditPosition",
+                    type: "GET",
+                    data: { id: positionId },
+                    success: function (result) {
+                        $("#modal-container").html(result);
+                        $("#modal-edit-position").modal('show');
+                    }
+                });
+            });
+
+            $(document).on("submit", "#edit-position-form", function (e) {
+                e.preventDefault(); // zatrzymanie submitu
+                const errorMessage = "Błąd. Nie udało się dodać nowej pozycji.";
+                $.ajax({
+                    type: "POST",
+                    url: "/Project/EditPosition",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success('Dane zostały zaktualizowane.');
+                            $('#modal-edit-position').modal('hide');
+                            reloadScopes();
+                        } else {
+                            toastr.error(errorMessage);
+                        }
+                    },
+                    error: function (data) {
+                        toastr.error(errorMessage);
+                    },
+                    dataType: "json"
+                });
+            });
+
+            $(document).on('change', '.form-check-input', function () {
+            const isCompleted = $(this).is(':checked');
+            const posId = $(this).data('pos-id');
+            $.ajax({
+                url: '/Project/FinishPosition',
+                type: 'POST',
                 data: {
-                    id: projectId
+                    id: posId,
+                    isCompleted: isCompleted
                 },
-                success: function (data) {
-                    if (data.success) {
-                        location.reload();
-                        toastr.success('Projekt został pomyślnie zakończony.')
-                    } 
-                    else 
-                        toastr.error('Błąd. ' + data.message);
+                success: function (response) {
+                    toastr.success('Zaktualizowano status');
                 },
-                error: function (data) {
-                    toastr.error('Błąd. Nie udało się zamknąć wybranego projektu. Spróbuj ponownie lub skontaktuj sie z administratorem.');
-                },
-                dataType: "json"
+                error: function () {
+                    toastr.error('Błąd podczas aktualizacji statusu');
+                }
             });
         });
-</script>
+
+                // kolorowanie i przekreślanie
+        $(document).on("change", ".isCompletedCb", function () {
+            const posId = $(this).data("pos-id");
+            const isChecked = $(this).is(":checked");
+
+            const title = $(`.position-title[data-pos-id='${posId}']`);
+            const wrapper = $(`.position-wrapper[data-pos-id='${posId}']`);
+
+            if (isChecked) {
+                title.addClass("completed");
+                wrapper.addClass("completed");
+            } else {
+                title.removeClass("completed");
+                wrapper.removeClass("completed");
+            }
+        });
+
+        // ładowanie postów przy otwarciu accordionu
+        $(document).on("shown.bs.collapse", ".accordion-collapse", function () {
+            const posId = $(this).attr("id").replace("pos-collapse-", "");
+            const target = `#posts-${posId}`;
+
+            loadPosts(posId, target);
+        });
+
+        $(document).on("click", ".open-add-post-modal", function () {
+                const positionId = $(this).data("position");
+                $.ajax({
+                    url: "/Project/AddPositionPost",
+                    type: "GET",
+                    data: { id: positionId },
+                    success: function (result) {
+                        $("#modal-container").html(result);
+                        $("#modal-add-position-post").modal('show');
+                    }
+                });
+            });
+
+            $(document).on("submit", "#add-position-post-form", function (e) {
+                e.preventDefault(); 
+                const errorMessage = "Błąd. Nie udało się dodać komentarza.";
+                $.ajax({
+                    type: "POST",
+                    url: "/Project/AddPositionPost",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success('Dane zostały zaktualizowane.');
+                            $('#modal-add-position-post').modal('hide');
+                            reloadPosts();
+                        } else {
+                            toastr.error(errorMessage);
+                        }
+                    },
+                    error: function (data) {
+                        toastr.error(errorMessage);
+                    },
+                    dataType: "json"
+                });
+            });
+
+
+            $('#modal-add-position').on('hidden.bs.modal', function () {
+                $(this).remove(); // usuwa modal z DOM po zamknięciu
+            });
+
+            $('#modal-edit-position').on('hidden.bs.modal', function () {
+                $(this).remove(); // usuwa modal z DOM po zamknięciu
+            });
+
+            $('#modal-add-position-post').on('hidden.bs.modal', function () {
+                $(this).remove(); // usuwa modal z DOM po zamknięciu
+            });
+
+           
+            function loadPosts(posId, target) {
+                $.ajax({
+                    url: "/Project/PositionPosts",
+                    type: "GET",
+                    data: { id: posId },
+                    success: function (result) {
+                        $(target).html(result);
+                    }
+                });
+            }
+
+            function reloadScopes() {
+                const id = $("#Id").val();
+                $.ajax({
+                    url: '/Project/Scopes',
+                    type: 'GET',
+                    data: { id: id },
+                    success: function (html) {
+                        $("#scopesAccordionContainer").html(html);
+                    }
+                });
+            }
+
+            function reloadPosts() {
+                const posId = $("#position-id").val();
+                const postsId = "#posts-" + posId;
+                $.ajax({
+                    url: "/Project/PositionPosts",
+                    type: "GET",
+                    data: { id: posId},
+                    success: function (html) {
+                        $(postsId).html(html);
+                        }
+                    });
+            }
+    </script>
 }
 
         

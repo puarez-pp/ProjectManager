@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Clients.Commands.EditClient;
 
@@ -24,7 +25,7 @@ public class EditClientCommandHandler : IRequestHandler<EditClientCommand>
         client.Email = request.Email;
         client.PhoneNumber = request.PhoneNumber;
         if (client.Address == null)
-            client.Address = new Domain.Entities.Address();
+            client.Address = new Address();
         client.Address.City = request.City;
         client.Address.Street = request.Street;
         client.Address.StreetNumber = request.StreetNumber;

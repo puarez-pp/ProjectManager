@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Projects.Extensions;
 
 namespace ProjectManager.Application.Projects.Queries.GetProjectBasics;
 
@@ -17,13 +17,20 @@ public class GetProjectBasicsQueryHandler : IRequestHandler<GetProjectBasicsQuer
     {
         var projects = await _context
             .Projects
-            .Include(x => x.Client)
-            .Include(x=>x.User)
-            .ThenInclude(x=>x.Employee)
-            .OrderByDescending(x => x.EditDate)
-            .Take(4)
             .AsNoTracking()
-            .Select(x => x.ToBasicsProjectDto())
+            .OrderByDescending(x => x.EditAt)
+            .Select(x => new ProjectBasicsDto
+            {
+                Id = x.Id,
+                ProjectType = x.ProjectType.GetDisplayName(),
+                ProjectStatus = x.Status,
+                Number = x.Number,
+                Name = x.Name,
+                Sharepoint = x.Sharepoint,
+                Client = x.Client.Name,
+                EditAt = x.EditAt,
+            })
+            .Take(4)
             .ToListAsync();
 
         return projects;

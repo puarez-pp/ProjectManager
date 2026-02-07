@@ -1,20 +1,18 @@
 ﻿using MediatR;
-using ProjectManager.Domain.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.Application.Projects.Commands.AddPosition;
 
-public class AddPositionCommand : IRequest<int>
+public class AddPositionCommand : IRequest
 {
 
+    public int ProjectScopeId { get; set; }
     [Required(ErrorMessage = "Pole 'Nazwa' jest wymagane")]
     [DisplayName("Nazwa")]
-    public DivisionPositionType DivisionPositionType { get; set; }
-
-    public int DivisionId { get; set; }
-
-    [DisplayName("Uwaga")]
-    public string Comment { get; set; }
+    public string Description { get; set; }
+    public bool IsCompleted { get; set; }
+    public bool NotApplicable { get; set; }
+    public DateTime? CompletionDate { get; set; }
 
 }

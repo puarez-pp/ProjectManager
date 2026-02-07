@@ -15,7 +15,9 @@ public class ApplicationUser : IdentityUser
     public ICollection<Project> ProjectsCreator { get; set; } = new HashSet<Project>();
     public ICollection<Project> ProjectsUpdator { get; set; } = new HashSet<Project>();
     public ICollection<Project> ProjectsPM { get; set; } = new HashSet<Project>();
-    public ICollection<Division> Divisions { get; set; } = new HashSet<Division>();
+    public ICollection<Project> DesignEng { get; set; } = new HashSet<Project>();
+    public ICollection<Project> ElectricEng { get; set; } = new HashSet<Project>();
+    public ICollection<ProjectScope> ProjectScopes { get; set; } = new HashSet<ProjectScope>();
     public ICollection<EmployeeEvent> EmployeeEvents { get; set; } = new HashSet<EmployeeEvent>();
     public ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     public ICollection<PostReply> PostReplies { get; set; } = new HashSet<PostReply>();

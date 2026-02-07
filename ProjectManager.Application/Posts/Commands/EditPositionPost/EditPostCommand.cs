@@ -11,5 +11,5 @@ public class EditPostCommand : IRequest
 
     [Required(ErrorMessage = "Pole 'Treść' jest wymagane")]
     [DisplayName("Treść")]
-    public string Content { get; set; }
+    public string Body { get; set; }
 }

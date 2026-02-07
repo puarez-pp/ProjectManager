@@ -27,8 +27,8 @@ public class FinishProjectCommandHandler : IRequestHandler<FinishProjectCommand>
             .FirstOrDefaultAsync(x => x.Id == request.Id);
         if (project != null)
         {
-            project.EditDate = _dateTime.Now;
-            project.FinishedDate = _dateTime.Now;
+            project.EditAt = _dateTime.Now;
+            project.FinishedAt = _dateTime.Now;
             project.UserUpdatorId = _currentUser.UserId;
             project.Status = ProjectStatus.Completed;
             await _context.SaveChangesAsync(cancellationToken);

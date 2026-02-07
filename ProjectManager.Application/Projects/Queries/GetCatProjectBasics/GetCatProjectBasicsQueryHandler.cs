@@ -18,12 +18,9 @@ public class GetCatProjectBasicsQueryHandler : IRequestHandler<GetCatProjectBasi
     {
         var projects = await _context
             .Projects
-            .Include(x=>x.Client)
-            .Include(x=>x.User)
-            .ThenInclude(x=>x.Employee)
             .AsNoTracking()
-            .Where(x=>x.ProjectType == request.ProjectTypeId)
-            .Select(x=>x.ToBasicsProjectDto())
+            .Where(x => x.ProjectType == request.ProjectTypeId)
+            .Select(x => x.ToBasicsProjectDto())
             .ToListAsync();
         return projects;
     }

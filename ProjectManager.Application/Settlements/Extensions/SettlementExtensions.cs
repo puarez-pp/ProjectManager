@@ -1,7 +1,6 @@
 ﻿using ProjectManager.Application.Settlements.Queries.GetAssumptions;
-using ProjectManager.Application.Settlements.Queries.GetGenerator;
+using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 using ProjectManager.Domain.Entities;
-using System;
 
 namespace ProjectManager.Application.Settlements.Extensions;
 
@@ -63,17 +62,18 @@ public static class SettlementExtensions
             SubContractor = cost.SubContractor.Name,
         };
     }
-    public static WorkScopDto ToWorkScopeDto(this WorkScope scope)
+    public static WorkScopeDto ToWorkScopeDto(this WorkScope scope)
     {
         if (scope == null)
         {
             return null;
         }
-        return new WorkScopDto
+        return new WorkScopeDto
         {
             Id = scope.Id,
             Description = scope.Description,
             Order = scope.Order,
+            WorkScopeType = scope.WorkScopeType,
         };
     }
 

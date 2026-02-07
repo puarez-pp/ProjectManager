@@ -22,9 +22,9 @@ public  class DeleteSubContractorCommandValidator: AbstractValidator<DeleteSubCo
     private async Task<bool> BeEmptySubContractor(int id, CancellationToken cancellationToken)
     {
         var project = await _context
-            .DivisionPositions
+            .ProjectScopePositions
             .AsNoTracking()
-            .Where(x => x.SubContractorId == id)
+            .Where(x => x.Id == id)
             .ToListAsync();
         return !project.Any();  
     }

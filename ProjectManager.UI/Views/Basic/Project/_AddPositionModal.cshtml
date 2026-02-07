@@ -1,0 +1,31 @@
+﻿@using ProjectManager.Application.Projects.Commands.AddPosition
+
+@model AddPositionCommand
+
+
+
+<div class="modal" id="modal-add-position">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-position-form">
+                <input type="hidden" asp-for="ProjectScopeId" />
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodawanie nowej pozycji</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"> 
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Description)
+                        @Html.TextBoxFor(x => x.Description, new { @class = "form-control", placeholder = "Wprowadź nazwę" })
+                        @Html.ValidationMessageFor(x => x.Description)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button id="modal-add-position-btn" type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

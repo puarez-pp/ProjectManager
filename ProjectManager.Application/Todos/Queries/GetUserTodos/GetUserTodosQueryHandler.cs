@@ -28,7 +28,7 @@ public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, IEnum
             .ThenInclude(x => x.Employee)
             .AsNoTracking()
             .Where(x => x.UserToId == _currentUser.UserId)
-            .OrderByDescending(x=>x.CreatedDate)
+            .OrderByDescending(x=>x.CreatedAt)
             .Select(x=>x.ToTodoDto())
             .ToListAsync();
 

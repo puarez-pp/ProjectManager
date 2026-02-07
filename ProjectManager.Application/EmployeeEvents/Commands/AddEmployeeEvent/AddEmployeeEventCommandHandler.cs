@@ -28,7 +28,7 @@ public class AddEmployeeEventCommandHandler : IRequestHandler<AddEmployeeEventCo
             IsFullDay = request.IsFullDay.GetValueOrDefault(),
             Start = request.Start,
             UserId = request.UserId,
-            CreatedDate = _dateTimeService.Now
+            CreatedAt = _dateTimeService.Now
         };
 
         _context.EmployeeEvents.Add(employeeEvent);

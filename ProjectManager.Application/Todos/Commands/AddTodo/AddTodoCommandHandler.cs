@@ -27,7 +27,7 @@ public class AddTodoCommandHandler : IRequestHandler<AddTodoCommand>
         todo.ProjectId = request.ProjectId;
         todo.UserToId = request.UserToId;
         todo.UserFromId = _currentUser.UserId;
-        todo.CreatedDate = _dateTime.Now;
+        todo.CreatedAt = _dateTime.Now;
         await _context.Todos.AddAsync(todo);
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

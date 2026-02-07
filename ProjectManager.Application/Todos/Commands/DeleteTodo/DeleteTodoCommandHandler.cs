@@ -16,7 +16,6 @@ public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
     {
         var todo = await _context
             .Todos
-            .AsNoTracking()
             .Include(x=>x.TodoPosts)
             .FirstOrDefaultAsync(x=>x.Id == request.Id);
         if (todo != null)

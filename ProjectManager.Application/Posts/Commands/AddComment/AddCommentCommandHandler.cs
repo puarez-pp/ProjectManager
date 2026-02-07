@@ -25,8 +25,8 @@ public class AddCommentCommandHandler : IRequestHandler<AddCommentCommand, int>
         {
             ProjectId = request.ProjectId,
             Title = request.Title,
-            Content = request.Content,
-            CreatedDate = _dateTimeService.Now,
+            Body = request.Body,
+            CreatedAt = _dateTimeService.Now,
             UserId = _currentUser.UserId
         };
         await _context.Posts.AddAsync(post);

@@ -23,7 +23,7 @@ class PositionPostConfiguration : IEntityTypeConfiguration<PositionPost>
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.Content)
+        builder.Property(x => x.Body)
             .IsRequired()
             .HasMaxLength(2000);
     }

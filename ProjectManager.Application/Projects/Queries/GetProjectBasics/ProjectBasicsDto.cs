@@ -9,8 +9,8 @@ public class ProjectBasicsDto
     public ProjectStatus ProjectStatus { get; set; }
     public string Number { get; set; }
     public string Name { get; set; }
-    public string ClientName { get; set; }
-    public string User { get; set; }
+    public int ClientId { get; set; }
+    public string Client { get; set; }
     public string Sharepoint { get; set; }
-    public DateTime EditDate { get; set; }
+    public DateTime EditAt { get; set; }
 }

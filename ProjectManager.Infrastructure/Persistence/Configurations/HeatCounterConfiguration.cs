@@ -11,7 +11,7 @@ class HeatCounterConfiguration : IEntityTypeConfiguration<HeatCounter>
         builder.ToTable("HeatCounters");
         builder
            .HasOne(x => x.Device)
-           .WithMany(x => x.HeatCounters)
+           .WithMany(x => x.LogHeatCounters)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
 

@@ -10,8 +10,7 @@ public class Invoice
     public decimal EuroRate { get; set; }
     public int SettlementId { get; set; }
     public Settlement Settlement { get; set; }
-    public int VendorId { get; set; }
-    public SubContractor Vendor { get; set; }
+    public string Vendor { get; set; }
     public int WorkScopeId { get; set; }
     public WorkScope WorkScope { get; set; }
 

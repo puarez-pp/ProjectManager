@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Extensions;
+using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Todos.Commands.EditTodo;
 using ProjectManager.Application.Users.Extensions;
 
@@ -33,7 +34,7 @@ public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTod
             .FirstOrDefaultAsync(x => x.Todos.Any(x=>x.Id == request.Id));
 
         var vm = new EditTodoVm();
-        vm.Project = project.ToProjectDto();
+        vm.Project = new ProjectDto();
         vm.Todo = new EditTodoCommand
         {
             Id = request.Id,

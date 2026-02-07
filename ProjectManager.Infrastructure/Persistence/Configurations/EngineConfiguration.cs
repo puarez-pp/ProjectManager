@@ -11,7 +11,7 @@ class EngineConfiguration : IEntityTypeConfiguration<Engine>
         builder.ToTable("Engines");
         builder
            .HasOne(x => x.Device)
-           .WithMany(x => x.Engines)
+           .WithMany(x => x.LogEngines)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
 

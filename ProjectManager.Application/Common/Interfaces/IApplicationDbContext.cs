@@ -9,8 +9,8 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<SubConAddress> SubConAddresses { get; set; }
         DbSet<ApplicationUser> Users { get; set; }
         DbSet<Client> Clients { get; set; }
-        DbSet<Division> Divisions { get; set; }
-        DbSet<DivisionPosition> DivisionPositions { get; set; }
+        DbSet<ProjectScope> ProjectScopes { get; set; }
+        DbSet<ProjectScopePosition> ProjectScopePositions { get; set; }
         DbSet<PositionPost> PositionPosts { get; set; }
         DbSet<Employee> Employees { get; set; }
         DbSet<EmployeeEvent> EmployeeEvents { get; set; }
@@ -29,8 +29,8 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<ToolRent> Rents { get; set; }
         DbSet<Plant> Plants { get; set; }
         DbSet<Device> Devices { get; set; }
-        DbSet<Template> Templates { get; set; }
-        DbSet<TemplatePosition> TemplatePositions { get; set; }
+        DbSet<DeviceTemplate> DeviceTemplates { get; set; }
+        DbSet<DeviceTemplatePosition> DeviceTemplatePositions { get; set; }
         DbSet<DeviceHeader> DeviceHeaders { get; set; }
         DbSet<Alarm> Alarms { get; set; }
         DbSet<OtherCounter> OtherCounters { get; set; }
@@ -46,6 +46,8 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<WorkScopeOffer> WorkScopeOffers { get; set; }
         DbSet<WorkScopePositionTemplate> WorkScopePositionTemplates { get; set; }
         DbSet<WorkScopeTemplate> WorkScopeTemplates { get; set; }
+        DbSet<ProjectScopeTemplate> ProjectScopeTemplates { get; set; }
+        DbSet<ProjectScopePositionTemplate> ProjectScopePositionTemplates { get; set; }
 
 
 

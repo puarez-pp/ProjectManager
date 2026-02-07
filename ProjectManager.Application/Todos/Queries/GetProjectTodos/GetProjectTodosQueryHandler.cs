@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Extensions;
+using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Todos.Extensions;
 
 namespace ProjectManager.Application.Todos.Queries.GetProjectTodos;
@@ -33,8 +34,8 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
 
         var todos = new ProjectTodos
         {
-            Todos = project.Todos.Select(x => x.ToTodoDto()).OrderByDescending(x=>x.CreatedDate),
-            Project = project.ToProjectDto()
+            Todos = project.Todos.Select(x => x.ToTodoDto()).OrderByDescending(x=>x.CreatedAt),
+            Project = new ProjectDto()
         };
         return todos;
     }

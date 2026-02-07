@@ -24,8 +24,8 @@ public class AddCommentReplyCommandHandler : IRequestHandler<AddCommentReplyComm
         var post = new PostReply
         {
             PostId = request.PostId,
-            Content = request.Content,
-            CreatedDate = _dateTimeService.Now,
+            Body = request.Body,
+            CreatedAt = _dateTimeService.Now,
             UserId = _currentUser.UserId
         };
         await _context.PostReplies.AddAsync(post);
