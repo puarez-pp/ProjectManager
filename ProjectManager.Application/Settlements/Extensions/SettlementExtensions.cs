@@ -1,4 +1,4 @@
-﻿using ProjectManager.Application.Settlements.Queries.GetAssumptions;
+﻿using ProjectManager.Application.Settlements.Queries.GetAssumption;
 using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 using ProjectManager.Domain.Entities;
 

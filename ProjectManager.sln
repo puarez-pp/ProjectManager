@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager.Infrastructu
 		{611C17C7-EC96-46D6-A956-AA765AAB46BD} = {611C17C7-EC96-46D6-A956-AA765AAB46BD}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "minAPI", "minAPI\minAPI.csproj", "{923C4DD6-F7E0-455B-9C7E-D80771B2ABDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{FFBDF23F-33E3-446F-9620-4ACEBD8C5B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFBDF23F-33E3-446F-9620-4ACEBD8C5B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFBDF23F-33E3-446F-9620-4ACEBD8C5B5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{923C4DD6-F7E0-455B-9C7E-D80771B2ABDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{923C4DD6-F7E0-455B-9C7E-D80771B2ABDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{923C4DD6-F7E0-455B-9C7E-D80771B2ABDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{923C4DD6-F7E0-455B-9C7E-D80771B2ABDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

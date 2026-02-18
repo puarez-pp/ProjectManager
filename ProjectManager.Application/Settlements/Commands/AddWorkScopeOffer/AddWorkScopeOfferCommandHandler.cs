@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
+using System.Linq.Dynamic.Core;
 
 namespace ProjectManager.Application.Settlements.Commands.AddWorkScopeOffer;
 
-public class AddWorkScopeOfferCommandHandler : IRequestHandler<AddWorkScopeOfferCommand, int>
+public class AddWorkScopeOfferCommandHandler : IRequestHandler<AddWorkScopeOfferCommand>
 {
     private readonly IApplicationDbContext _context;
 
@@ -15,20 +16,23 @@ public class AddWorkScopeOfferCommandHandler : IRequestHandler<AddWorkScopeOffer
         _context = context;
     }
 
-    public async Task<int> Handle(AddWorkScopeOfferCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddWorkScopeOfferCommand request, CancellationToken cancellationToken)
     {
         var order = await _context
             .WorkScopeOffers
             .AsNoTracking()
             .Where(x => x.WorkScopeId == request.WorkScopeId)
-            .MaxAsync(x => x.Order);
+            .Select(x => x.Order)
+            .ToListAsync(cancellationToken);
+
+        int maxOrder = order.Count > 0 ? order.Max() : 0;
 
         var offer = new WorkScopeOffer
         {
             WorkScopeId = request.WorkScopeId,
             Description = request.Description,
             Comment = request.Comment,
-            Order = order + 1,
+            Order = maxOrder + 1,
             IsUsed = request.IsUsed,
             UnitType = request.UnitType,
             Quantity = request.Quantity,
@@ -38,7 +42,7 @@ public class AddWorkScopeOfferCommandHandler : IRequestHandler<AddWorkScopeOffer
             SubContractorId = request.SubContractorId,
         };
         await _context.WorkScopeOffers.AddAsync(offer);
-        await _context.SaveChangesAsync(cancellationToken);
-        return offer.Id;
+        await _context.SaveChangesAsync();
+        return Unit.Value;
     }
 }

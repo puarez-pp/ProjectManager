@@ -1,0 +1,54 @@
+﻿@using ProjectManager.Application.Projects.Queries.GetProjectBasics
+@using ProjectManager.Domain.Enums
+@model ProjectBasicsDto
+
+@if (true)
+{
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-light btn-sm"
+                onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Id, st = WorkScopeType.Agregat })'">
+                type="button">
+            <i class="fas fa-clipboard-check me-1"></i> Kontrola projektu
+        </button>
+
+        <button class="btn btn-outline-light btn-sm"
+                onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Id, st = WorkScopeType.Agregat })'">
+                type="button">
+            <i class="fas fa-lightbulb me-1"></i> Założenia
+        </button>
+
+        <button class="btn btn-outline-light btn-sm"
+                onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Id, st = WorkScopeType.Agregat })'">
+                type="button">
+            <i class="fas fa-file-invoice-dollar me-1"></i> Zestawienia kosztów
+        </button>
+
+        <button class="btn btn-outline-light btn-sm"
+                type="button"
+                onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Id, st = WorkScopeType.Agregat })'">
+            <i class="fas fa-layer-group me-1"></i> Agregat
+        </button>
+
+        <button class="btn btn-outline-light btn-sm"
+                type="button"
+                onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Id, st = WorkScopeType.Installation })'">
+            <i class="fas fa-plug me-1"></i> Instalacje
+        </button>
+
+        <button class="btn btn-outline-light btn-sm"
+                type="button"
+                onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Id, st = WorkScopeType.Aadministration })'">
+            <i class="fas fa-sliders me-1"></i> Zarządzanie
+        </button>
+    </div>
+}
+else
+{
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-light btn-sm"
+                type="button"
+                onclick="location.href='@Url.Action("AddSettlement", "Settlement", new { id = Model.Id })'">
+            <i class="fas fa-circle-plus me-1"></i> Dodaj rozliczenie
+        </button>
+    </div>
+}

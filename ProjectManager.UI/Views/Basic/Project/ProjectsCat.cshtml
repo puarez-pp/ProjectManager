@@ -1,4 +1,4 @@
-﻿ @using System.Globalization
+﻿@using System.Globalization
 @using ProjectManager.Application.Common.Extensions
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Projects.Queries.GetProjectBasics
@@ -8,143 +8,129 @@
 @{
     var projectType = (ProjectType)ViewData["projectType"];
     ViewData["Title"] = $"Projekty typu: {projectType.GetDisplayName()}";
+
     var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var canManage = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
 }
 
 @section Styles {
-<partial name="Styles/_DataTablesStyles" />
+    <partial name="Styles/_DataTablesStyles" />
 }
 
-<partial 
-    name="Modals/_ModalConfirm"
-    model="@(new ModalParams
-    {
-        Id = "modal-confirm-delete",
-        Title = "Potwierdź proszę",
-        Description = "Czy na pewno chcesz usunąć wybrany projekt?"
-    })" 
-/>
+<partial name="Modals/_ModalConfirm"
+         model="@(new ModalParams
+         {
+             Id = "modal-confirm-delete",
+             Title = "Potwierdź proszę",
+             Description = "Czy na pewno chcesz usunąć wybrany projekt?"
+         })" />
 
 <div class="card card-primary card-border-top">
-
     <div class="card-body">
 
-        <table id="projects" class="table table-bordered">
-            <thead>
+        <table id="projects" class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
                 <tr>
                     <th class="desktop">Numer projektu</th>
                     <th class="desktop">Nazwa projektu</th>
-                    <th class="desktop">Link do Sharepoint</th>
-                    <th class="desktop"></th>
+                    <th class="desktop">Link do SharePoint</th>
+                    <th class="desktop text-center" style="width: 180px;">Akcje</th>
                 </tr>
             </thead>
-            <tbody>
 
+            <tbody>
                 @foreach (var project in Model)
                 {
                     <tr>
+                        <td>@project.Number</td>
+
                         <td>
-                            @project.Number
+                            <a class="edit-link" href="/Project/Project?id=@project.Id">
+                                <i class="fas fa-circle-info me-1"></i>@project.Name
+                            </a>
                         </td>
-                        <td>
-                            <a class="edit-link" href='/Project/Project?id=@project.Id'><i class="fas fa-solid fa-circle-info"></i>@project.Name</a>
+
+                        <td class="text-truncate" style="max-width: 260px;">
+                            <a class="edit-link" href="@project.Sharepoint" target="_blank">
+                                @project.Sharepoint
+                            </a>
                         </td>
-                        <td>
-                            <a class="edit-link" href="@project.Sharepoint" target="_blank">@project.Sharepoint</a>
-                        </td>
-                        <td>
-                            @if(roles)
+
+                        <td class="text-center">
+                            @if (canManage)
                             {
-                                <a class="btn btn-success btn-sm" role="button" href="/Project/EditProject?Id=@project.Id">
-                                    <i class="fas fa-solid fa-pen-to-square"></i>Edytuj
+                                <a class="btn btn-success btn-sm me-1" href="/Project/EditProject?Id=@project.Id">
+                                    <i class="fas fa-pen-to-square"></i> Edytuj
                                 </a>
 
                                 <button class="btn btn-danger btn-sm" onclick="deleteProject('@project.Id', this)">
-                                    <i class="fas fa-solid fa-trash-can"></i>Usuń
+                                    <i class="fas fa-trash-can"></i> Usuń
                                 </button>
                             }
                         </td>
                     </tr>
                 }
-
             </tbody>
         </table>
 
     </div>
-
 </div>
 
 @section Scripts {
-<partial name="Scripts/_DataTablesScripts" />
+    <partial name="Scripts/_DataTablesScripts" />
 
-<script>
+    <script>
+        let table;
+        let selectedRow;
+        let selectedProjectId;
 
-    var selectedRow;
-    var selectedProjectId = 0;
-    var projects;
+        $(document).ready(function () {
 
-    $(document).ready(function () {
+            table = $('#projects').DataTable({
+                paging: true,
+                ordering: true,
+                info: true,
+                responsive: true,
+                autoWidth: false,
+                lengthChange: true,
+                language: {
+                    url: `/lib/datatables/lang/${'@locale'}.json`
+                },
+                order: [[0, "asc"]]
+            });
 
-
-        projects = $('#projects').DataTable({
-            columnDefs: [
-                    ],
-            paging: true,
-            ordering: true,
-            info: true,
-            responsive: true,
-            autoWidth: false,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            },
-            order: [[0, "asc"]],
         });
 
-    });
+        function deleteProject(id, btn) {
+            selectedRow = $(btn).closest('tr');
+            selectedProjectId = id;
+            $('#modal-confirm-delete').modal('show');
+        }
 
-  
+        $('#modal-confirm-delete-btn').on('click', function () {
 
-    function refreshTable() {
-        projects.draw();
-    }
+            $('#modal-confirm-delete').modal('hide');
 
-    function deleteProject(id, btn) {
-        selectedRow = btn.parentNode.parentNode;
-        selectedProjectId = id;
-        $('#modal-confirm-delete').modal('show');
-    }
+            const errorMessage = 'Błąd. Nie udało się usunąć wybranego projektu. Spróbuj ponownie lub skontaktuj się z administratorem.';
 
-    $('#modal-confirm-delete-btn').on('click', function (e) {
-
-        $('#modal-confirm-delete').modal('hide');
-
-
-        var errorMessage = 'Błąd. Nie udało się usunąć wybranego projektu. Spróbuj ponownie lub skontaktuj sie z administratorem.'
-
-        $.ajax({
-            type: "POST",
-            url: "/Project/DeleteProject",
-            data: {
-                id: selectedProjectId
-            },
-            success: function (data) {
-                if (data.success) {
-                    projects.rows(selectedRow).remove().draw();
-                    toastr.success('Dane zostały zaktualizowane.')
-                } 
-                else 
+            $.ajax({
+                type: "POST",
+                url: "/Project/DeleteProject",
+                data: { id: selectedProjectId },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        table.row(selectedRow).remove().draw();
+                        toastr.success('Dane zostały zaktualizowane.');
+                    } else {
+                        toastr.error(errorMessage);
+                    }
+                },
+                error: function () {
                     toastr.error(errorMessage);
-            },
-            error: function (data) {
-                toastr.error(errorMessage);
-            },
-            dataType: "json"
+                }
+            });
+
         });
-
-    });
-
-
-</script>
+    </script>
 }

@@ -5,7 +5,6 @@ using ProjectManager.Application.Posts.Commands.AddComment;
 using ProjectManager.Application.Posts.Commands.AddCommentReply;
 using ProjectManager.Application.Posts.Commands.AddPositionPost;
 using ProjectManager.Application.Posts.Commands.DeletePost;
-using ProjectManager.Application.Posts.Commands.EditPositionPost;
 using ProjectManager.Application.Posts.Queries.GetCommnents;
 using ProjectManager.Domain.Enums;
 

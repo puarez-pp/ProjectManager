@@ -12,16 +12,16 @@ class WorkScopeCostConfiguration : IEntityTypeConfiguration<WorkScopeCost>
         builder.ToTable("WorkScopeCosts");
 
         builder
-            .HasOne(x => x.SubContractor)
-            .WithMany(x => x.WorkScopeCosts)
-            .HasForeignKey(x => x.SubContractorId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
             .HasOne(x => x.WorkScope)
             .WithMany(x => x.WorkScopeCosts)
             .HasForeignKey(x => x.WorkScopeId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+           .HasOne(x => x.SubContractor)
+           .WithMany(x => x.WorkScopeCosts)
+           .HasForeignKey(x => x.SubContractorId)
+           .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.Description)
             .IsRequired()

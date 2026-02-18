@@ -1,43 +1,78 @@
 ﻿
 @using System.Globalization
 @using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Projects.Commands.AddPosition
 @using ProjectManager.Application.Projects.Queries.GetProject
 @using ProjectManager.Application.Users.Extensions
 @using ProjectManager.Domain.Enums
-
+@using ProjectManager.Infrastructure.Services
+@inject ICurrentUserService currentUserService
 @model GetProjectVm
 
 @{
-    ViewData["Title"] = "Przegląd projektu";
     var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
     var completed = Model.Project.ProjectStatus == ProjectStatus.Completed;
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
-
+    var canDelete = User.IsInRole(RolesDict.Administrator) || Model.Project.ProjectManager.Id == currentUserService.UserId;
 }
 
 @section Styles {
-<partial name="Styles/_DataTablesStyles" />
-}
 
-<input type="hidden" id="Id" name="Id" value="@Model.Project.Id" />
+}
+<partial name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete-post",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybrany komentarz?"
+    })" />
+<partial name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete-position",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybraną pozycję?"
+    })" 
+/>
+
 
 <div class="card shadow-sm mb-4 border-0">
 
     <!-- NAGŁÓWEK KARTY -->
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
             <i class="fas fa-folder-open me-2"></i>
             @Model.Project.Name
         </h4>
 
-        <button class="btn btn-light btn-sm open-edit-project-modal"
-                data-project="@Model.Project.Id"
-                type="button">
-            <i class="fas fa-edit me-1"></i> Edytuj projekt
-        </button>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-light btn-sm"
+                    data-project="@Model.Project.Id"
+                    type="button">
+                <i class="fas fa-comments me-1"></i> Komentarze
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    data-project="@Model.Project.Id"
+                    type="button">
+                <i class="fas fa-list-check me-1"></i> Lista zadań
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("Settlement", "Settlement", new { id = Model.Project.Id })'">
+                <i class="fas fa-file-invoice-dollar me-1"></i> Rozliczenie
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("EditProject", "Project", new {id = Model.Project.Id})'">
+                    <i class="fas fa-edit me-1"></i> Edytuj projekt
+            </button>
+        </div>
     </div>
 
     <!-- TREŚĆ KARTY -->
@@ -146,27 +181,89 @@
 </div>
 
 @section Scripts {
-    <partial name="Scripts/_DataTablesScripts" />
-    <script>
-        $(document).on("click", ".load-posts", function () {
-            var positionId = $(this).data("position");
-            var target = $(this).data("target");
-            var container = $(target).find(".posts-container");
 
-            if ($(target).hasClass("show")) {
-                $(target).collapse("hide");
-                return;
-            }
-            $.ajax({
-                url: "/Project/PositionPosts",
-                type: "GET",
-                data: { id: positionId },
-                success: function (result) {
-                    container.html(result);
-                    $(target).collapse("show");
-                    }
+    <script>
+        let deleteId;
+        //usuwanie pozycji z zakresu
+        $(document).on("click", ".open-delete-position-confirm", function () {
+            deleteId = $(this).data("position");
+            $('#modal-confirm-delete-position').modal('show');
+            $('.loading-overlay').show();
+
+        });
+        $(document).on("click", "#modal-confirm-delete-position-btn", function (){
+            const errorMessage = 'Błąd. Nie udało się usunąć wybranej pozycji.';
+                $.ajax({
+                    type: "POST",
+                    url: "/Project/DeletePosition",
+                    data: {id: deleteId},
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success) {
+                            $('[data-pos-id="' + deleteId + '"]').remove();
+                            $('#modal-confirm-delete-position').modal('hide');
+                            toastr.success('Dane zostały zaktualizowane.')
+                        }
+                        else
+                            toastr.error(errorMessage);
+                        $('.loading-overlay').hide();
+                    },
+                    dataType: "json"
                 });
         });
+
+        //usuwanie komentarza do pozycji
+        $(document).on("click", ".open-delete-post-confirm", function () {
+            deleteId = $(this).data("post");
+            $('#modal-confirm-delete-post').modal('show');
+            $('.loading-overlay').show();
+
+        });
+        $(document).on("click", "#modal-confirm-delete-post-btn", function (){
+            const errorMessage = 'Błąd. Nie udało się usunąć wybranego komentarza.';
+                $.ajax({
+                    type: "POST",
+                    url: "/Project/DeletePost",
+                    data: {id: deleteId},
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success) {
+                            $('[data-post-id="' + deleteId + '"]').remove();
+                            $('#modal-confirm-delete-post').modal('hide');
+                            toastr.success('Dane zostały zaktualizowane.')
+                        }
+                        else
+                            toastr.error(errorMessage);
+                        $('.loading-overlay').hide();
+                    },
+                    dataType: "json"
+                });
+        });
+
+        //lazy loading, pobieranie tylko w pierwszym wywołaniu
+        $(document).on("show.bs.collapse", ".accordion-collapse", function () {
+            const collapse = $(this);
+            const wrapper = collapse.closest(".position-wrapper");
+            const posId = wrapper.data("pos-id");
+
+            const postsContainer = collapse.find(".posts-container"); 
+
+            // Jeśli już załadowane — nie pobieramy ponownie
+            if (postsContainer.data("loaded")) return;
+
+            $.ajax({
+                url: `/Project/PositionPosts?id=${posId}`,
+                type: "GET",
+                success: function (html) {
+                    postsContainer.html(html);
+                    postsContainer.data("loaded", true);
+                },
+                error: function () {
+                    postsContainer.html("<div class='text-danger'>Błąd ładowania komentarzy.</div>");
+                }
+            });
+        });
+
             $(document).on("click", ".open-add-position-modal", function () {
                 var scopeId = $(this).data("scope");
                 $.ajax({
@@ -191,13 +288,10 @@
                         if (data.success) {
                             toastr.success('Dane zostały zaktualizowane.');
                             $('#modal-add-position').modal('hide');
-                            reloadScopes();
+                            reloadScope(data.scopeId);
                         } else {
                             toastr.error(errorMessage);
                         }
-                    },
-                    error: function (data) {
-                        toastr.error(errorMessage);
                     },
                     dataType: "json"
                 });
@@ -218,7 +312,7 @@
 
             $(document).on("submit", "#edit-position-form", function (e) {
                 e.preventDefault(); // zatrzymanie submitu
-                const errorMessage = "Błąd. Nie udało się dodać nowej pozycji.";
+                const errorMessage = "Błąd. Nie udało się zaktualizować danych.";
                 $.ajax({
                     type: "POST",
                     url: "/Project/EditPosition",
@@ -227,13 +321,10 @@
                         if (data.success) {
                             toastr.success('Dane zostały zaktualizowane.');
                             $('#modal-edit-position').modal('hide');
-                            reloadScopes();
+                            reloadScope(data.scopeId);
                         } else {
                             toastr.error(errorMessage);
                         }
-                    },
-                    error: function (data) {
-                        toastr.error(errorMessage);
                     },
                     dataType: "json"
                 });
@@ -279,7 +370,6 @@
         $(document).on("shown.bs.collapse", ".accordion-collapse", function () {
             const posId = $(this).attr("id").replace("pos-collapse-", "");
             const target = `#posts-${posId}`;
-
             loadPosts(posId, target);
         });
 
@@ -296,78 +386,81 @@
                 });
             });
 
-            $(document).on("submit", "#add-position-post-form", function (e) {
-                e.preventDefault(); 
-                const errorMessage = "Błąd. Nie udało się dodać komentarza.";
-                $.ajax({
-                    type: "POST",
-                    url: "/Project/AddPositionPost",
-                    data: $(this).serialize(),
-                    success: function (data) {
-                        if (data.success) {
-                            toastr.success('Dane zostały zaktualizowane.');
-                            $('#modal-add-position-post').modal('hide');
-                            reloadPosts();
-                        } else {
-                            toastr.error(errorMessage);
-                        }
-                    },
-                    error: function (data) {
+        $(document).on("submit", "#add-position-post-form", function (e) {
+            e.preventDefault(); 
+            const errorMessage = "Błąd. Nie udało się dodać komentarza.";
+            const posId = $("#position-id").val();
+            const target = `#posts-${posId}`;
+            $.ajax({
+                type: "POST",
+                url: "/Project/AddPositionPost",
+                data: $(this).serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success('Dane zostały zaktualizowane.');
+                        $('#modal-add-position-post').modal('hide');
+                        loadPosts(posId, target);
+                    } else {
                         toastr.error(errorMessage);
-                    },
-                    dataType: "json"
-                });
-            });
-
-
-            $('#modal-add-position').on('hidden.bs.modal', function () {
-                $(this).remove(); // usuwa modal z DOM po zamknięciu
-            });
-
-            $('#modal-edit-position').on('hidden.bs.modal', function () {
-                $(this).remove(); // usuwa modal z DOM po zamknięciu
-            });
-
-            $('#modal-add-position-post').on('hidden.bs.modal', function () {
-                $(this).remove(); // usuwa modal z DOM po zamknięciu
-            });
-
-           
-            function loadPosts(posId, target) {
-                $.ajax({
-                    url: "/Project/PositionPosts",
-                    type: "GET",
-                    data: { id: posId },
-                    success: function (result) {
-                        $(target).html(result);
                     }
-                });
-            }
+                },
+                error: function (data) {
+                    toastr.error(errorMessage);
+                },
+                dataType: "json"
+            });
+        });
 
-            function reloadScopes() {
-                const id = $("#Id").val();
-                $.ajax({
-                    url: '/Project/Scopes',
-                    type: 'GET',
-                    data: { id: id },
-                    success: function (html) {
-                        $("#scopesAccordionContainer").html(html);
+
+        $('#modal-add-position').on('hidden.bs.modal', function () {
+            $(this).remove(); // usuwa modal z DOM po zamknięciu
+        });
+
+        $('#modal-edit-position').on('hidden.bs.modal', function () {
+            $(this).remove(); // usuwa modal z DOM po zamknięciu
+        });
+
+        $('#modal-add-position-post').on('hidden.bs.modal', function () {
+            $(this).remove(); // usuwa modal z DOM po zamknięciu
+        });
+
+        
+        function loadPosts(posId, target) {
+            $.ajax({
+                url: "/Project/PositionPosts",
+                type: "GET",
+                data: { id: posId },
+                success: function (result) {
+                    $(target).html(result);
+                }
+            });
+        }
+
+        function reloadScope(scopeId) {
+            const collapse = $(`#collapse-scope-${scopeId}`); 
+            const scope = collapse.closest(".accordion-item"); 
+            const wasOpen = collapse.hasClass("show");
+            $.ajax({
+                url: "/Project/GetScope",
+                type: "GET",
+                data: { id: scopeId },
+                success: function (html) {
+                    const newScope = $(html);
+                    scope.replaceWith(newScope);
+                    $(collapse).html(html);
+                    if (wasOpen) {
+                        const newCollapse = $(`#collapse-scope-${scopeId}`);
+                        newCollapse.addClass("show"); 
+                        newCollapse 
+                            .prev(".accordion-header") 
+                            .find("button") 
+                            .removeClass("collapsed") 
+                            .attr("aria-expanded", "true"); 
                     }
-                });
-            }
+                }
+            });
+        }
 
-            function reloadPosts() {
-                const posId = $("#position-id").val();
-                const postsId = "#posts-" + posId;
-                $.ajax({
-                    url: "/Project/PositionPosts",
-                    type: "GET",
-                    data: { id: posId},
-                    success: function (html) {
-                        $(postsId).html(html);
-                        }
-                    });
-            }
     </script>
 }
 

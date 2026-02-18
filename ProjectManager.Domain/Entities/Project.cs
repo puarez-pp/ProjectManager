@@ -33,4 +33,5 @@ public class Project
     public ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     public ICollection<Todo> Todos { get; set; } = new HashSet<Todo>();
     public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
+
 }

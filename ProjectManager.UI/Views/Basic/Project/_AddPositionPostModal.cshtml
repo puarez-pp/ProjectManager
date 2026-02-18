@@ -3,12 +3,11 @@
 
 @model AddPostCommand
 
-
 <div class="modal" id="modal-add-position-post">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="add-position-post-form">
-                <input type="hidden" asp-for="PositionId" />
+                <input type="hidden" id="position-id" value="@Model.PositionId" asp-for="PositionId" />
                 <div class="modal-header">
                     <h4 class="modal-title">Dodawanie komentarza</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

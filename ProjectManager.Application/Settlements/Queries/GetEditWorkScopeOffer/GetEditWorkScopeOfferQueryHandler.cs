@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Settlements.Commands.EditWorkScopeOffer;
 using ProjectManager.Application.SubContractors.Extension;
 using ProjectManager.Domain.Entities;
@@ -19,8 +20,20 @@ public class GetEditWorkScopeOfferQueryHandler : IRequestHandler<GetEditWorkScop
     }
     public async Task<EditWorkScopeOfferVm> Handle(GetEditWorkScopeOfferQuery request, CancellationToken cancellationToken)
     {
+        var project = await _context
+            .Projects
+            .AsNoTracking()
+            .Where(p => p.Settlement.WorkScopes.Any(ws => ws.WorkScopeOffers.Any(wso => wso.Id == request.Id)))
+            .Select(p => new ProjectBasicsDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
         var subContractors = await _context
             .SubContractors
+            .AsNoTracking()
             .Select(x => x.ToSubContractorBasicsDto())
             .AsNoTracking()
             .ToListAsync(cancellationToken);
@@ -30,7 +43,6 @@ public class GetEditWorkScopeOfferQueryHandler : IRequestHandler<GetEditWorkScop
             .Where(o => o.Id == request.Id)
             .Select(o => new 
             { 
-                SettlementId = o.WorkScope.SettlementId, 
                 WorkScopeType = o.WorkScope.WorkScopeType, 
                 WorkScopeOffer = o 
             }).FirstOrDefaultAsync();
@@ -39,7 +51,7 @@ public class GetEditWorkScopeOfferQueryHandler : IRequestHandler<GetEditWorkScop
 
         var vm = new EditWorkScopeOfferVm
         {
-            SettlementId = offer.SettlementId,
+            Project = project,
             ScopeType = offer.WorkScopeType,
             SubContractors = subContractors,
             ScopeOffer = new EditWorkScopeOfferCommand 

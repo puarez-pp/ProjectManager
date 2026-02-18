@@ -23,6 +23,7 @@ public async Task<EditPositionCommand> Handle(GetEditPositionQuery request, Canc
         return new EditPositionCommand
         {
             Id = request.Id,
+            ProjectScopeId = position.ProjectScopeId,
             Description = position.Description,
             CompletionDate = position.CompletionDate
         };

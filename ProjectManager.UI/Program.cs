@@ -41,6 +41,7 @@ internal class Program
             .AddControllersWithViews()
             .AddSessionStateTempDataProvider();
 
+
         var app = builder.Build();
         app.UseSession();
 
@@ -85,7 +86,7 @@ internal class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-        app.MapHub<NotificationUserHub>("/NotificationUserHub");
+        //app.MapHub<NotificationUserHub>("/NotificationUserHub");
 
         app.MapRazorPages();
 

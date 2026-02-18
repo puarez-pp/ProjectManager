@@ -11,29 +11,29 @@ public class EditWorkScopeOfferCommand:IRequest
     [Required(ErrorMessage = "Pole 'Opis' jest wymagane")]
     [DisplayName("Opis")]
     public string Description { get; set; }
-    [Required(ErrorMessage = "Pole 'Uwagi' jest wymagane")]
+
     [DisplayName("Uwagi")]
     public string Comment { get; set; }
     [DisplayName("Aktywny")]
     public bool IsUsed { get; set; }
 
     [DisplayName("Ilość")]
-    //[RegularExpression(@"[0-9]{13}", ErrorMessage = "Wartość nie jest cyfrą")]
+    [RegularExpression(@"^\d+$", ErrorMessage = "Wartość musi być liczbą całkowitą")]
     public int Quantity { get; set; }
     [Required(ErrorMessage = "Pole 'Jednostka' jest wymagane")]
     [DisplayName("Jednostka")]
     public UnitType UnitType { get; set; }
 
     [DisplayName("Cena netto")]
-    //[RegularExpression(@"^\$?\d+(\.(\d{2}))?$", ErrorMessage = "Nieprawidłowa wartość")]
+    [RegularExpression(@"^[0-9]+([.,][0-9]{1,2})?$", ErrorMessage = "Podaj poprawną kwotę (maks. 2 miejsca po przecinku).")]
     public decimal NetAmount { get; set; }
     [DisplayName("Cena netto Euro")]
-    //[RegularExpression(@"^\$?\d+(\.(\d{2}))?$", ErrorMessage = "Nieprawidłowa wartość")]
+    [RegularExpression(@"^[0-9]+([.,][0-9]{1,2})?$", ErrorMessage = "Podaj poprawną kwotę (maks. 2 miejsca po przecinku).")]
     public decimal EuroNetAmount { get; set; }
     [DisplayName("Kurs euro")]
-    //[RegularExpression(@"^\$?\d+(\.(\d{2}))?$", ErrorMessage = "Nieprawidłowa wartość")]
+    [RegularExpression(@"^[0-9]+([.,][0-9]{1,2})?$", ErrorMessage = "Podaj poprawną kwotę (maks. 2 miejsca po przecinku).")]
     public decimal EuroRate { get; set; }
-    [Required(ErrorMessage = "Pole 'Wykonawca' jest wymagane")]
+
     [DisplayName("Wykonawca")]
     public int SubContractorId { get; set; }
 }

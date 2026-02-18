@@ -1,5 +1,4 @@
-﻿
-@using System.Globalization
+﻿@using System.Globalization
 @using ProjectManager.Application.Common.Extensions
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Projects.Queries.GetProjectBasics
@@ -10,167 +9,163 @@
 @{
     ViewData["Title"] = "Projekty";
     var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-    var gas = (ProjectType.Gas).GetDisplayName();
-    var diesel = (ProjectType.Diesel).GetDisplayName();
-    var turbine = (ProjectType.Turbine).GetDisplayName();
-    var renewable = (ProjectType.Renewable).GetDisplayName();
+
+    var gas = ProjectType.Gas.GetDisplayName();
+    var diesel = ProjectType.Diesel.GetDisplayName();
+    var turbine = ProjectType.Turbine.GetDisplayName();
+    var renewable = ProjectType.Renewable.GetDisplayName();
+
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+
+    string IconColor(ProjectType type) => type switch
+    {
+        ProjectType.Gas => "text-danger",
+        ProjectType.Diesel => "text-secondary",
+        ProjectType.Turbine => "text-info",
+        ProjectType.Renewable => "text-success",
+        _ => "text-primary"
+    };
+
+    string IconClass(ProjectType type) => type switch
+    {
+        ProjectType.Gas => "fas fa-gas-pump",
+        ProjectType.Diesel => "fas fa-gas-pump",
+        ProjectType.Turbine => "fas fa-fan",
+        ProjectType.Renewable => "fas fa-solar-panel",
+        _ => "fas fa-folder"
+    };
 }
 
 @section Styles {
-<partial name="Styles/_DataTablesStyles" />
+    <partial name="Styles/_DataTablesStyles" />
 }
-
 
 <div class="card card-primary card-border-top">
 
-    <div class="card-body">
-        @if(roles)
+    <div class="card-body pb-1">
+
+        @if (roles)
         {
-            <a href='/Project/AddProject' class="btn btn-primary mb-3" role="button">
-                <i class="fas fa-solid fa-circle-plus"></i>Dodaj projekt
+            <a href="/Project/AddProject" class="btn btn-primary mb-4">
+                <i class="fas fa-circle-plus me-1"></i> Dodaj projekt
             </a>
         }
-        <h6 class="card-title">Projekty z podziałem na katagorie:</h6>
-        <table id="projects" class="table table-bordered table-hover">
-            <thead>
-                <tr> 
-                    <th>Lp</th>
-                    <th class="desktop">Typ projektu</th>
-                    <th class="desktop">Sharepoint</th>
-                </tr>
-            </thead>
-            <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            <a class="edit-link" href='/Project/ProjectsCat?id=@ProjectType.Gas'><i class="fas fa-solid fa-gas-pump"></i>@gas</a>
-                        </td>
-                        <td>
-                            <a class="edit-link" href="https://www.wp.pl" target="_blank">@gas</a>
-                        </td>
-                    </tr>
 
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            <a class="edit-link" href='/Project/ProjectsCat?id=@ProjectType.Diesel'><i class="fas fa-solid fa-gas-pump"></i>@diesel</a>
-                        </td>
-                        <td>
-                            <a class="edit-link" href="https://www.wp.pl" target="_blank">@diesel</a>
-                        </td>
-                    </tr>
+        <h6 class="card-title fw-bold mb-3">Projekty z podziałem na kategorie:</h6>
 
-                    <tr>
-                        <td>
-                            3
-                        </td>
-                        <td>
-                            <a class="edit-link" href='/Project/ProjectsCat?id=@ProjectType.Turbine'><i class="fas fa-solid fa-fan"></i>@turbine</a>
-                        </td>
-                        <td>
-                            <a class="edit-link" href="https://www.wp.pl" target="_blank">@turbine</a>
-                        </td>
-                    </tr>
+        <!-- KAFLE KATEGORII -->
+        <div class="row g-3">
 
-                    <tr>
-                        <td>
-                            4
-                        </td>
-                        <td>
-                            <a class="edit-link" href='/Project/ProjectsCat?id=@ProjectType.Renewable'><i class="fas fa-solid fa-solar-panel"></i>@renewable</a>
-                        </td>
-                        <td>
-                            <a class="edit-link" href="https://www.wp.pl" target="_blank">@renewable</a>
-                        </td>
-                    </tr>
+            <div class="col-md-3">
+                <a href="/Project/ProjectsCat?id=@ProjectType.Gas" class="text-decoration-none">
+                    <div class="card shadow-sm h-100 border-danger-subtle">
+                        <div class="card-body text-center">
+                            <i class="fas fa-gas-pump text-danger fs-2 mb-2"></i>
+                            <h6 class="fw-bold text-danger">@gas</h6>
+                            <p class="text-muted small mb-0">Projekty gazowe</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
-            </tbody>
-        </table>
+            <div class="col-md-3">
+                <a href="/Project/ProjectsCat?id=@ProjectType.Diesel" class="text-decoration-none">
+                    <div class="card shadow-sm h-100 border-secondary-subtle">
+                        <div class="card-body text-center">
+                            <i class="fas fa-gas-pump text-secondary fs-2 mb-2"></i>
+                            <h6 class="fw-bold text-secondary">@diesel</h6>
+                            <p class="text-muted small mb-0">Projekty dieslowe</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="/Project/ProjectsCat?id=@ProjectType.Turbine" class="text-decoration-none">
+                    <div class="card shadow-sm h-100 border-info-subtle">
+                        <div class="card-body text-center">
+                            <i class="fas fa-fan text-info fs-2 mb-2"></i>
+                            <h6 class="fw-bold text-info">@turbine</h6>
+                            <p class="text-muted small mb-0">Projekty turbin gazowych</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="/Project/ProjectsCat?id=@ProjectType.Renewable" class="text-decoration-none">
+                    <div class="card shadow-sm h-100 border-success-subtle">
+                        <div class="card-body text-center">
+                            <i class="fas fa-solar-panel text-success fs-2 mb-2"></i>
+                            <h6 class="fw-bold text-success">@renewable</h6>
+                            <p class="text-muted small mb-0">Odnawialne źródła energii</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="card-body mt-2">
-        <h6 class="card-title">Ostatnio edytowane projekty:</h6>
-         <table id="projectsLastEdit" class="table table-bordered table-hover">
-            <thead>
-                <tr> 
-                    <th class="desktop">Numer projektu</th>
-                    <th class="desktop">Nazwa projektu</th>
-                    <th class="desktop">Typ projektu</th>
-                    <th class="desktop">Klient</th>
-                    <th class="desktop">Data edycji</th>
+    <!-- OSTATNIO EDYTOWANE -->
+    <div class="card-body pt-0 mt-4">
+        <h6 class="card-title fw-bold mb-3">Ostatnio edytowane projekty</h6>
+
+        <table id="projectsLastEdit" class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Numer projektu</th>
+                    <th>Nazwa projektu</th>
+                    <th>Typ projektu</th>
+                    <th>Klient</th>
+                    <th>Data edycji</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var project in Model)
                 {
                     <tr>
+                        <td>@project.Number</td>
                         <td>
-                            @project.Number
+                            <a class="edit-link" href="/Project/Project?id=@project.Id">
+                                <i class="fas fa-circle-info me-1 text-primary"></i>@project.Name
+                            </a>
                         </td>
                         <td>
-                            <a class="edit-link" href='/Project/Project?id=@project.Id'><i class="fas fa-solid fa-circle-info"></i>@project.Name</a>
+                            <span class="badge bg-light border @IconColor(project.ProjectType) text-uppercase">
+                                <i class="@IconClass(project.ProjectType) @IconColor(project.ProjectType) me-2"></i>
+                                @project.ProjectType.GetDisplayName()
+                            </span>
                         </td>
-                        <td>
-                            @(project.ProjectType)
-                        </td>
-                        <td>
-                            @project.Client
-                        </td>
-                        <td>
-                            @project.EditAt
-                        </td>
+                        <td>@project.Client</td>
+                        <td>@project.EditAt</td>
                     </tr>
                 }
             </tbody>
-        </table> 
+        </table>
     </div>
+
 </div>
 
 @section Scripts {
-<partial name="Scripts/_DataTablesScripts" />
+    <partial name="Scripts/_DataTablesScripts" />
 
-<script>
+    <script>
+        $(document).ready(function () {
 
-    $(document).ready(function () {
-
-        projects = $('#projects').DataTable({
-            info: false,
-            columnDefs: [
-                    ],
-            paging: true,
-            ordering: true,
-            info: true,
-            responsive: true,
-            autoWidth: false,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            },
-            order: [[0, "asc"]]
+            $('#projectsLastEdit').DataTable({
+                info: false,
+                paging: false,
+                searching: false,
+                ordering: false,
+                responsive: true,
+                autoWidth: false,
+                lengthChange: false,
+                language: {
+                    url: `/lib/datatables/lang/${'@locale'}.json`
+                }
+            });
         });
-
-        projectsLastEdit = $('#projectsLastEdit').DataTable({
-            info: false,
-            columnDefs: [
-            ],
-            paging: false,
-            searching: false,
-            ordering: false,
-            responsive: true,
-            autoWidth: false,
-            lengthChange: true,
-            language: {
-                url: `/lib/datatables/lang/${'@locale'}.json`
-            },
-            order: [[0, "asc"]]
-        });
-    });
-
-</script>
+    </script>
 }

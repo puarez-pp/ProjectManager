@@ -2,12 +2,13 @@
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Settlements.Commands.AddSettlement;
 using ProjectManager.Application.Settlements.Commands.DeleteInvoice;
+using ProjectManager.Application.Settlements.Commands.DeleteOffer;
 using ProjectManager.Application.Settlements.Commands.DeleteWorkScopeCost;
 using ProjectManager.Application.Settlements.Commands.EditSettlement;
 using ProjectManager.Application.Settlements.Queries.GetAddInvoice;
 using ProjectManager.Application.Settlements.Queries.GetAddWorkScopeCost;
 using ProjectManager.Application.Settlements.Queries.GetAddWorkScopeOffer;
-using ProjectManager.Application.Settlements.Queries.GetAssumptions;
+using ProjectManager.Application.Settlements.Queries.GetAssumption;
 using ProjectManager.Application.Settlements.Queries.GetCostDetails;
 using ProjectManager.Application.Settlements.Queries.GetCostSummary;
 using ProjectManager.Application.Settlements.Queries.GetEditInvoice;
@@ -32,9 +33,9 @@ namespace ProjectManager.UI.Controllers
         }
 
  
-        public async Task<IActionResult> Assumption(int id)
+        public async Task<IActionResult> Settlement(int id)
         {
-            return View(await Mediator.Send(new GetAssumptionsQuery { Id = id }));
+            return View(await Mediator.Send(new GetAssumptionQuery { Id = id }));
         }
 
         public async Task<IActionResult> Offers(int id, WorkScopeType st)
@@ -71,9 +72,9 @@ namespace ProjectManager.UI.Controllers
             if (!result.IsValid)
                 return View(command);
 
-            TempData["Success"] = "Dane zostały dodane.";
+            TempData["Success"] = "Rozliczenie zostało dodane.";
 
-            return RedirectToAction("Assumption",new { @id = command.Id });
+            return RedirectToAction("Settlement", new { @id = command.Id });
         }
 
         public async Task<IActionResult> EditSettlement(int id)
@@ -92,7 +93,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Assumption", new { @id = command.Id });
+            return RedirectToAction("Settlement", new { @id = command.Id });
         }
 
 
@@ -112,7 +113,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Costs", new { @id = viewModel.SettlementId });
+            return RedirectToAction("CostsDetails", new { @id = viewModel.Project.Id });
         }
 
         public async Task<IActionResult> EditCost(int id)
@@ -131,7 +132,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Costs", new { @id = viewModel.SettlementId });
+            return RedirectToAction("CostsDetails", new { @id = viewModel.Project.Id});
         }
 
         [HttpPost]
@@ -168,9 +169,10 @@ namespace ProjectManager.UI.Controllers
             if (!result.IsValid)
                 return View(viewModel);
 
-            TempData["Success"] = "Dane zostały zaktualizowane.";
+            TempData["Success"] = "Oferta została dodana.";
 
-            return RedirectToAction("Offers", new { @id = viewModel.SettlementId, @st = viewModel.ScopeType});
+            return RedirectToAction("Offers", new { @id = viewModel.Project.Id, @st = viewModel.ScopeType });
+
         }
 
         public async Task<IActionResult> EditOffer(int id)
@@ -189,7 +191,27 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Offers", new { @id = viewModel.SettlementId, @st = viewModel.ScopeType });
+            return RedirectToAction("Offers", new { @id = viewModel.Project.Id, @st = viewModel.ScopeType });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteOffer(int id)
+        {
+            try
+            {
+                await Mediator.Send(
+                    new DeleteOfferCommand
+                    {
+                        Id = id
+                    });
+
+                return Json(new { success = true });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, null);
+                return Json(new { success = false });
+            }
         }
 
         public async Task<IActionResult> Invoices(int id)

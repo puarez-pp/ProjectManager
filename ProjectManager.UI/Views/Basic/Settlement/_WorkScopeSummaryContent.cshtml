@@ -1,0 +1,80 @@
+﻿@using ProjectManager.Application.Settlements.Queries.GetCostSummary
+@model CostSummaryVm
+
+<!-- PODSUMOWANIE -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-file-invoice-dollar fa-2x text-primary mb-2"></i>
+                <h5 class="card-title">Oferta</h5>
+                <p class="fw-bold fs-4 text-primary">
+                    @Model.Offers.ToString("N2")
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-coins fa-2x text-danger mb-2"></i>
+                <h5 class="card-title">Realizacja</h5>
+                <p class="fw-bold fs-4 text-danger">
+                    @Model.Costs.ToString("N2")
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x @(Model.Profits >= 0 ? "text-success" : "text-danger") mb-2"></i>
+                <h5 class="card-title">Różnica</h5>
+                <p class="fw-bold fs-4 @(Model.Profits >= 0 ? "text-success" : "text-danger")">
+                    @Model.Profits.ToString("N2")
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- TABELA ZAKRESÓW -->
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">
+            <i class="fas fa-tasks me-2"></i> Zakresy prac
+        </h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="scopeCostsTable" class="table table-striped table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="fas fa-align-left me-1"></i>Opis</th>
+                        <th class="text-end"><i class="fas fa-file-invoice-dollar me-1"></i>Oferta</th>
+                        <th class="text-end"><i class="fas fa-coins me-1"></i>Realizacja</th>
+                        <th class="text-end"><i class="fas fa-chart-line me-1"></i>Różnica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var scope in Model.ScopeCosts)
+                    {
+                        <tr>
+                            <td>@scope.Description</td>
+                            <td class="text-end">@scope.Offer.ToString("N2")</td>
+                            <td class="text-end">@scope.Cost.ToString("N2")</td>
+                            <td class="text-end @(scope.Profit >= 0 ? "text-success" : "text-danger")">
+                                @scope.Profit.ToString("N2")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

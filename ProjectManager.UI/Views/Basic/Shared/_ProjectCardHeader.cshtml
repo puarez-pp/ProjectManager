@@ -1,0 +1,13 @@
+﻿@using ProjectManager.Application.Projects.Queries.GetProjectBasics
+@model ProjectBasicsDto
+
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+    <h4 class="mb-0 d-flex align-items-center">
+        <a class="edit-link text-white" href="/Project/Project?id=@Model.Id">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Name
+        </a>
+    </h4>
+
+    @RenderSection("Actions", required: false)
+</div>

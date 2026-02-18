@@ -1,0 +1,312 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Settlements.Queries.GetAssumption
+@using ProjectManager.Domain.Enums
+
+
+@inject ICurrentUserService currentUserService
+@inject IFinanceService financeService
+@model AssumptionsVm
+
+@{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var canDelete = User.IsInRole(RolesDict.Administrator) ;
+    var existSettlement = Model.Assumption.Id != 0;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+}
+
+
+<input type="hidden" id="ProjectId" name="ProjectId" value="@Model.Project.Id" />
+<input type="hidden" id="AssumptionId" name="AssumptionId" value="@Model.Assumption.Id" />
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
+                <i class="fas fa-folder-open me-2"></i>
+                @Model.Project.Name
+            </a>
+        </h4>
+        @if (existSettlement)
+        {
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-light btn-sm"
+                        data-project="@Model.Assumption.Id"
+                        type="button">
+                    <i class="fas fa-clipboard-check me-1"></i> Kontrola projektu
+                </button>
+
+                <button class="btn btn-outline-light btn-sm"
+                        type="button"
+                        onclick="location.href='@Url.Action("CostsSummary", "Settlement", new { id = Model.Project.Id })'">
+                    <i class="fas fa-file-invoice-dollar me-1"></i> Podsumowanie kosztów
+                </button>
+
+                <button class="btn btn-outline-light btn-sm"
+                        type="button"
+                        onclick="location.href='@Url.Action("CostsDetails", "Settlement", new { id = Model.Project.Id })'">
+                    <i class="fas fa-file-invoice-dollar me-1"></i> Zestawienia kosztów
+                </button>
+
+                <button class="btn btn-outline-light btn-sm"
+                        type="button"
+                        onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Project.Id, st = WorkScopeType.Agregat })'">
+                    <i class="fas fa-layer-group me-1"></i> Agregat
+                </button>
+
+                <button class="btn btn-outline-light btn-sm"
+                        type="button"
+                        onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Project.Id, st = WorkScopeType.Installation })'">
+                    <i class="fas fa-plug me-1"></i> Instalacje
+                </button>
+
+                <button class="btn btn-outline-light btn-sm"
+                        type="button"
+                        onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Project.Id, st = WorkScopeType.Aadministration })'">
+                    <i class="fas fa-sliders me-1"></i> Zarządzanie
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-light btn-sm"
+                        type="button"
+                        onclick="location.href='@Url.Action("AddSettlement", "Settlement", new { id = Model.Project.Id })'">
+                    <i class="fas fa-circle-plus me-1"></i> Dodaj rozliczenie
+                </button>
+            </div>
+        }
+        
+    </div>
+    
+</div>
+
+@if (existSettlement)
+{
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 d-flex align-items-center">
+                <i class="fas fa-lightbulb me-2 text-primary"></i> Założenia finansowe
+            </h5>
+            <a class="btn btn-outline-primary btn-sm mt-2"
+               href="@Url.Action("EditSettlement", "Settlement", new { id = Model.Project.Id })">
+                <i class="fas fa-edit me-1"></i> Edytuj założenia
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-4">
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Marża – Generator (%)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.MarginGen.ToString("N2")</span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Marża – Instalacje (%)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.MarginInstall.ToString("N2")</span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Plan upustu (%)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.Discount.ToString("N2")</span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Termin płatności (dni)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.Maturity</span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Koszty firmy (%)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.CompanyCost.ToString("N2")</span>
+                        <span class="text-muted medium fw-semibold mt-2">Koszty firmy (zł)</span>
+                        <span class="fs-5 fw-bold">@financeService.CalculatePercentage(Model.WorkScopesSum.TotalImplementation, Model.Assumption.CompanyCost).ToString("N2")</span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Gwarancja firmy (%)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.CompanyGuarantee.ToString("N2")</span>
+                        <span class="text-muted medium fw-semibold mt-2">Gwarancja firmy (zł)</span>
+                        <span class="fs-5 fw-bold">@financeService.CalculatePercentage(Model.WorkScopesSum.TotalImplementation, Model.Assumption.CompanyGuarantee).ToString("N2")</span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex flex-column">
+                        <span class="text-muted medium fw-semibold">Ubezpieczenie (%)</span>
+                        <span class="fs-5 fw-bold">@Model.Assumption.Insurance.ToString("N2")</span>
+                        <span class="text-muted medium fw-semibold mt-2">Ubezpieczenie (zł)</span>
+                        <span class="fs-5 fw-bold">@financeService.CalculatePercentage(Model.WorkScopesSum.TotalImplementation, Model.Assumption.Insurance).ToString("N2")</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 d-flex align-items-center">
+                <i class="fas fa-chart-line me-2 text-success"></i> Założenia finansowe
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row text-center">
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Sprzedaż</div>
+                        <div class="fs-4 fw-bold text-primary">@Model.WorkScopesSum.TotalSales.ToString("N2") zł</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Marża przed upustami</div>
+                        <div class="fs-4 fw-bold text-success">@Model.WorkScopesSum.Margin.ToString("N2") %</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Marża końcowa</div>
+                        <div class="fs-4 fw-bold text-success">@Model.WorkScopesSum.FinalMargin.ToString("N2") %</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Zysk końcowy</div>
+                        <div class="fs-4 fw-bold text-success">@Model.WorkScopesSum.FinalProfit.ToString("N2") zł</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Koszty realizacji</div>
+                        <div class="fs-4 fw-bold text-danger">@Model.WorkScopesSum.TotalImplementation.ToString("N2") zł</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Koszty ogólne</div>
+                        <div class="fs-4 fw-bold text-danger">@Model.WorkScopesSum.TotalOverheads.ToString("N2") zł</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Koszty razem</div>
+                        <div class="fs-4 fw-bold text-danger">@Model.WorkScopesSum.TotalCosts.ToString("N2") zł</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="fw-semibold text-secondary">Koszty po upustach </div>
+                        <div class="fs-4 fw-bold text-danger">@Model.WorkScopesSum.TotalAfterDiscount.ToString("N2") zł</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-light d-flex justify-content-between">
+                    <h6 class="mb-0 d-flex align-items-end">
+                        <i class="fas fa-coins me-2 text-warning"></i> Sprzedaż
+                    </h6>
+                    <span class="mb-0 d-flex align-items-center">
+                        Razem: @Model.WorkScopesSum.TotalSales.ToString("N2") zł
+                    </span>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead class="table-light">
+
+                        </thead>
+                        <tbody>
+                            @foreach (var s in Model.WorkScopesSum.Sales)
+                            {
+                                <tr>
+                                    <td>@s.ScopeType.GetDisplayName()</td>
+                                    <td class="text-end">@s.ScopeAmount.ToString("N2") zł</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-light d-flex justify-content-between">
+                    <h6 class="mb-0 d-flex align-items-center">
+                        <i class="fas fa-file-invoice-dollar me-2 text-danger"></i> Koszty
+                    </h6>
+                    <p class="mb-0 d-flex align-items-end">
+                        Razem: @Model.WorkScopesSum.TotalImplementation.ToString("N2") zł
+                    </p>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead class="table-light">
+
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model.WorkScopesSum.Costs)
+                            {
+                                <tr>
+                                    <td>@c.ScopeType.GetDisplayName()</td>
+                                    <td class="text-end">@c.ScopeAmount.ToString("N2") zł</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+    <script>
+
+
+    </script>
+}
+
+        

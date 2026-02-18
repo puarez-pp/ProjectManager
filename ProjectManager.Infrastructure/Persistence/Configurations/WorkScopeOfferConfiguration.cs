@@ -12,15 +12,15 @@ class WorkScopeOfferConfiguration : IEntityTypeConfiguration<WorkScopeOffer>
         builder.ToTable("WorkScopeOffers");
 
         builder
-            .HasOne(x => x.SubContractor)
-            .WithMany(x => x.WorkScopeOffers)
-            .HasForeignKey(x => x.SubContractorId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
             .HasOne(x => x.WorkScope)
             .WithMany(x => x.WorkScopeOffers)
             .HasForeignKey(x => x.WorkScopeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasOne(x => x.SubContractor)
+            .WithMany(x => x.WorkScopeOffers)
+            .HasForeignKey(x => x.SubContractorId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.Description)
@@ -28,7 +28,7 @@ class WorkScopeOfferConfiguration : IEntityTypeConfiguration<WorkScopeOffer>
             .HasMaxLength(200);
 
         builder.Property(x => x.Comment)
-            .IsRequired()
+            .HasDefaultValue(string.Empty)
             .HasMaxLength(200);
 
         builder.Property(x => x.IsUsed)

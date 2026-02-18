@@ -1,0 +1,13 @@
+﻿@using ProjectManager.Application.Projects.Queries.GetProjectBasics
+@model ProjectBasicsDto
+
+<div class="card shadow-sm mb-4 border-0">
+
+    @await Html.PartialAsync("_ProjectCardHeader", Model, new ViewDataDictionary(ViewData)
+    {
+        { "Actions", Html.Partial("_ProjectCardActions", Model) }
+    })
+
+</div>
+ @* w  widoku głównym wywołanie *@
+@await Html.PartialAsync("_ProjectCard", Model)

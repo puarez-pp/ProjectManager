@@ -21,6 +21,7 @@ public class EditWorkScopeCostCommandHandler : IRequestHandler<EditWorkScopeCost
         if (cost != null)
         {
             cost.Description = request.Description;
+            cost.CostStatusType = request.CostStatusType;
             cost.UnitType = request.UnitType;
             cost.Quantity = request.Quantity;
             cost.NetAmount = request.NetAmount;

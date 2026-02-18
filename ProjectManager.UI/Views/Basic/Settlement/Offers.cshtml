@@ -1,0 +1,89 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Settlements.Queries.GetAssumption
+@using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer
+
+
+@inject ICurrentUserService currentUserService
+@model WorkScopeTypeVm
+
+@{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var canDelete = User.IsInRole(RolesDict.Administrator) ;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+<partial name="Styles/_SelectStyles" />
+}
+
+<partial name="Modals/_ModalConfirm"
+         model="@(new ModalParams
+         {
+             Id = "modal-confirm-delete-offer",
+             Title = "Potwierdź proszę",
+             Description = "Czy na pewno chcesz usunąć wybraną ofertę?"
+         })" />
+
+
+<input type="hidden" id="ProjectId" name="ProjectId" value="@Model.Project.Id" />
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
+                <i class="fas fa-folder-open me-2"></i>
+                @Model.Project.Name
+            </a>
+        </h4>
+    </div>
+</div>
+
+<div id="modal-container"></div>
+
+<div id="workScopeContainer">
+    <partial name="_WorkScopeTypeContent" model="Model" />
+</div>
+
+@section Scripts {
+    <script>
+        let deleteId;
+        //usuwanie pozycji z zakresu
+        $(document).on("click", ".open-delete-offer-confirm", function () {
+            deleteId = $(this).data("offer-id");
+            $('#modal-confirm-delete-offer').modal('show');
+            $('.loading-overlay').show();
+        });
+
+        $(document).on("click", "#modal-confirm-delete-offer-btn", function (){
+            const errorMessage = 'Błąd. Nie udało się usunąć wybranej oferty.';
+                $.ajax({
+                    type: "POST",
+                    url: "/Settlement/DeleteOffer",
+                    data: {id: deleteId},
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success) {
+                            $('[data-offer-id="' + deleteId + '"]').remove();
+                            $('#modal-confirm-delete-offer').modal('hide');
+                            toastr.success('Dane zostały zaktualizowane.')
+                        }
+                        else
+                            toastr.error(errorMessage);
+                        $('.loading-overlay').hide();
+                    },
+                    dataType: "json"
+                });
+        });
+    </script>       
+}
+
+
+        

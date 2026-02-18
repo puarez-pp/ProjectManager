@@ -1,0 +1,27 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer
+
+@model WorkScopeCostDto
+
+<tr data-cost-id="@Model.Id">
+    <!---->
+    <td class="">@Model.Description</td>
+    <td class="">@Model.CostStatusType.GetDisplayName()</td>
+    <td class="">@Model.Quantity</td>
+    <td class="">@Model.UnitType.GetDisplayName()</td>
+    <td class="view-mode text-end">@Model.NetAmount.ToString("N2") zł</td>
+    <td class="cost-total text-end">@Model.Total.ToString("N2") zł</td>
+    <td class="">@Model.SubContractor</td>
+
+    <td class="view-mode text-end">
+        <button class="btn btn-sm btn-outline-success open-edit-cost m-sm-1"
+                type="button"
+                onclick="location.href='@Url.Action("EditCost", "Settlement", new { id = Model.Id })'">
+            <i class="fas fa-pen-to-square"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger open-delete-cost-confirm m-sm-1"
+                data-offer-id="@Model.Id">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+</tr>

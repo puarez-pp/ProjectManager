@@ -7,6 +7,7 @@ namespace ProjectManager.Application.Projects.Commands.EditPosition;
 public class EditPositionCommand:IRequest
 {
     public int Id { get; set; }
+    public int ProjectScopeId { get; set; }
     [Required(ErrorMessage = "Pole 'Nazwa' jest wymagane")]
     [DisplayName("Nazwa")]
     public string Description { get; set; }

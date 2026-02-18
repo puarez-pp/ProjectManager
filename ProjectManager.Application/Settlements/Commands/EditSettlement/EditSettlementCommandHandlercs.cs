@@ -18,7 +18,7 @@ public class EditSettlementCommandHandlercs : IRequestHandler<EditSettlementComm
         var settlement = await _context
             .Settlements
             .Include(s => s.Assumption)
-            .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(s => s.ProjectId == request.Id, cancellationToken);
         if (settlement != null)
         {
             settlement.Id = request.Id;

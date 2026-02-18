@@ -25,7 +25,8 @@ public class AddSettlementCommandHandler : IRequestHandler<AddSettlementCommand>
     {
         var projectType = await _context
             .Projects
-            .Where(p => p.Id == request.Id).Select(x => x.ProjectType)
+            .Where(p => p.Id == request.Id)
+            .Select(x => x.ProjectType)
             .FirstOrDefaultAsync();
 
         // 1. Pobranie szablonów

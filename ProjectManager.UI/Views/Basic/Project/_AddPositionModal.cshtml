@@ -2,13 +2,11 @@
 
 @model AddPositionCommand
 
-
-
 <div class="modal" id="modal-add-position">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="add-position-form">
-                <input type="hidden" asp-for="ProjectScopeId" />
+                <input type="hidden" asp-for="ProjectScopeId" value="@Model.ProjectScopeId" />
                 <div class="modal-header">
                     <h4 class="modal-title">Dodawanie nowej pozycji</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

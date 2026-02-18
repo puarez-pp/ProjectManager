@@ -1,8 +1,5 @@
 ﻿using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 using ProjectManager.Domain.Enums;
-
-
-
 public class WorkScopeDto
 {
     public int Id { get; set; }

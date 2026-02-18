@@ -1,0 +1,371 @@
+widok główny:
+
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Settlements.Queries.GetAssumption
+@using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer
+
+
+@inject ICurrentUserService currentUserService
+@model WorkScopeTypeVm
+
+@{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var canDelete = User.IsInRole(RolesDict.Administrator) ;
+}
+
+@section Styles {
+<partial name="Styles/_DataTablesStyles" />
+<partial name="Styles/_SelectStyles" />
+}
+
+<partial name="Modals/_ModalConfirm"
+         model="@(new ModalParams
+         {
+             Id = "modal-confirm-delete-offer",
+             Title = "Potwierdź proszę",
+             Description = "Czy na pewno chcesz usunąć wybraną ofertę?"
+         })" />
+
+
+<input type="hidden" id="ProjectId" name="ProjectId" value="@Model.Project.Id" />
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
+                <i class="fas fa-folder-open me-2"></i>
+                @Model.Project.Name
+            </a>
+        </h4>
+    </div>
+</div>
+
+<div id="modal-container"></div>
+
+<div id="workScopeContainer">
+    <partial name="_WorkScopeTypeContent" model="Model" />
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.select2-UnitType').select2({
+                theme: 'bootstrap-5'
+            });
+
+             $('.select2-SubContractor').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+
+         $(document).on("click", ".open-add-offer-modal", function () {
+            var scopeId = $(this).data("scope-id");
+            console.log("Kliknięto przycisk dodawania oferty dla zakresu o ID: " + scopeId);
+            $.ajax({
+                url: "/Settlement/AddOffer",
+                type: "GET",
+                data: { id: scopeId },
+                success: function (result) {
+                    $('#modal-container').html(result);
+                    $('#modal-add-offer').modal('show');
+                }
+            });
+        });
+
+        $(document).on("submit", "#add-offer-form", function (e) {
+            e.preventDefault(); // zatrzymanie submitu
+            const errorMessage = "Błąd. Nie udało się dodać nowej oferty.";
+            $.ajax({
+                type: "POST",
+                url: "/Settlement/AddOffer",
+                data: $(this).serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success('Dane zostały zaktualizowane.');
+                        $('#modal-add-offer').modal('hide');
+                        reloadScope(data.scopeId);
+                    } else {
+                        toastr.error(errorMessage);
+                    }
+                },
+                dataType: "json"
+            });
+        });
+        $('#modal-add-offer').on('hidden.bs.modal', function () {
+            $(this).remove(); // usuwa modal z DOM po zamknięciu
+        });
+
+        function reloadScope(scopeId) {
+            const collapse = $(`#collapse-${scopeId}`);
+            const scope = collapse.closest(".accordion-body");
+            const wasOpen = collapse.hasClass("show");
+            $.ajax({
+                url: "/Settlement/GetScope",
+                type: "GET",
+                data: { id: scopeId },
+                success: function (html) {
+                    const newScope = $(html);
+                    scope.replaceWith(newScope);
+                    $(collapse).html(html);
+                    if (wasOpen) {
+                        const newCollapse = $(`#collapse-${scopeId}`);
+                        newCollapse.addClass("show");
+                        newCollapse
+                            .prev(".accordion-header")
+                            .find("button")
+                            .removeClass("collapsed")
+                            .attr("aria-expanded", "true");
+                    }
+                }
+            });
+        }
+
+        function initCurrencySelector(container) {
+
+            const switcher = container.find(".currency-switch");
+            const label = container.find(".currency-label");
+
+            const plnFields = container.find(".pln-fields");
+            const eurFields = container.find(".euro-fields");
+
+            const netPLN = container.find(".net-pln");
+            const netEUR = container.find(".net-eur");
+            const rate = container.find(".eur-rate");
+
+            switcher.off().on("change", function () {
+                if ($(this).is(":checked")) {
+                    label.text("🇪🇺 EUR");
+                    plnFields.slideUp();
+                    eurFields.slideDown();
+                    netPLN.val("");
+                } else {
+                    label.text("🇵🇱 PLN");
+                    eurFields.slideUp();
+                    plnFields.slideDown();
+                    netEUR.val("");
+                    rate.val("");
+                }
+            });
+
+        //Automatyczna inicjalizacja w modalach
+        $(document).on("shown.bs.modal", function (e) {
+            const modal = $(e.target);
+            modal.find(".currency-selector").each(function () {
+                initCurrencySelector($(this));
+            });
+        });
+    </script>       
+}
+
+partiale:
+
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer
+@model WorkScopeTypeVm
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="bi bi-diagram-3 text-primary me-2"></i>
+            @Model.WorkScopeType.GetDisplayName()
+        </h5>
+
+        <div>
+            <span class="badge bg-info text-dark me-2 type-margin">
+                Marża: @Model.Margin.ToString("N2") %
+            </span>
+            <span class="badge bg-success type-total">
+                Razem netto: @Model.Total.ToString("N2") zł
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="accordion" id="workScopeAccordion">
+            @foreach (var scope in Model.WorkScopes.OrderBy(s => s.Order))
+            {
+                @await Html.PartialAsync("_WorkScopeItem", scope)
+            }
+        </div>
+    </div>
+</div>
+
+@model WorkScopeDto
+
+<div class="accordion-item mb-2" id="scope-@Model.Id">
+    <h2 class="accordion-header" id="heading-@Model.Id">
+        <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse-@Model.Id">
+
+            <div class="d-flex flex-column col-md-6">
+                <strong>@Model.Description</strong>
+            </div>
+
+            <span class="badge bg-primary ms-md-auto scope-total">
+                @Model.Total.ToString("N2") zł
+            </span>
+        </button>
+    </h2>
+
+    <div id="collapse-@Model.Id"
+         class="accordion-collapse collapse"
+         aria-labelledby="heading-@Model.Id"
+         data-bs-parent="#workScopeAccordion">
+
+        <div class="accordion-body">
+            @await Html.PartialAsync("_WorkScopeOffers", Model)
+        </div>
+    </div>
+</div>
+
+@model WorkScopeDto
+
+<h6 class="text-secondary mb-2">
+    <i class="bi bi-tag me-1"></i> Oferty
+</h6>
+
+<div class="d-flex justify-content-end mb-2">
+    <button class="btn btn-primary btn-sm mb-2 open-add-offer-modal"
+            data-scope-id="@Model.Id">
+        <i class="fas fa-circle-plus"></i> Dodaj ofertę
+    </button>
+</div>
+
+<table class="table table-sm align-middle">
+    <thead>
+        <tr>
+            <th>Opis</th>
+            <th>Ilość</th>
+            <th>Jednostka</th>
+            <th>Netto</th>
+            <th>Razem</th>
+            <th>Podwykonawca</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var offer in Model.Offers.OrderBy(o => o.Order))
+        {
+            @await Html.PartialAsync("_WorkScopeOfferRow", offer)
+        }
+    </tbody>
+</table>
+
+Modal: 
+
+@using ProjectManager.Application.Settlements.Queries.GetAddWorkScopeOffer
+@using ProjectManager.Domain.Enums
+
+@model AddWorkScopeOfferVm
+
+<div class="modal fade" id="modal-add-offer" style="width:max-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-offer-form">
+                <input type="hidden" asp-for="ScopeOffer.WorkScopeId" value="@Model.ScopeOffer.WorkScopeId" />
+                @for (int i = 0; i < Model.SubContractors.Count(); i++)
+                {
+                    @Html.HiddenFor(x => x.SubContractors[i].Id)
+                    @Html.HiddenFor(x => x.SubContractors[i].Name)
+                }
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodawanie nowej oferty</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row g-3">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(x => x.ScopeOffer.Description)
+                        @Html.TextBoxFor(x => x.ScopeOffer.Description, new { @class = "form-control", placeholder = "Wprowadź nazwę" })
+                        @Html.ValidationMessageFor(x => x.ScopeOffer.Description)
+                    </div>
+                    <div class="col-md-12 form-group">
+                        @Html.LabelFor(x => x.ScopeOffer.Comment)
+                        @Html.TextAreaFor(x => x.ScopeOffer.Comment, new { @class = "form-control", placeholder = "Wprowadź komentarz" })
+                        @Html.ValidationMessageFor(x => x.ScopeOffer.Comment)
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(x => x.ScopeOffer.Quantity)
+                        @Html.TextBoxFor(x => x.ScopeOffer.Quantity, new { @class = "form-control", placeholder = "Wprowadź ilość" })
+                        @Html.ValidationMessageFor(x => x.ScopeOffer.Quantity)
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(x => x.ScopeOffer.UnitType)
+                        <div class="select2-blue">
+                            @Html.DropDownList("ScopeOffer.UnitType", Html.GetEnumSelectList<UnitType>(), null, htmlAttributes: new { @class = "form-control select2-UnitType", style = "width: 100%;" })
+                            @Html.ValidationMessageFor(x => x.ScopeOffer.UnitType)
+                        </div>
+                    </div>
+                    <div class="currency-selector">
+
+                        <div class="form-group mb-3">
+                            <label class="form-label d-block">Waluta</label>
+
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input currency-switch" />
+                                <label class="form-check-label">
+                                    <span class="currency-label">🇵🇱 PLN</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- PLN -->
+                        <div class="pln-fields row">
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(x => x.ScopeOffer.NetAmount)
+                                @Html.TextBoxFor(x => x.ScopeOffer.NetAmount, new { @class = "form-control net-pln", placeholder = "Kwota netto (PLN)" })
+                                @Html.ValidationMessageFor(x => x.ScopeOffer.NetAmount)
+                            </div>
+                        </div>
+
+                        <!-- EURO -->
+                        <div class="euro-fields row" style="display:none;">
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(x => x.ScopeOffer.EuroNetAmount)
+                                @Html.TextBoxFor(x => x.ScopeOffer.EuroNetAmount, new { @class = "form-control net-eur", placeholder = "Kwota netto (EUR)" })
+                                @Html.ValidationMessageFor(x => x.ScopeOffer.EuroNetAmount)
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(x => x.ScopeOffer.EuroRate)
+                                @Html.TextBoxFor(x => x.ScopeOffer.EuroRate, new { @class = "form-control eur-rate", placeholder = "Kurs EUR" })
+                                @Html.ValidationMessageFor(x => x.ScopeOffer.EuroRate)
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(x => x.ScopeOffer.SubContractorId)
+                        <div class="select2-blue">
+                            @Html.DropDownList("SubContractors", @Model.SubContractors.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class = "form-control select2-SubContractor", style = "width: 100%;" })
+                            @Html.ValidationMessageFor(x => x.SubContractors)
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button id="modal-add-position-btn" type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+Kontroler:
+     public async Task<IActionResult> AddOffer(int id)
+     {
+         return PartialView("_AddOfferModal", await Mediator.Send(new GetAddWorkScopeOfferQuery { Id = id }));
+     }
+
+Proeblem: nie wyświelta sie modal
+
+        

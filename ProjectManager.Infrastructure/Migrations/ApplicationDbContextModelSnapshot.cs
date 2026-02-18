@@ -3155,7 +3155,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 17,
-                            Description = "Rezerwa",
+                            Description = "Inne",
                             Order = 16,
                             ProjectScopeTemplateId = 2
                         },
@@ -3218,7 +3218,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 26,
-                            Description = "Rezerwa",
+                            Description = "Inne",
                             Order = 10,
                             ProjectScopeTemplateId = 3
                         },
@@ -3260,7 +3260,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 32,
-                            Description = "Rezerwa",
+                            Description = "Inne",
                             Order = 7,
                             ProjectScopeTemplateId = 4
                         },
@@ -3295,7 +3295,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 37,
-                            Description = "Rezerwa",
+                            Description = "Inne",
                             Order = 6,
                             ProjectScopeTemplateId = 5
                         },
@@ -3323,7 +3323,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 41,
-                            Description = "Rezerwa",
+                            Description = "Inne",
                             Order = 5,
                             ProjectScopeTemplateId = 6
                         },
@@ -3358,7 +3358,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 46,
-                            Description = "Rezerwa",
+                            Description = "Inne",
                             Order = 6,
                             ProjectScopeTemplateId = 7
                         },
@@ -4233,9 +4233,10 @@ namespace ProjectManager.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Comment")
-                        .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasDefaultValue("");
 
                     b.Property<string>("Description")
                         .IsRequired()

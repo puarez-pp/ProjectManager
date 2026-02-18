@@ -22,14 +22,13 @@
     @using (Html.BeginForm("EditProject", "Project"))
     {
         @Html.AntiForgeryToken()
-
         @Html.HiddenFor(x => x.Project.Id)
 
-        @* @for (int i = 0; i < Model.AvailableManagers.Count(); i++)
+        @for (int i = 0; i < Model.AvailableEmployees.Count(); i++)
         {
-            @Html.HiddenFor(x => x.AvailableManagers[i].Id)
-            @Html.HiddenFor(x => x.AvailableManagers[i].FullName)
-        } *@
+            @Html.HiddenFor(x => x.AvailableEmployees[i].Id)
+            @Html.HiddenFor(x => x.AvailableEmployees[i].FullName)
+        }
 
         @for (int i = 0; i < Model.AvaiableClients.Count(); i++)
         {
@@ -46,26 +45,28 @@
                 </div>
             </div>
 
-            <div class="form-group"> 
-
-                @Html.LabelFor(x => x.Project.ClientId)
-
+            <div class="form-group">
+                @Html.LabelFor(x => x.Project.ProjectStatus)
                 <div class="select2-blue">
+                    @Html.DropDownList("Project.ProjectStatus", Html.GetEnumSelectList<ProjectStatus>(), null, htmlAttributes: new { @class = "form-control select2-ProjectStatus", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.ProjectStatus)
+                </div>
+            </div>
 
+            <div class="form-group"> 
+                @Html.LabelFor(x => x.Project.ClientId)
+                <div class="select2-blue">
                     @Html.DropDownList("Project.ClientId", @Model.AvaiableClients.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class="form-control select2-ClientId", style="width: 100%;" })
                     @Html.ValidationMessageFor(x => x.Project.ClientId)
                 </div>
             </div>
 
             <div class="form-group"> 
-
                 @Html.LabelFor(x => x.Project.UserPMId)
-
-                @* <div class="select2-blue">
-
-                    @Html.DropDownList("Project.UserPMId", @Model.AvailableManagers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-UserPMId", style="width: 100%;" })
+                <div class="select2-blue">
+                    @Html.DropDownList("Project.UserPMId", @Model.AvailableEmployees.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class="form-control select2-UserPMId", style="width: 100%;" })
                     @Html.ValidationMessageFor(x => x.Project.UserPMId)
-                </div> *@
+                </div>
             </div>
 
              <div class="form-group">
@@ -78,13 +79,19 @@
                 @Html.LabelFor(x => x.Project.Name)
                 @Html.TextBoxFor(x => x.Project.Name, new { @class = "form-control", placeholder="Wprowadź nazwę projektu"})
                 @Html.ValidationMessageFor(x => x.Project.Name)
-            </div> 
-
-            <div class="form-group"> 
-                @Html.LabelFor(x => x.Project.ProjectStatus)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Project.DesignEngId)
                 <div class="select2-blue">
-                    @Html.DropDownList("Project.ProjectStatus", Html.GetEnumSelectList<ProjectStatus>(), null, htmlAttributes: new { @class="form-control select2-ProjectStatus", style="width: 100%;" })
-                    @Html.ValidationMessageFor(x => x.Project.ProjectStatus)
+                    @Html.DropDownList("Project.DesignEngId", @Model.AvailableEmployees.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class = "form-control select2-DesignEngId", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.DesignEngId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Project.ElectricEngId)
+                <div class="select2-blue">
+                    @Html.DropDownList("Project.ElectricEngId", @Model.AvailableEmployees.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class = "form-control select2-ElectricEngId", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Project.ElectricEngId)
                 </div>
             </div>
 
@@ -136,6 +143,12 @@
             });
 
             $('.select2-UserPMId').select2({
+                theme: 'bootstrap-5'
+            });
+            $('.select2-DesignEngId').select2({
+                theme: 'bootstrap-5'
+            });
+            $('.select2-ElectricEngId').select2({
                 theme: 'bootstrap-5'
             });
 

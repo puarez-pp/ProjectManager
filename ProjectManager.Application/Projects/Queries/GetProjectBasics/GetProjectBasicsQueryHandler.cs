@@ -22,7 +22,7 @@ public class GetProjectBasicsQueryHandler : IRequestHandler<GetProjectBasicsQuer
             .Select(x => new ProjectBasicsDto
             {
                 Id = x.Id,
-                ProjectType = x.ProjectType.GetDisplayName(),
+                ProjectType = x.ProjectType,
                 ProjectStatus = x.Status,
                 Number = x.Number,
                 Name = x.Name,

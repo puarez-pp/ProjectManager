@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 
 namespace ProjectManager.Application.Settlements.Queries.GetCostDetails;
@@ -19,33 +20,67 @@ public class GetCostDetailsQueryHandler : IRequestHandler<GetCostDetailsQuery, C
     }
     public async Task<CostDetailsVm> Handle(GetCostDetailsQuery request, CancellationToken cancellationToken)
     {
-        var workScopes = await _context
-            .WorkScopes
+        var project = await _context
+            .Projects
             .AsNoTracking()
-            .Where(x => x.SettlementId == request.Id)
-            .Select(s => new WorkScopeDto
+            .Where(x => x.Id == request.Id)
+            .Select(s => new ProjectBasicsDto
             {
                 Id = s.Id,
-                Description = s.Description,
-                Order = s.Order,
-                Total = _financeService.RoundAmount(s.WorkScopeCosts.Sum(y => y.Quantity * y.NetAmount)),
-                Costs = s.WorkScopeCosts.Select(y => new WorkScopeCostDto
+                Name = s.Name,
+                Number = s.Number
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var rawScopes = await _context
+            .WorkScopes
+            .AsNoTracking()
+            .Where(x => x.Settlement.ProjectId == request.Id)
+            .Select(s => new
+            {
+                s.Id,
+                s.Description,
+                s.Order,
+                Costs = s.WorkScopeCosts.Select(y => new
                 {
-                    Id = y.Id,
-                    Description = y.Description,
-                    Order = y.Order,
-                    UnitType = y.UnitType,
-                    Quantity = y.Quantity,
-                    NetAmount = y.NetAmount,
-                    Total = _financeService.RoundAmount(y.Quantity * y.NetAmount),
-                    SubContractor = y.SubContractor.Name,
-                }).OrderBy(x => x.Order)
-                .ToList()
-            }).OrderBy(x => x.Order)
+                    y.Id,
+                    y.Description,
+                    y.Order,
+                    y.UnitType,
+                    y.Quantity,
+                    y.NetAmount,
+                    SubContractor = y.SubContractor.Name
+                }).OrderBy(o => o.Order).ToList()
+            })
+            .OrderBy(x => x.Order)
             .ToListAsync(cancellationToken);
-        
+
+        var workScopes = rawScopes.Select(s => new WorkScopeDto
+        {
+            Id = s.Id,
+            Description = s.Description,
+            Order = s.Order,
+
+            Costs = s.Costs.Select(o => new WorkScopeCostDto
+            {
+                Id = o.Id,
+                Description = o.Description,
+                Order = o.Order,
+                UnitType = o.UnitType,
+                Quantity = o.Quantity,
+                NetAmount = o.NetAmount,
+                Total = _financeService.RoundAmount(o.Quantity * o.NetAmount),
+                SubContractor = o.SubContractor
+            }).ToList(),
+            Total = s.Costs.Sum(o => _financeService.RoundAmount(o.Quantity * o.NetAmount))
+        })
+       .OrderBy(x => x.Order)
+       .ToList();
+
         var vm = new CostDetailsVm
         {
+            Project = project,
+            Total = workScopes.Sum(s => s.Total),
             WorkScopes = workScopes
         };
         return vm;

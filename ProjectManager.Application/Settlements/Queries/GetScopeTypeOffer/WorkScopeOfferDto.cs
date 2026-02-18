@@ -1,5 +1,4 @@
-﻿using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Domain.Enums;
+﻿using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 

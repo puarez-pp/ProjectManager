@@ -1,0 +1,16 @@
+﻿@using ProjectManager.Application.Projects.Queries.GetProject
+@model IEnumerable<PositionPostDto>
+
+<div class="d-flex justify-content-start mb-1">
+    <button class="btn btn-primary btn-sm open-add-post-modal"
+            data-position="@ViewBag.Id">
+        <i class="fas fa-solid fa-circle-plus"></i>Dodaj komentarz
+    </button>
+</div>
+
+<div class="posts-list">
+    @foreach (var post in Model)
+    {
+        <partial name="_PostItem" model="post" />
+    }
+</div>

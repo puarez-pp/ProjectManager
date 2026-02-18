@@ -33,7 +33,7 @@ public class EditProjectCommand:IRequest
     [Required(ErrorMessage = "Pole 'Kierownik projektu' jest wymagane")]
     [DisplayName("Kierownik projektu")]
     public string UserPMId { get; set; }
-    [DisplayName("Inżynier technologii")]
+    [DisplayName("Inżynier technolog")]
     public string DesignEngId { get; set; }
     [DisplayName("Inżynier elektryk")]
     public string ElectricEngId { get; set; }

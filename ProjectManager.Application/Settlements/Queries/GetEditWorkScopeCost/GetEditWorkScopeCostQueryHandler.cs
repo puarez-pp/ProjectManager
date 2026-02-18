@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Settlements.Commands.EditWorkScopeCost;
 using ProjectManager.Application.SubContractors.Extension;
 
@@ -17,6 +18,17 @@ public class GetEditWorkScopeCostQueryHandler : IRequestHandler<GetEditWorkScope
     }
     public async Task<EditWorkScopeCostVm> Handle(GetEditWorkScopeCostQuery request, CancellationToken cancellationToken)
     {
+        var project = await _context
+            .Projects
+            .AsNoTracking()
+            .Where(p => p.Settlement.WorkScopes.Any(ws => ws.WorkScopeCosts.Any(wsc => wsc.Id == request.Id)))
+            .Select(p => new ProjectBasicsDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
         var subContractors = await _context
            .SubContractors
            .AsNoTracking ()
@@ -26,29 +38,24 @@ public class GetEditWorkScopeCostQueryHandler : IRequestHandler<GetEditWorkScope
 
         var cost = await _context
             .WorkScopeCosts
-            .Where(c => c.Id == request.Id)
-            .Select(c => new
-            {
-                SettlementId = c.WorkScope.SettlementId,
-                WorkScopeCost = c
-            })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(c => c.Id == request.Id);
 
 
         var vm = new EditWorkScopeCostVm
         {
-            SettlementId = cost.SettlementId,
+            Project = project,
             SubContractors = subContractors,
             ScopeCost = new EditWorkScopeCostCommand
             {
                 Id = request.Id,
-                Description = cost.WorkScopeCost.Description,
-                Quantity = cost.WorkScopeCost.Quantity,
-                UnitType = cost.WorkScopeCost.UnitType,
-                NetAmount = cost.WorkScopeCost.NetAmount,
-                EuroNetAmount = cost.WorkScopeCost.EuroNetAmount,
-                EuroRate = cost.WorkScopeCost.EuroRate,
-                SubContractorId = cost.WorkScopeCost.SubContractorId
+                Description = cost.Description,
+                CostStatusType = cost.CostStatusType,
+                Quantity = cost.Quantity,
+                UnitType = cost.UnitType,
+                NetAmount = cost.NetAmount,
+                EuroNetAmount = cost.EuroNetAmount,
+                EuroRate = cost.EuroRate,
+                SubContractorId = cost.SubContractorId
             }
         };
         return vm;

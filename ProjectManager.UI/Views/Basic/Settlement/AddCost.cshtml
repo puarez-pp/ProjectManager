@@ -1,0 +1,149 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Settlements.Queries.GetAddWorkScopeCost
+@using ProjectManager.Domain.Enums
+
+@model AddWorkScopeCostVm
+
+@{
+    ViewData["Title"] = "Dodawanie kosztu";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DateTimeStyles" />
+}
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3 mb-3">
+    <h4 class="mb-0 d-flex align-items-center">
+        <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Project.Name
+        </a>
+    </h4>
+</div>
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("AddCost", "Settlement"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.ScopeCost.WorkScopeId)
+        @Html.HiddenFor(x => x.Project.Id)
+
+        <div class="card-body row g-3">
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.ScopeCost.Description)
+                @Html.TextBoxFor(x => x.ScopeCost.Description, new { @class = "form-control", placeholder = "Wprowadź nazwę" })
+                @Html.ValidationMessageFor(x => x.ScopeCost.Description)
+            </div>
+
+            <div class="form-group col-sm-6">
+                @Html.LabelFor(x => x.ScopeCost.CostStatusType)
+                <div class="select2-blue">
+                    @Html.DropDownList("ScopeCost.CostStatusType", Html.GetEnumSelectList<CostStatusType>(), null, htmlAttributes: new { @class = "form-control select2-CostStatusType", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.ScopeCost.CostStatusType)
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                @Html.LabelFor(x => x.ScopeCost.Quantity)
+                @Html.TextBoxFor(x => x.ScopeCost.Quantity, new { @class = "form-control", placeholder = "Wprowadź ilość" })
+                @Html.ValidationMessageFor(x => x.ScopeCost.Quantity)
+            </div>
+
+            <div class="form-group col-sm-6">
+                @Html.LabelFor(x => x.ScopeCost.UnitType)
+                <div class="select2-blue">
+                    @Html.DropDownList("ScopeOffer.UnitType", Html.GetEnumSelectList<UnitType>(), null, htmlAttributes: new { @class = "form-control select2-UnitType", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.ScopeCost.UnitType)
+                </div>
+            </div>
+            <div class="currency-selector" id="currencyContainer">
+
+                <div class="form-group mb-3">
+                    <label class="form-label d-block">Przełącz walutę</label>
+
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input currency-switch" />
+                        <label class="form-check-label">
+                            <span class="currency-label">🇵🇱 PLN</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- PLN -->
+                <div class="pln-fields row">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(x => x.ScopeCost.NetAmount)
+                        @Html.TextBoxFor(x => x.ScopeCost.NetAmount, new { @class = "form-control net-pln", placeholder = "Kwota netto (PLN)" })
+                        @Html.ValidationMessageFor(x => x.ScopeCost.NetAmount)
+                    </div>
+                </div>
+
+                <!-- EURO -->
+                <div class="euro-fields" style="display:none;">
+                    <div class="form-group col-sm-6">
+                        @Html.LabelFor(x => x.ScopeCost.EuroNetAmount)
+                        @Html.TextBoxFor(x => x.ScopeCost.EuroNetAmount, new { @class = "form-control net-eur", placeholder = "Kwota netto (EUR)" })
+                        @Html.ValidationMessageFor(x => x.ScopeCost.EuroNetAmount)
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        @Html.LabelFor(x => x.ScopeCost.EuroRate)
+                        @Html.TextBoxFor(x => x.ScopeCost.EuroRate, new { @class = "form-control eur-rate", placeholder = "Kurs EUR" })
+                        @Html.ValidationMessageFor(x => x.ScopeCost.EuroRate)
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.ScopeCost.SubContractorId)
+                <div class="select2-blue">
+                    @Html.DropDownList("ScopeCost.SubContractorId", @Model.SubContractors.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class = "form-control select2-SubContractor", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.SubContractors)
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DateTimeScripts" />
+    <script type="module">
+
+    $(document).ready(function() {
+            $('.select2-UnitType').select2({
+                theme: 'bootstrap-5'
+            });
+            $('.select2-SubContractor').select2({
+                theme: 'bootstrap-5'
+            });
+            $('.select2-CostStatusType').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+    import { CurrencyModule } from '/js/modules/currencyModule.js';
+
+        // Inicjalizacja przełącznika waluty
+    CurrencyModule.initCurrencySelector(".currency-selector");
+
+        // Inicjalizacja przeliczania
+    CurrencyModule.initConversion({
+        plnSelector: ".net-pln",
+        eurSelector: ".net-eur",
+        rateSelector: ".eur-rate"
+    });
+    </script>
+}

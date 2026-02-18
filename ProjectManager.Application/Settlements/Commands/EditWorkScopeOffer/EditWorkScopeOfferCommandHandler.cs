@@ -18,6 +18,7 @@ public class EditWorkScopeOfferCommandHandler : IRequestHandler<EditWorkScopeOff
         var offer = await _context
             .WorkScopeOffers
             .FirstOrDefaultAsync(x => x.Id == request.Id);
+
         if(offer != null)
         {
             offer.Description = request.Description;

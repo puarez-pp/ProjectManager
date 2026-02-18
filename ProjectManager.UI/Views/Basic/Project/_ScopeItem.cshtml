@@ -1,0 +1,31 @@
+﻿
+@using ProjectManager.Application.Projects.Queries.GetProject
+@model ProjectScopeDto
+
+@{
+    Layout = null;
+    var scopeId = Model.Id;
+}
+
+<div class="accordion-item mb-3">
+    <h2 class="accordion-header" id="heading-scope-@scopeId">
+        <button class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse-scope-@scopeId">
+            @Model.Description
+        </button>
+    </h2>
+
+    <div id="collapse-scope-@scopeId" class="accordion-collapse collapse">
+        <div class="accordion-body">
+
+            <button class="btn btn-primary btn-sm mb-2 open-add-position-modal"
+                    data-scope="@Model.Id">
+                <i class="fas fa-circle-plus"></i> Dodaj pozycję
+            </button>
+            <partial name="_PositionsList" model="Model.Positions" />
+
+        </div>
+    </div>
+</div>

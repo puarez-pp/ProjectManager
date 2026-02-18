@@ -1,0 +1,33 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Settlements.Queries.GetCostDetails
+
+@model CostDetailsVm
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="bi bi-diagram-3 text-primary me-2"></i>
+            Szczegółowe zestawienie kosztów
+        </h5>
+
+        <div>
+            <span class="badge bg-info type-total">
+                <a class="edit-link" href="/Project/Project?id=@Model.Project.Id">
+                    Podsumowanie kosztów
+                </a>
+            </span>
+            <span class="badge bg-success type-total">
+                Razem netto: @Model.Total.ToString("N2") zł
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="accordion" id="workScopeAccordion">
+            @foreach (var scope in Model.WorkScopes.OrderBy(s => s.Order))
+            {
+                @await Html.PartialAsync("_WorkScopeCostItem", scope)
+            }
+        </div>
+    </div>
+</div>

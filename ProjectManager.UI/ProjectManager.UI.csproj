@@ -49,7 +49,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Basic\Project\Modals\" />
-    <Folder Include="Views\Basic\Settlement\" />
   </ItemGroup>
 
 </Project>

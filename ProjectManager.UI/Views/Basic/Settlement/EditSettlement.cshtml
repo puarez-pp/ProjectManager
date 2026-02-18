@@ -1,0 +1,93 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Projects.Commands.AddProject
+@using ProjectManager.Application.Settlements.Commands.AddSettlement
+@using ProjectManager.Application.Settlements.Commands.EditSettlement
+@using ProjectManager.Domain.Enums
+
+@model EditSettlementCommand
+
+@{
+    ViewData["Title"] = "Edycja - założenia";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DateTimeStyles" />
+}
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("EditSettlement", "Settlement"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card-body row g-3">
+
+             <div class="col-md-3 form-group">
+                @Html.LabelFor(x => x.MarginGen)
+                @Html.TextBoxFor(x => x.MarginGen, new { @class = "form-control", placeholder = "Wprowadź GP - Agregat" })
+                @Html.ValidationMessageFor(x => x.MarginGen)
+            </div>
+
+            <div class="col-md-3 form-group">
+                @Html.LabelFor(x => x.MarginInstall)
+                @Html.TextBoxFor(x => x.MarginInstall, new { @class = "form-control", placeholder = "Wprowadź GP - Instalacja" })
+                @Html.ValidationMessageFor(x => x.MarginInstall)
+            </div>
+
+            <div class="col-md-3 form-group">
+                @Html.LabelFor(x => x.Discount)
+                @Html.TextBoxFor(x => x.Discount, new { @class = "form-control", placeholder = "Wprowadź Plan upustu [%]" })
+                @Html.ValidationMessageFor(x => x.Discount)
+            </div>
+
+            <div class="col-md-3 form-group">
+                @Html.LabelFor(x => x.Maturity)
+                @Html.TextBoxFor(x => x.Maturity, new { @class = "form-control", placeholder = "Wprowadź Termin płatności" })
+                @Html.ValidationMessageFor(x => x.Maturity)
+            </div>
+
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(x => x.CompanyCost)
+                @Html.TextBoxFor(x => x.CompanyCost, new { @class = "form-control", placeholder = "Wprowadź Koszty ogólne firmy" })
+                @Html.ValidationMessageFor(x => x.CompanyCost)
+            </div>
+
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(x => x.CompanyGuarantee)
+                @Html.TextBoxFor(x => x.CompanyGuarantee, new { @class = "form-control", placeholder = "Wprowadź Gwarancja Firmy" })
+                @Html.ValidationMessageFor(x => x.CompanyGuarantee)
+            </div>
+
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(x => x.Insurance)
+                @Html.TextBoxFor(x => x.Insurance, new { @class = "form-control", placeholder = "Wprowadź Koszty ogólne firmy" })
+                @Html.ValidationMessageFor(x => x.Insurance)
+            </div>
+        </div>
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+
+    }
+
+</div>
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DateTimeScripts" />
+    <script>
+
+        $(document).ready(function() {
+
+        });
+    </script>
+}

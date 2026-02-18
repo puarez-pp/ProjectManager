@@ -1,0 +1,9 @@
+﻿@using ProjectManager.Application.Projects.Queries.GetProject
+@model IEnumerable<ProjectScopePositionDto>
+
+<div class="positions-list">
+    @foreach (var pos in Model)
+    {
+        <partial name="_PositionItem" model="pos" />
+    }
+</div>

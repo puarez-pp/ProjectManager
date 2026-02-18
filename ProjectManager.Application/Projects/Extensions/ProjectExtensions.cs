@@ -1,5 +1,4 @@
-﻿using ProjectManager.Application.Common.Extensions;
-using ProjectManager.Application.Projects.Queries.GetProjectBasics;
+﻿using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Projects.Extensions;
@@ -15,12 +14,11 @@ public static class ProjectExtensions
         return new ProjectBasicsDto
         {
             Id = project.Id,
-            ProjectType = (project.ProjectType).GetDisplayName(),
+            ProjectType = project.ProjectType,
             ProjectStatus = project.Status,
             Number = project.Number,
             Name = project.Name,
             Sharepoint = project.Sharepoint,
-            Client = project.Client.Name,
             EditAt = project.EditAt,
         };
     }

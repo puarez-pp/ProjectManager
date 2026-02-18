@@ -35,6 +35,10 @@ public class FinanceService : IFinanceService
 
     public decimal ConvertToEuro(decimal amount, decimal rate)
     {
+        if (rate == 0)
+        {
+            return 0;
+        }
         return RoundAmountTo2Places(amount / rate);
     }
 
@@ -65,7 +69,11 @@ public class FinanceService : IFinanceService
 
     public decimal CalculateMarginRate(decimal netAmount, decimal grossAmount)
     {
-        return RoundAmountTo2Places((grossAmount-netAmount)/netAmount);
+        if (netAmount == 0)
+        {
+            return 0;
+        }
+        return RoundAmountTo2Places((grossAmount - netAmount) / netAmount);
     }
 
     public decimal CalculatePercentageOfRates(decimal amount, IEnumerable<decimal> rates)
@@ -73,7 +81,7 @@ public class FinanceService : IFinanceService
         _amount = 0;
         foreach (var rate in rates)
         {
-            _amount += rate*amount;
+            _amount += rate*amount/100;
         }
         return RoundAmountTo2Places(_amount);
     }
@@ -83,7 +91,7 @@ public class FinanceService : IFinanceService
         _amount = 0;
         foreach (var amount in amounts)
         {
-            _amount += rate * amount;
+            _amount += rate * amount/100;
         }
         return RoundAmountTo2Places(_amount);
     }

@@ -33,27 +33,27 @@ public class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, GetProjec
                User = new UserDto
                {
                    FullName = $"{x.User.FirstName} {x.User.LastName}",
-                   Employee = new EmployeeDto { }
+                   Employee = new EmployeeDto ()
                },
                UserUpd = new UserDto
                {
                    FullName = $"{x.UserUpdator.FirstName} {x.UserUpdator.LastName}",
-                   Employee = new EmployeeDto { }
+                   Employee = new EmployeeDto ()
                },
                ProjectManager = new UserDto
                {
                    FullName = $"{x.UserPM.FirstName} {x.UserPM.LastName}",
-                   Employee = new EmployeeDto { }
+                   Employee = new EmployeeDto ()
                },
                DesignEng = new UserDto
                {
                    FullName = $"{x.DesignEng.FirstName} {x.DesignEng.LastName}",
-                   Employee = new EmployeeDto { }
+                   Employee = new EmployeeDto ()
                },
                ElectricEng = new UserDto
                {
                    FullName = $"{x.ElectricEng.FirstName} {x.ElectricEng.LastName}",
-                   Employee = new EmployeeDto { }
+                   Employee = new EmployeeDto ()
                },
                Client = x.Client.Name,
                CreatedAt = x.CreatedAt,

@@ -20,7 +20,18 @@ public class GetCatProjectBasicsQueryHandler : IRequestHandler<GetCatProjectBasi
             .Projects
             .AsNoTracking()
             .Where(x => x.ProjectType == request.ProjectTypeId)
-            .Select(x => x.ToBasicsProjectDto())
+            .Select(x => new ProjectBasicsDto
+            {
+                Id = x.Id,
+                ProjectType = x.ProjectType,
+                ProjectStatus = x.Status,
+                Number = x.Number,
+                Name = x.Name,
+                ClientId = x.ClientId,
+                Client = x.Client.Name,
+                Sharepoint = x.Sharepoint,
+                EditAt = x.EditAt
+            })
             .ToListAsync();
         return projects;
     }

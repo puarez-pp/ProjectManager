@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Posts.Commands.AddPositionPost;
+using ProjectManager.Application.Posts.Commands.DeletePost;
 using ProjectManager.Application.Posts.Queries.GetPositionPosts;
 using ProjectManager.Application.Projects.Commands.AddPosition;
 using ProjectManager.Application.Projects.Commands.AddProject;
@@ -14,6 +15,7 @@ using ProjectManager.Application.Projects.Queries.GetEditPosition;
 using ProjectManager.Application.Projects.Queries.GetEditProject;
 using ProjectManager.Application.Projects.Queries.GetProject;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
+using ProjectManager.Application.Projects.Queries.GetScopes;
 using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.UI.Controllers
@@ -29,16 +31,18 @@ namespace ProjectManager.UI.Controllers
             _dateTimeService = dateTimeService;
             _logger = logger;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Project(int id)
         {
             return View(await Mediator.Send(new GetProjectQuery { Id = id}));
         }
-        public async Task<IActionResult> Scopes(int id)
-        {
-            return PartialView("_ScopesAccordion", await Mediator.Send(new GetProjectQuery { Id = id }));
-        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetScope(int id)
+        {
+            return PartialView("_ScopeItem", await Mediator.Send(new GetScopeQuery { Id = id }));
+        }
+        [HttpGet]
         public async Task<IActionResult> Projects()
         {
             return View(await Mediator.Send(new GetProjectBasicsQuery()));
@@ -47,16 +51,16 @@ namespace ProjectManager.UI.Controllers
         public async Task<IActionResult> PositionPosts(int id)
         {
             ViewBag.Id = id;
-            return PartialView("_PositionPosts", await Mediator.Send(new GetPositionPostsQuery { Id = id }));
+            return PartialView("_PostsList", await Mediator.Send(new GetPositionPostsQuery { Id = id }));
         }
-
+        [HttpGet]
         public async Task<IActionResult> ProjectsCat(ProjectType id)
         {
             ViewData["projectType"] = id;
             return View(await Mediator.Send(new GetCatProjectBasicsQuery { ProjectTypeId = id }));
             
         }
-
+        [HttpGet]
         public async Task<IActionResult> AddProject()
         {
 
@@ -76,7 +80,7 @@ namespace ProjectManager.UI.Controllers
 
             return RedirectToAction("Projects");
         }
-
+        [HttpGet]
         public async Task<IActionResult> EditProject(int id)
         {
             return View(await Mediator.Send(new GetEditProjectQuery { Id = id }));
@@ -115,7 +119,7 @@ namespace ProjectManager.UI.Controllers
                 return Json(new { success = false });
             }
         }
-
+        [HttpGet]
         public async Task<IActionResult> AddPosition(int id)
         {
             return PartialView("_AddPositionModal", new AddPositionCommand { ProjectScopeId = id});
@@ -130,10 +134,11 @@ namespace ProjectManager.UI.Controllers
 
             return Json(new
             {
-                success = true
+                success = true,
+                scopeId = command.ProjectScopeId
             });
         }
-
+        [HttpGet]
         public async Task<IActionResult> EditPosition(int id)
         {
             var command = await Mediator.Send(new GetEditPositionQuery { Id = id});
@@ -148,7 +153,8 @@ namespace ProjectManager.UI.Controllers
 
             return Json(new
             {
-                success = true
+                success = true,
+                scopeId = command.ProjectScopeId
             });
         }
 
@@ -165,11 +171,11 @@ namespace ProjectManager.UI.Controllers
 
             return Json(new { success = true});
         }
-
+        [HttpGet]
         public async Task<IActionResult> AddPositionPost(int id)
         {
-            return PartialView("_AddPositionPostModal", new AddPostCommand { PositionId = id });
 
+            return PartialView("_AddPositionPostModal", new AddPostCommand { PositionId = id });
         }
 
 
@@ -191,6 +197,25 @@ namespace ProjectManager.UI.Controllers
             {
                 await Mediator.Send(
                     new DeletePositionCommand
+                    {
+                        Id = id
+                    });
+
+                return Json(new { success = true });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, null);
+                return Json(new { success = false });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            try
+            {
+                await Mediator.Send(
+                    new DeletePostCommand
                     {
                         Id = id
                     });

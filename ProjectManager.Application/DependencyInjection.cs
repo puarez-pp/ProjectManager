@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectManager.Application.Common.Behaviours;
-using ProjectManager.Application.Settlements.Commands.AddSettlement;
 using System.Reflection;
 
 namespace ProjectManager.Application;

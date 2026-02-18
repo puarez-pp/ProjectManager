@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Projects.Commands.DeletePosition;
 
@@ -23,25 +24,27 @@ public class DeletePositionCommandHandler : IRequestHandler<DeletePositionComman
     {
         var position = await _context
             .ProjectScopePositions
-            .AsNoTracking ()
-            .Include(x=>x.ProjectScope)
-            .ThenInclude(x=>x.Project)
-            .FirstOrDefaultAsync(x => x.Id == request.Id);
+            .Include(x => x.ProjectScope)
+            .ThenInclude(x => x.Project)
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (position.ProjectScope.Project != null)
+        if (position == null)
+            return Unit.Value;
+
+        if (position.ProjectScope?.Project != null)
         {
             position.ProjectScope.Project.EditAt = _dateTimeService.Now;
             position.ProjectScope.Project.UserUpdatorId = _currentUser.UserId;
         }
+        var posts = _context.PositionPosts.Where(x => x.PositionId == request.Id);
+        _context.PositionPosts.RemoveRange(posts);
 
-        if (position != null)
-        {
-            _context.PositionPosts.RemoveRange(_context.PositionPosts.Where(x => x.Id == request.Id));
-            _context.ProjectScopePositions.Remove(position);
-        }
-        await _context.SaveChangesAsync();
+        _context.ProjectScopePositions.Remove(position);
+
+        await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
-            
+
     }
+
 }

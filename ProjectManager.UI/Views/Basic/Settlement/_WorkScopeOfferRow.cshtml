@@ -1,0 +1,26 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer
+@using ProjectManager.Domain.Enums
+@model WorkScopeOfferDto
+
+<tr data-offer-id="@Model.Id">
+    <!---->
+    <td class="view-mode">@Model.Description</td>
+    <td class="view-mode ">@Model.Quantity</td>
+    <td class="view-mode">@Model.UnitType.GetDisplayName()</td>
+    <td class="view-mode text-end">@Model.NetAmount.ToString("N2") zł</td>
+    <td class="view-mode offer-total text-end">@Model.Total.ToString("N2") zł</td>
+    <td class="view-mode">@Model.SubContractor</td>
+
+    <td class="view-mode text-end">
+        <button class="btn btn-sm btn-outline-success open-edit-offer m-sm-1"
+                type="button"
+                onclick="location.href='@Url.Action("EditOffer", "Settlement", new { id = Model.Id })'">
+            <i class="fas fa-pen-to-square"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger open-delete-offer-confirm m-sm-1"
+                data-offer-id="@Model.Id">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+</tr>

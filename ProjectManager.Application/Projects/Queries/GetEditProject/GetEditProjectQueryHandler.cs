@@ -42,7 +42,7 @@ public class GetEditProjectQueryHandler : IRequestHandler<GetEditProjectQuery, E
             Sharepoint = project.Sharepoint
         };
 
-        vm.AvailableEmployee = await _context
+        vm.AvailableEmployees = await _context
             .Users
             .AsNoTracking ()
             .Include(x=>x.Employee)
