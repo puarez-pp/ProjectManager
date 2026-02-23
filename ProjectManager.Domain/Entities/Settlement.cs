@@ -9,6 +9,5 @@ public class Settlement
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
     public DateTime CreatedAt { get; set; }
-    public ICollection<Invoice> Invoices { get; set; } = new HashSet<Invoice>();
     public ICollection<WorkScope> WorkScopes { get; set; } = new HashSet<WorkScope>();
 }

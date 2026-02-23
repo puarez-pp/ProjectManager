@@ -56,8 +56,8 @@
             </button>
 
             <button class="btn btn-outline-light btn-sm"
-                    data-project="@Model.Project.Id"
-                    type="button">
+                    type="button"
+                    onclick="location.href='@Url.Action("Todos", "Todo", new { id = Model.Project.Id })'">
                 <i class="fas fa-list-check me-1"></i> Lista zadań
             </button>
 

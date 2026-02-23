@@ -13,6 +13,7 @@
 
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
     var canDelete = User.IsInRole(RolesDict.Administrator) ;
+    var id = Model.Project.Id;
 }
 
 @section Styles {
@@ -29,8 +30,6 @@
          })" />
 
 
-<input type="hidden" id="ProjectId" name="ProjectId" value="@Model.Project.Id" />
-
 <div class="card shadow-sm mb-4 border-0">
 
     <!-- NAGŁÓWEK KARTY -->
@@ -41,6 +40,9 @@
                 @Model.Project.Name
             </a>
         </h4>
+        <div id="settlementNavContainer">
+            <partial name="_SettlementNav" model="Model.Project.Id" />
+        </div>
     </div>
 </div>
 

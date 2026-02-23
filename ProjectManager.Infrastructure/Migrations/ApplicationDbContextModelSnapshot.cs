@@ -2648,9 +2648,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Vendor")
                         .HasColumnType("nvarchar(max)");
 
@@ -2658,8 +2655,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SettlementId");
 
                     b.HasIndex("WorkScopeId");
 
@@ -3975,12 +3970,12 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Content")
+                    b.Property<string>("Body")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -4027,7 +4022,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("Body")
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
@@ -4050,29 +4045,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TodoReplies", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.TodoToUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("TodoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TodoId");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("TodoToUsers", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Tool", b =>
@@ -5603,19 +5575,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.Settlement", "Settlement")
-                        .WithMany("Invoices")
-                        .HasForeignKey("SettlementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ProjectManager.Domain.Entities.WorkScope", "WorkScope")
                         .WithMany("Invoices")
                         .HasForeignKey("WorkScopeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Settlement");
 
                     b.Navigation("WorkScope");
                 });
@@ -5909,24 +5873,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.TodoToUser", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Todo", "Todo")
-                        .WithMany("TodoToUsers")
-                        .HasForeignKey("TodoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("TodoToUsers")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Todo");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.ToolRent", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Tool", "Tool")
@@ -6050,8 +5996,6 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("TodoPostsRedirect");
 
-                    b.Navigation("TodoToUsers");
-
                     b.Navigation("TodosFrom");
 
                     b.Navigation("TodosTo");
@@ -6145,8 +6089,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     b.Navigation("Assumption");
 
-                    b.Navigation("Invoices");
-
                     b.Navigation("WorkScopes");
                 });
 
@@ -6164,8 +6106,6 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.Navigation("TodoPosts");
-
-                    b.Navigation("TodoToUsers");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Tool", b =>

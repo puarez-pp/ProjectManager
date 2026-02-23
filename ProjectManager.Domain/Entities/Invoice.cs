@@ -8,8 +8,6 @@ public class Invoice
     public decimal NetAmount { get; set; }
     public decimal EuroNetAmount { get; set; }
     public decimal EuroRate { get; set; }
-    public int SettlementId { get; set; }
-    public Settlement Settlement { get; set; }
     public string Vendor { get; set; }
     public int WorkScopeId { get; set; }
     public WorkScope WorkScope { get; set; }

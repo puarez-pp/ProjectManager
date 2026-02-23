@@ -1,10 +1,12 @@
-﻿using ProjectManager.Application.Settlements.Commands.EditInvoice;
+﻿using ProjectManager.Application.Projects.Queries.GetProjectBasics;
+using ProjectManager.Application.Settlements.Commands.EditInvoice;
+using ProjectManager.Application.Settlements.Queries.GetAssumption;
 
 namespace ProjectManager.Application.Settlements.Queries.GetEditInvoice;
 
 public class EditInvoiceVm
 {
-    public int SettlementId { get; set; }
-    public List<WorkScopeDto> WorkScopes { get; set; }
+    public SettlementDto Settlement { get; set; }
+    public ProjectBasicsDto Project { get; set; }
     public EditInvoiceCommand Invoice { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Todos.Commands.AddTodo;
 
@@ -20,10 +21,11 @@ public class AddTodoCommandHandler : IRequestHandler<AddTodoCommand>
     }   
     public async Task<Unit> Handle(AddTodoCommand request, CancellationToken cancellationToken)
     {
-        var todo = new Domain.Entities.Todo();
+        var todo = new Todo();
         todo.Title = request.Title;
         todo.CompletionDate =  request.CompletionDate;
-        todo.Content = request.Content;
+        todo.IsCompleted = request.IsCompleted;
+        todo.Body = request.Body;
         todo.ProjectId = request.ProjectId;
         todo.UserToId = request.UserToId;
         todo.UserFromId = _currentUser.UserId;

@@ -1,0 +1,113 @@
+﻿@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Settlements.Queries.GetFinancialControl
+
+
+@inject ICurrentUserService currentUserService
+@model FinancialControlVm
+
+@{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var canDelete = User.IsInRole(RolesDict.Administrator);
+    var id = Model.Project.Id;
+}
+
+@section Styles {
+    <partial name="Styles/_DataTablesStyles" />
+    <partial name="Styles/_SelectStyles" />
+}
+
+<input type="hidden" id="ProjectId" name="ProjectId" value="@Model.Project.Id" />
+
+<partial name="Modals/_ModalConfirm"
+         model="@(new ModalParams
+         {
+             Id = "modal-confirm-delete-invoice",
+             Title = "Potwierdź proszę",
+             Description = "Czy na pewno chcesz usunąć wybraną fakturę?"
+         })" />
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- HEADER -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <a class="edit-link text-white" href="/Project/Project?id=@id">
+                <i class="fas fa-folder-open me-2"></i>
+                @Model.Project.Name
+            </a>
+        </h4>
+        <div id="settlementNavContainer">
+            <partial name="_SettlementNav" model="Model.Project.Id" />
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div id="projectControlContainer">
+    <partial name="_ProjectControlContent" model="Model" />
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#invoicesTable').DataTable({
+                paging: true,
+                searching: false,
+                info: false,            
+                ordering: true,
+                language: {
+                    url: `/lib/datatables/lang/${'@locale'}.json`
+                }
+            });
+        });
+        const projectId = $("#ProjectId").val();
+        let deleteId;
+        //usuwanie faktury
+        $(document).on("click", ".open-delete-invoice-confirm", function () {
+            deleteId = $(this).data("invoice-id");
+            $('#modal-confirm-delete-invoice').modal('show');
+            $('.loading-overlay').show();
+        });
+
+        $(document).on("click", "#modal-confirm-delete-invoice-btn", function (){
+            const errorMessage = 'Błąd. Nie udało się usunąć wybranej faktury.';
+                $.ajax({
+                    type: "POST",
+                    url: "/Settlement/DeleteInvoice",
+                    data: {id: deleteId},
+                    success: function (data) {
+                        if (data.success) {
+                            $('[data-invoice-id="' + deleteId + '"]').remove();
+                            refreshSummaryTable();
+                            $('#modal-confirm-delete-invoice').modal('hide');
+                            toastr.success('Dane zostały zaktualizowane.')
+                        }
+                        else
+                            toastr.error(errorMessage);
+                        $('.loading-overlay').hide();
+                    },
+                    dataType: "json"
+                });
+        });
+
+        function refreshSummaryTable() {
+            $.ajax({
+                url: '/Settlement/GetSummaryPartial',
+                type: 'GET',
+                data: {id: projectId },
+                success: function (html) {
+                    $("#summaryContainer").html(html);
+                },
+                error: function () {
+                    alert("Nie udało się odświeżyć tabeli sum.");
+                }
+            });
+        }
+
+    </script>
+}

@@ -42,7 +42,7 @@ namespace ProjectManager.Application.Todos.Commands.FinishTodo
             {
                 var post = new TodoPost
                 {
-                    Content = $"Zadanie zostało zakończone przez użytkownika {user.FirstName} {user.LastName}.",
+                    Body = $"Zadanie zostało zakończone przez użytkownika {user.FirstName} {user.LastName}.",
                     UserId = _currentUser.UserId,
                     TodoId = request.Id,
                     CreatedAt = _dateTime.Now

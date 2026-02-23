@@ -17,64 +17,29 @@
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
     var canDelete = User.IsInRole(RolesDict.Administrator) ;
     var existSettlement = Model.Assumption.Id != 0;
+    var id = Model.Project.Id;
 }
 
 @section Styles {
 <partial name="Styles/_DataTablesStyles" />
 }
 
-
 <input type="hidden" id="ProjectId" name="ProjectId" value="@Model.Project.Id" />
-<input type="hidden" id="AssumptionId" name="AssumptionId" value="@Model.Assumption.Id" />
 
 <div class="card shadow-sm mb-4 border-0">
 
     <!-- NAGŁÓWEK KARTY -->
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
         <h4 class="mb-0 d-flex align-items-center">
-            <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
+            <a class="edit-link text-white" href="/Project/Project?id=@id">
                 <i class="fas fa-folder-open me-2"></i>
                 @Model.Project.Name
             </a>
         </h4>
         @if (existSettlement)
         {
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-light btn-sm"
-                        data-project="@Model.Assumption.Id"
-                        type="button">
-                    <i class="fas fa-clipboard-check me-1"></i> Kontrola projektu
-                </button>
-
-                <button class="btn btn-outline-light btn-sm"
-                        type="button"
-                        onclick="location.href='@Url.Action("CostsSummary", "Settlement", new { id = Model.Project.Id })'">
-                    <i class="fas fa-file-invoice-dollar me-1"></i> Podsumowanie kosztów
-                </button>
-
-                <button class="btn btn-outline-light btn-sm"
-                        type="button"
-                        onclick="location.href='@Url.Action("CostsDetails", "Settlement", new { id = Model.Project.Id })'">
-                    <i class="fas fa-file-invoice-dollar me-1"></i> Zestawienia kosztów
-                </button>
-
-                <button class="btn btn-outline-light btn-sm"
-                        type="button"
-                        onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Project.Id, st = WorkScopeType.Agregat })'">
-                    <i class="fas fa-layer-group me-1"></i> Agregat
-                </button>
-
-                <button class="btn btn-outline-light btn-sm"
-                        type="button"
-                        onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Project.Id, st = WorkScopeType.Installation })'">
-                    <i class="fas fa-plug me-1"></i> Instalacje
-                </button>
-
-                <button class="btn btn-outline-light btn-sm"
-                        type="button"
-                        onclick="location.href='@Url.Action("Offers", "Settlement", new { id = Model.Project.Id, st = WorkScopeType.Aadministration })'">
-                    <i class="fas fa-sliders me-1"></i> Zarządzanie
-                </button>
+            <div id="settlementNavContainer">
+                <partial name="_SettlementNav" model="Model.Project.Id" />
             </div>
         }
         else
@@ -82,7 +47,7 @@
             <div class="d-flex gap-2">
                 <button class="btn btn-outline-light btn-sm"
                         type="button"
-                        onclick="location.href='@Url.Action("AddSettlement", "Settlement", new { id = Model.Project.Id })'">
+                        onclick="location.href='@Url.Action("AddSettlement", "Settlement", new { id = id })'">
                     <i class="fas fa-circle-plus me-1"></i> Dodaj rozliczenie
                 </button>
             </div>
@@ -100,7 +65,7 @@
                 <i class="fas fa-lightbulb me-2 text-primary"></i> Założenia finansowe
             </h5>
             <a class="btn btn-outline-primary btn-sm mt-2"
-               href="@Url.Action("EditSettlement", "Settlement", new { id = Model.Project.Id })">
+               href="@Url.Action("EditSettlement", "Settlement", new { id = id})">
                 <i class="fas fa-edit me-1"></i> Edytuj założenia
             </a>
         </div>

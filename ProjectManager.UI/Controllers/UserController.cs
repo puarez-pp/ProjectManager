@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Users.Queries.GetEditUser;
 using ProjectManager.Application.Users.Queries.GetUser;
 using ProjectManager.Application.Users.Commands.DeleteUser;
+using ProjectManager.Application.Users.Queries.GetUsers;
 
 namespace ProjectManager.UI.Controllers;
 
@@ -25,6 +26,16 @@ public class UserController : BaseController
     public async Task<IActionResult> User()
     {
         return View(await Mediator.Send(new GetUserQuery { UserId = UserId }));
+    }
+
+    public async Task<IActionResult> Users()
+    {
+        var users = await Mediator.Send(new GetUsersQuery());
+        return Json(users.Select(u => new
+        {
+            id = u.Id,
+            fullName = u.FullName
+        }));
     }
 
     public async Task<IActionResult> EditUser()

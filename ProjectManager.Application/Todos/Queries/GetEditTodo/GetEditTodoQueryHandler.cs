@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Projects.Extensions;
-using ProjectManager.Application.Projects.Queries.GetProject;
+using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Todos.Commands.EditTodo;
 using ProjectManager.Application.Users.Extensions;
 
@@ -22,32 +21,40 @@ public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTod
         var project = await _context
             .Projects
             .AsNoTracking()
-            .Include(x => x.Client)
-            .Include(x => x.User)
-            .ThenInclude(x => x.Employee)
-            .Include(x=>x.Todos)
-            .ThenInclude(x=>x.UserFrom)
-            .ThenInclude(x=>x.Employee)
-            .Include(x=>x.Todos)
-            .ThenInclude(x=>x.UserTo)
-            .ThenInclude(x=>x.Employee)
-            .FirstOrDefaultAsync(x => x.Todos.Any(x=>x.Id == request.Id));
+            .Where(x => x.Id == request.Id)
+            .Select(x => new ProjectBasicsDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Number = x.Number,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        var vm = new EditTodoVm();
-        vm.Project = new ProjectDto();
-        vm.Todo = new EditTodoCommand
-        {
-            Id = request.Id,
-            ProjectId = project.Todos.FirstOrDefault(x=>x.Id == request.Id).ProjectId,
-            Title = project.Todos.FirstOrDefault(x => x.Id == request.Id).Title,
-            Content = project.Todos.FirstOrDefault(x => x.Id == request.Id).Content,
-            UserToId = project.Todos.FirstOrDefault(x => x.Id == request.Id).UserToId
-        };
-        vm.AvaiableUsers = await _context
+        var users = await _context
             .Users
             .Include(x => x.Employee)
+            .AsNoTracking()
             .Select(x => x.ToUserDto())
             .ToListAsync();
+
+        var todo = await _context
+            .Todos
+            .Where(x => x.Id == request.Id)
+            .Select(x => new EditTodoCommand
+            {
+                Id = x.Id,
+                ProjectId = x.ProjectId,
+                Title = x.Title,
+                Body = x.Body,
+                UserToId = x.UserToId,
+            }).FirstOrDefaultAsync(cancellationToken);
+
+        var vm = new EditTodoVm
+        {
+            Project = project,
+            AvaiableUsers = users,
+            Todo = todo
+        };
         return vm;
     }
 }

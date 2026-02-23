@@ -20,11 +20,7 @@ public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
             .FirstOrDefaultAsync(x=>x.Id == request.Id);
         if (todo != null)
         {
-            foreach (var reply in todo.TodoPosts)
-            {
-                _context.TodoPosts.Remove(reply);
-            }
-            await _context.SaveChangesAsync(cancellationToken);
+            _context.TodoPosts.RemoveRange(todo.TodoPosts);
             _context.Todos.Remove(todo);
             await _context.SaveChangesAsync(cancellationToken);
         }

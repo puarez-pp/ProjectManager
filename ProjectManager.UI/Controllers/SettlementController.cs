@@ -43,7 +43,7 @@ namespace ProjectManager.UI.Controllers
             return View(await Mediator.Send(new GetScopeTypeOfferQuery { Id = id, ScopeType = st}));
         }
 
-        public async Task<IActionResult> FinControl(int id)
+        public async Task<IActionResult> FinanceControl(int id)
         {
             return View(await Mediator.Send(new GetFinancialControlQuery { Id = id}));
         }
@@ -214,10 +214,6 @@ namespace ProjectManager.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> Invoices(int id)
-        {
-            return View(await Mediator.Send(new GetFinancialControlQuery { Id = id }));
-        }
 
         public async Task<IActionResult> AddInvoice(int id)
         {
@@ -235,7 +231,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Invoices", new { @id = viewModel.SettlementId});
+            return RedirectToAction("FinanceControl", new { @id = viewModel.Project.Id});
         }
 
         public async Task<IActionResult> EditInvoice(int id)
@@ -254,7 +250,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Invoices", new { @id = viewModel.SettlementId });
+            return RedirectToAction("FinanceControl", new { @id = viewModel.Project.Id });
         }
 
         [HttpPost]
@@ -263,7 +259,7 @@ namespace ProjectManager.UI.Controllers
             try
             {
                 await Mediator.Send(
-                    new DeleteInvoiceQuery
+                    new DeleteInvoiceCommand
                     {
                         Id = id
                     });
@@ -276,6 +272,11 @@ namespace ProjectManager.UI.Controllers
                 return Json(new { success = false });
             }
         }
+        public async Task<IActionResult> GetSummaryPartial(int id)
+        {
+            return PartialView("_SummaryTablePartial", await Mediator.Send(new GetFinancialControlQuery { Id = id }));
+        }
+
 
     }
 }

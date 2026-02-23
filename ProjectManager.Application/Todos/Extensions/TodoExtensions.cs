@@ -19,13 +19,13 @@ public static class TodoExtensions
             Id = todo.Id,
             ProjectId = todo.ProjectId,
             Title = todo.Title,
-            Content = todo.Content,
+            Body = todo.Body,
             IsCompleted = todo.IsCompleted,
             CreatedAt = todo.CreatedAt,
             FinishDate = todo.FinishDate,
             CompletionDate = todo.CompletionDate,
-            UserFrom = todo.UserFrom.ToUserDto().FullName,
-            UserTo = todo.UserTo.ToUserDto().FullName,
+            UserFrom = todo.UserFrom.ToUserDto(),
+            UserTo = todo.UserTo.ToUserDto(),
         };
     }
 
@@ -38,7 +38,7 @@ public static class TodoExtensions
         return new TodoReplyDto
         {
             Id = reply.Id,
-            Content = reply.Content,
+            Content = reply.Body,
             UserId = reply.UserId,
             User = reply.User.ToUserDto().FullName,
             TodoId = reply.TodoId,

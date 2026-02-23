@@ -1,0 +1,20 @@
+﻿@using ProjectManager.Application.Settlements.Queries.GetFinancialControl
+@model FinancialControlVm
+
+<table id="summaryTable" class="table table-striped mb-0">
+    <thead class="table-secondary">
+        <tr>
+            <th>Opis</th>
+            <th class="text-end">Suma netto [PLN]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sum in Model.TotalSums)
+        {
+            <tr>
+                <td>@sum.Description</td>
+                <td class="text-end fw-bold">@sum.Total.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>

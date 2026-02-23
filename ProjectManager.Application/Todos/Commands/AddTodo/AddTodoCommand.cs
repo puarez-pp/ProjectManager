@@ -17,9 +17,10 @@ public class AddTodoCommand:IRequest
 
     [Required(ErrorMessage = "Pole 'Treść' jest wymagane")]
     [DisplayName("Treść")]
-    public string Content { get; set; }
+    public string Body { get; set; }
 
     [Required(ErrorMessage = "Pole 'Pracownik' jest wymagane")]
     [DisplayName("Zadanie dla pracownika")]
     public string UserToId { get; set; }
+    public bool IsCompleted { get; set; }
 }

@@ -20,11 +20,6 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
             .Include(x => x.Employee)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.UserId);
-        
-
         return user.ToUserDto();
-
-
-
     }
 }

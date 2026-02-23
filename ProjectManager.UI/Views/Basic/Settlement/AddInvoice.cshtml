@@ -1,0 +1,160 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Settlements.Queries.GetAddInvoice
+@using ProjectManager.Domain.Enums
+
+@model AddInvoiceVm
+
+@{
+    ViewData["Title"] = "Dodawanie faktury";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var id = Model.Project.Id;
+}
+
+@section Styles {
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DateTimeStyles" />
+}
+
+
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3 mb-3">
+    <h4 class="mb-0 d-flex align-items-center">
+        <a class="edit-link text-white" href="/Project/Project?id=@id">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Project.Name
+        </a>
+    </h4>
+</div>
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("AddInvoice", "Settlement"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Project.Id)
+        @for (int i = 0; i < Model.Settlement.WorkScopes.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.Settlement.WorkScopes[i].Id)
+            @Html.HiddenFor(x => x.Settlement.WorkScopes[i].Description)
+        }
+
+        <div class="card-body row g-3">
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.Invoice.Number)
+                @Html.TextBoxFor(x => x.Invoice.Number, new { @class = "form-control", placeholder = "Wprowadź numer" })
+                @Html.ValidationMessageFor(x => x.Invoice.Number)
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.Invoice.IssueDate)
+                <div class="input-group date" id="dtpDateIssueDate" data-target-input="nearest">
+                    <input asp-for="Invoice.IssueDate" type="text" class="form-control datetimepicker-input" data-target="#dtpDateIssueDate" />
+                    <div class="input-group-append" data-target="#dtpDateIssueDate" data-toggle="datetimepicker">
+                        <div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(x => x.Invoice.IssueDate)
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.Invoice.Vendor)
+                @Html.TextBoxFor(x => x.Invoice.Vendor, new { @class = "form-control", placeholder = "Wprowadź Sprzedawcę" })
+                @Html.ValidationMessageFor(x => x.Invoice.Vendor)
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.Invoice.OrderNumber)
+                @Html.TextBoxFor(x => x.Invoice.OrderNumber, new { @class = "form-control", placeholder = "Wprowadź numer zamówienia" })
+                @Html.ValidationMessageFor(x => x.Invoice.OrderNumber)
+            </div>
+
+            <div class="form-group col-md-8">
+                @Html.LabelFor(x => x.Invoice.WorkScopeId)
+                <div class="select2-blue">
+                    @Html.DropDownList("Invoice.WorkScopeId", @Model.Settlement.WorkScopes.Select(x => new SelectListItem(x.Description, x.Id.ToString())), null, htmlAttributes: new { @class = "form-control select2-WorkScopes", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.Invoice.WorkScopeId)
+                </div>
+            </div>
+           
+            <div class="currency-selector" id="currencyContainer">
+
+                <div class="form-group mb-3">
+                    <label class="form-label d-block">Przełącz walutę</label>
+
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input currency-switch" />
+                        <label class="form-check-label">
+                            <span class="currency-label">🇵🇱 PLN</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- PLN -->
+                <div class="pln-fields row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(x => x.Invoice.NetAmount)
+                        @Html.TextBoxFor(x => x.Invoice.NetAmount, new { @class = "form-control net-pln", placeholder = "Kwota netto (PLN)" })
+                        @Html.ValidationMessageFor(x => x.Invoice.NetAmount)
+                    </div>
+                </div>
+
+                <!-- EURO -->
+                <div class="euro-fields" style="display:none;">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(x => x.Invoice.EuroNetAmount)
+                        @Html.TextBoxFor(x => x.Invoice.EuroNetAmount, new { @class = "form-control net-eur", placeholder = "Kwota netto (EUR)" })
+                        @Html.ValidationMessageFor(x => x.Invoice.EuroNetAmount)
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(x => x.Invoice.EuroRate)
+                        @Html.TextBoxFor(x => x.Invoice.EuroRate, new { @class = "form-control eur-rate", placeholder = "Kurs EUR" })
+                        @Html.ValidationMessageFor(x => x.Invoice.EuroRate)
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DateTimeScripts" />
+    <script type="module">
+
+    $(document).ready(function() {
+            $('#dtpDateIssueDate').datetimepicker({
+            format: 'L',
+            locale: '@locale'
+            });
+            $('.select2-WorkScopes').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+    import { CurrencyModule } from '/js/modules/currencyModule.js';
+
+        // Inicjalizacja przełącznika waluty
+    CurrencyModule.initCurrencySelector(".currency-selector");
+
+        // Inicjalizacja przeliczania
+    CurrencyModule.initConversion({
+        plnSelector: ".net-pln",
+        eurSelector: ".net-eur",
+        rateSelector: ".eur-rate"
+    });
+    </script>
+}

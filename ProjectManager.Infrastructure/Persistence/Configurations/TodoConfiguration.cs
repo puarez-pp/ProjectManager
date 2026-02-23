@@ -32,7 +32,7 @@ class TodoConfiguration : IEntityTypeConfiguration<Todo>
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.Property(x => x.Content)
+        builder.Property(x => x.Body)
             .HasMaxLength(2000);
     }
 }

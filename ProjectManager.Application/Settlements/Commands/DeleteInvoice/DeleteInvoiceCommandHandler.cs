@@ -4,16 +4,16 @@ using ProjectManager.Application.Common.Interfaces;
 
 namespace ProjectManager.Application.Settlements.Commands.DeleteInvoice;
 
-public class DeleteInvoiceQueryHandler : IRequestHandler<DeleteInvoiceQuery>
+public class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public DeleteInvoiceQueryHandler(
+    public DeleteInvoiceCommandHandler(
         IApplicationDbContext context)
     {
         _context = context;
     }
-    public async Task<Unit> Handle(DeleteInvoiceQuery request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
     {
 
         var invoice = await _context

@@ -25,7 +25,7 @@ public class EditTodoCommandHandler : IRequestHandler<EditTodoCommand>
             .FirstOrDefaultAsync(x=>x.Id == request.Id);
         todo.Title = request.Title;
         todo.CompletionDate = request.CompletionDate;
-        todo.Content = request.Content;
+        todo.Body = request.Body;
         todo.UserFromId = _currentUser.UserId;
         todo.UserToId = request.UserToId;
         todo.ProjectId = request.ProjectId;

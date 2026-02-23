@@ -45,6 +45,7 @@ public class GetCostDetailsQueryHandler : IRequestHandler<GetCostDetailsQuery, C
                 {
                     y.Id,
                     y.Description,
+                    y.CostStatusType,
                     y.Order,
                     y.UnitType,
                     y.Quantity,
@@ -65,6 +66,7 @@ public class GetCostDetailsQueryHandler : IRequestHandler<GetCostDetailsQuery, C
             {
                 Id = o.Id,
                 Description = o.Description,
+                CostStatusType = o.CostStatusType,
                 Order = o.Order,
                 UnitType = o.UnitType,
                 Quantity = o.Quantity,

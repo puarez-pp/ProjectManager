@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Projects.Extensions;
+using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Todos.Commands.AddTodo;
 using ProjectManager.Application.Users.Extensions;
 
@@ -20,23 +20,31 @@ public class GetAddTodoQueryHandler : IRequestHandler<GetAddTodoQuery, AddTodoVm
         var project = await _context
             .Projects
             .AsNoTracking()
-            .Include(x => x.Client)
-            .Include(x => x.User)
-            .ThenInclude(x => x.Employee)
-            .FirstOrDefaultAsync(x => x.Id == request.Id);
+            .Where(x => x.Id == request.Id)
+            .Select(x => new ProjectBasicsDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Number = x.Number,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        var vm = new AddTodoVm();
-        vm.Project = new Projects.Queries.GetProject.ProjectDto();
-        vm.Todo = new AddTodoCommand
-        {
-            ProjectId = request.Id,
-        };
-        vm.AvaiableUsers = await _context
+        var users = await _context
             .Users
             .Include(x => x.Employee)
+            .AsNoTracking()
             .Select(x => x.ToUserDto())
             .ToListAsync();
-        return vm;
 
+        var vm = new AddTodoVm
+        {
+            Project = project,
+            Todo = new AddTodoCommand
+            {
+                ProjectId = request.Id,
+            },
+             AvaiableUsers = users,
+        };
+        return vm;
     }
 }

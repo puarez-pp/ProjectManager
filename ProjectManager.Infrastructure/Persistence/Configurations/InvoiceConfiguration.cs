@@ -11,12 +11,6 @@ class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.ToTable("Invoices");
 
         builder
-            .HasOne(x => x.Settlement)
-            .WithMany(x => x.Invoices)
-            .HasForeignKey(x => x.SettlementId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
             .HasOne(x => x.WorkScope)
             .WithMany(x => x.Invoices)
             .HasForeignKey(x => x.WorkScopeId)

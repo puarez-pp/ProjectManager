@@ -9,7 +9,7 @@
     <td class="">@Model.CostStatusType.GetDisplayName()</td>
     <td class="">@Model.Quantity</td>
     <td class="">@Model.UnitType.GetDisplayName()</td>
-    <td class="view-mode text-end">@Model.NetAmount.ToString("N2") zł</td>
+    <td class="text-end">@Model.NetAmount.ToString("N2") zł</td>
     <td class="cost-total text-end">@Model.Total.ToString("N2") zł</td>
     <td class="">@Model.SubContractor</td>
 
@@ -20,7 +20,7 @@
             <i class="fas fa-pen-to-square"></i>
         </button>
         <button class="btn btn-sm btn-outline-danger open-delete-cost-confirm m-sm-1"
-                data-offer-id="@Model.Id">
+                data-cost-id="@Model.Id">
             <i class="fas fa-trash"></i>
         </button>
     </td>

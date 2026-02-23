@@ -26,7 +26,7 @@ class TodoPostConfiguration : IEntityTypeConfiguration<TodoPost>
             .OnDelete(DeleteBehavior.Restrict);
 
 
-        builder.Property(x => x.Content)
+        builder.Property(x => x.Body)
             .IsRequired()
             .HasMaxLength(2000);
     }

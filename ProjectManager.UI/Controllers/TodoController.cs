@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Todos.Commands.AddPost;
+using ProjectManager.Application.Todos.Commands.AddTodo;
 using ProjectManager.Application.Todos.Commands.DeleteTodo;
-using ProjectManager.Application.Todos.Commands.DeleteTodoPost;
 using ProjectManager.Application.Todos.Commands.FinishTodo;
 using ProjectManager.Application.Todos.Queries.GetAddTodo;
 using ProjectManager.Application.Todos.Queries.GetEditTodo;
-using ProjectManager.Application.Todos.Queries.GetFromUserTodos;
 using ProjectManager.Application.Todos.Queries.GetProjectTodos;
 using ProjectManager.Application.Todos.Queries.GetTodo;
+using ProjectManager.Application.Todos.Queries.GetTodoPosts;
 using ProjectManager.Application.Todos.Queries.GetUserTodos;
 
 namespace ProjectManager.UI.Controllers
@@ -20,7 +20,7 @@ namespace ProjectManager.UI.Controllers
         {
             _logger = logger; 
         }
-        public async Task <IActionResult> Todos(int id)
+        public async Task <IActionResult> Todos(int id, bool showAll = false)
         {
             return View(await Mediator.Send(new GetProjectTodosQuery { Id = id}));
         }
@@ -30,17 +30,8 @@ namespace ProjectManager.UI.Controllers
             return View(await Mediator.Send(new GetUserTodosQuery()));
         }
 
-        public async Task<IActionResult> FromUserTodos()
-        {
-            return View(await Mediator.Send(new GetFromUserTodosQuery()));
-        }
-
+       
         public async Task<IActionResult> Todo(int id)
-        {
-            return View(await Mediator.Send(new GetTodoQuery { Id = id }));
-        }
-
-        public async Task<IActionResult> UserToTodo(int id)
         {
             return View(await Mediator.Send(new GetTodoQuery { Id = id }));
         }
@@ -60,7 +51,7 @@ namespace ProjectManager.UI.Controllers
             if (!result.IsValid)
                 return View(viewModel);
 
-            TempData["Success"] = "Zadanie zostało dodane.";
+            TempData["Success"] = "Dane zostały zaktualizowane .";
 
             return RedirectToAction("Todos", new { @id = viewModel.Project.Id });
         }
@@ -134,52 +125,19 @@ namespace ProjectManager.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPost(AddPostCommand command)
         {
-            var result = await MediatorSendValidate(command);
-
-            if (!result.IsValid)
-                return View(command);
-            TempData["Success"] = "Komentarz został dodany.";
-
-            return RedirectToAction("UserToTodo", new { @id = command.TodoId });
-        }
-
-        public async Task<IActionResult> AddPostMan(int id, string title)
-        {
-            ViewData["Todo"] = title;
-            return View(new AddPostCommand { TodoId = id });
+            await Mediator.Send(command);
+            var posts = await Mediator.Send(new GetTodoPostsQuery { Id = command.TodoId });
+            return PartialView("_TodoPosts", posts);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddPostMan(AddPostCommand command)
+        public async Task<IActionResult> DeletePost(DeleteTodoCommand command)
         {
-            var result = await MediatorSendValidate(command);
-
-            if (!result.IsValid)
-                return View(command);
-            TempData["Success"] = "Komentarz został dodany.";
-
-            return RedirectToAction("Todo", new { @id = command.TodoId });
+            await Mediator.Send(command);
+            var posts = await Mediator.Send(new GetTodoPostsQuery { Id = command.Id });
+            return PartialView("_TodoPosts", posts);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeletePost(int id)
-        {
-            try
-            {
-                await Mediator.Send(
-                    new DeleteTodoPostCommand
-                    {
-                        Id = id
-                    });
-
-                return Json(new { success = true });
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, null);
-                return Json(new { success = false });
-            }
-        }
     }
 }

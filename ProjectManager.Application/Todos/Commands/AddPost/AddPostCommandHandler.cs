@@ -23,7 +23,7 @@ public class AddPostCommandHandler : IRequestHandler<AddPostCommand>
     {
         var post = new TodoPost();
         post.TodoId = request.TodoId;
-        post.Content = request.Content;
+        post.Body = request.Body;
         post.UserId = _currentUser.UserId;
         post.CreatedAt = _dateTime.Now;
         await _context.TodoPosts.AddAsync(post);

@@ -27,7 +27,6 @@ public class ApplicationUser : IdentityUser
     public ICollection<TodoPost> TodoPostsRedirect { get; set; } = new HashSet<TodoPost>();
     public ICollection<PositionPost> PositionPosts { get; set; } = new HashSet<PositionPost>();
     public ICollection<ToolRent> Rents { get; set; } = new HashSet<ToolRent>();
-    public ICollection<TodoToUser> TodoToUsers { get; set; } = new HashSet<TodoToUser>();
     public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
     public ICollection<Activity> Activities { get; set; } = new HashSet<Activity>();
     public ICollection<Plant> Plants { get; set; } = new HashSet<Plant>();
