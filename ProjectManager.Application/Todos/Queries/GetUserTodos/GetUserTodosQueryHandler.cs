@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Todos.Extensions;
+using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
 using ProjectManager.Application.Todos.Queries.GetProjectTodos;
+using ProjectManager.Application.Users.Queries.GetUser;
 
 namespace ProjectManager.Application.Todos.Queries.GetUserTodos;
 
-public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, IEnumerable<TodoDto>>
+public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, List<TodoDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUser;
@@ -18,20 +19,37 @@ public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, IEnum
         _context = context;
         _currentUser = currentUser;
     }
-    public async Task<IEnumerable<TodoDto>> Handle(GetUserTodosQuery request, CancellationToken cancellationToken)
+    public async Task<List<TodoDto>> Handle(GetUserTodosQuery request, CancellationToken cancellationToken)
     {
         var todos = await _context
             .Todos
-            .Include(x=>x.UserFrom)
-            .ThenInclude(x=>x.Employee)
-            .Include(x => x.UserTo)
-            .ThenInclude(x => x.Employee)
             .AsNoTracking()
             .Where(x => x.UserToId == _currentUser.UserId)
-            .OrderByDescending(x=>x.CreatedAt)
-            .Select(x=>x.ToTodoDto())
+            .Select(x => new TodoDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Body = x.Body,
+                IsCompleted = x.IsCompleted,
+                CreatedAt = x.CreatedAt,
+                FinishDate = x.FinishDate,
+                CompletionDate = x.CompletionDate,
+                UserFrom = new UserDto
+                {
+                    Id = x.UserFrom.Id,
+                    FullName = $"{x.UserFrom.FirstName} {x.UserFrom.LastName}",
+                    Employee = new EmployeeDto()
+                },
+                UserTo = new UserDto
+                {
+                    Id = x.UserTo.Id,
+                    FullName = $"{x.UserTo.FirstName} {x.UserTo.LastName}",
+                    Employee = new EmployeeDto()
+                },
+                PostsNumber = x.TodoPosts.Count()
+            })
+            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
-
         return todos;
     }
 }

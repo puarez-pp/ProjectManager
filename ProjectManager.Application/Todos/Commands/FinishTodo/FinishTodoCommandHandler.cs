@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectManager.Application.Todos.Commands.FinishTodo
 {
@@ -29,17 +24,16 @@ namespace ProjectManager.Application.Todos.Commands.FinishTodo
         {
             var todo = await _context
                 .Todos
-                .FirstOrDefaultAsync(x=>x.Id==request.Id);
-            
-            todo.IsCompleted=true;
-            todo.FinishDate = _dateTime.Now;
-            await _context.SaveChangesAsync(cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             var user = await _context
                 .Users
                 .FirstOrDefaultAsync(x => x.Id == _currentUser.UserId);
-            if (todo.IsCompleted)
+
+            if (todo != null)
             {
+                todo.IsCompleted = true;
+                todo.FinishDate = _dateTime.Now;
                 var post = new TodoPost
                 {
                     Body = $"Zadanie zostało zakończone przez użytkownika {user.FirstName} {user.LastName}.",

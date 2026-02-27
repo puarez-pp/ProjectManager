@@ -1,0 +1,19 @@
+﻿@using ProjectManager.Application.Todos.Queries.GetProjectTodos
+@model List<TodoPostDto>
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-muted small">Brak komentarzy.</p>
+}
+else
+{
+    foreach (var p in Model)
+    {
+        <div class="border rounded p-2 mb-2 bg-light">
+            <div class="small text-muted">
+                @p.CreatedAt.ToString("yyyy-MM-dd HH:mm") — @p.User.FullName
+            </div>
+            <div>@p.Body</div>
+        </div>
+    }
+}

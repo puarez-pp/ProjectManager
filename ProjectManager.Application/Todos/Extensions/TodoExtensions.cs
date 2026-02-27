@@ -1,6 +1,5 @@
 ﻿
 using ProjectManager.Application.Todos.Queries.GetProjectTodos;
-using ProjectManager.Application.Todos.Queries.GetTodo;
 using ProjectManager.Application.Users.Extensions;
 using ProjectManager.Domain.Entities;
 
@@ -26,23 +25,6 @@ public static class TodoExtensions
             CompletionDate = todo.CompletionDate,
             UserFrom = todo.UserFrom.ToUserDto(),
             UserTo = todo.UserTo.ToUserDto(),
-        };
-    }
-
-    public static TodoReplyDto ToTodoReplyDto(this TodoPost reply)
-    {
-        if (reply == null)
-        {
-            return null;
-        }
-        return new TodoReplyDto
-        {
-            Id = reply.Id,
-            Content = reply.Body,
-            UserId = reply.UserId,
-            User = reply.User.ToUserDto().FullName,
-            TodoId = reply.TodoId,
-            CreatedAt = reply.CreatedAt
         };
     }
 

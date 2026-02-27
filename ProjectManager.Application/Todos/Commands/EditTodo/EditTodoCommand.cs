@@ -23,4 +23,5 @@ public class EditTodoCommand:IRequest
     [Required(ErrorMessage = "Pole 'Pracownik' jest wymagane")]
     [DisplayName("Zadanie dla pracownika")]
     public string UserToId { get; set; }
+    public bool IsCompleted { get; set; }
 }

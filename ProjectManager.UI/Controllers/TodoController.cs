@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Todos.Commands.AddPost;
-using ProjectManager.Application.Todos.Commands.AddTodo;
 using ProjectManager.Application.Todos.Commands.DeleteTodo;
+using ProjectManager.Application.Todos.Commands.DeleteTodoPost;
 using ProjectManager.Application.Todos.Commands.FinishTodo;
 using ProjectManager.Application.Todos.Queries.GetAddTodo;
 using ProjectManager.Application.Todos.Queries.GetEditTodo;
@@ -20,7 +20,7 @@ namespace ProjectManager.UI.Controllers
         {
             _logger = logger; 
         }
-        public async Task <IActionResult> Todos(int id, bool showAll = false)
+        public async Task <IActionResult> Todos(int id)
         {
             return View(await Mediator.Send(new GetProjectTodosQuery { Id = id}));
         }
@@ -34,6 +34,13 @@ namespace ProjectManager.UI.Controllers
         public async Task<IActionResult> Todo(int id)
         {
             return View(await Mediator.Send(new GetTodoQuery { Id = id }));
+        }
+
+
+        public async Task<IActionResult> Posts(int id)
+        {
+            var posts = await Mediator.Send(new GetTodoPostsQuery { Id = id});
+            return PartialView("Partials/_TodoPostsList", posts);
         }
 
 
@@ -58,7 +65,7 @@ namespace ProjectManager.UI.Controllers
 
         public async Task<IActionResult> EditTodo(int id)
         {
-            return View(await Mediator.Send(new GetEditTodoQuery { Id = id }));
+            return View(await Mediator.Send(new GetEditTodoQuery { Id = id}));
         }
 
         [HttpPost]
@@ -71,28 +78,18 @@ namespace ProjectManager.UI.Controllers
                 return View(viewModel);
 
             TempData["Success"] = "Dane zostały zaktualizowane .";
-
             return RedirectToAction("Todos", new { @id = viewModel.Project.Id });
         }
 
         [HttpPost]
         public async Task<IActionResult> FinishTodo(int id)
         {
-            try
-            {
-                await Mediator.Send(
-                    new FinishTodoCommand
-                    {
-                        Id = id
-                    });
-
-                return Json(new { success = true });
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, null);
-                return Json(new { success = false });
-            }
+            await Mediator.Send(
+                new FinishTodoCommand
+                {
+                    Id = id
+                });
+            return Json(new { success = true });
         }
 
         [HttpPost]
@@ -115,29 +112,37 @@ namespace ProjectManager.UI.Controllers
             }
         }
          
-        public async Task<IActionResult> AddPost(int id, string title)
-        {
-            ViewData["Todo"] = title;
-            return View(new AddPostCommand { TodoId = id });
-        }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPost(AddPostCommand command)
         {
             await Mediator.Send(command);
-            var posts = await Mediator.Send(new GetTodoPostsQuery { Id = command.TodoId });
-            return PartialView("_TodoPosts", posts);
+            var todo = await Mediator.Send(new GetTodoQuery { Id = command.TodoId });
+
+            return Json(new
+            {
+                postsNumber = todo.PostsNumber,
+                success = true
+            });
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeletePost(DeleteTodoCommand command)
+        public async Task<IActionResult> DeletePost(int id)
         {
-            await Mediator.Send(command);
-            var posts = await Mediator.Send(new GetTodoPostsQuery { Id = command.Id });
-            return PartialView("_TodoPosts", posts);
-        }
+            try
+            {
+                await Mediator.Send(
+                    new DeleteTodoPostCommand
+                    {
+                        Id = id
+                    });
 
+                return Json(new { success = true });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, null);
+                return Json(new { success = false });
+            }
+        }
     }
 }

@@ -44,11 +44,13 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
                 CompletionDate = x.CompletionDate,
                 UserFrom = new UserDto
                 {
+                    Id = x.UserFromId,
                     FullName = $"{x.UserFrom.FirstName} {x.UserFrom.LastName}",
                     Employee = new EmployeeDto()
                 },
                 UserTo = new UserDto
-                {
+                { 
+                    Id = x.UserToId,
                     FullName = $"{x.UserTo.FirstName} {x.UserTo.LastName}",
                     Employee = new EmployeeDto()
                 },
@@ -59,7 +61,7 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
         
         var vm = new ProjectTodosVm();
         vm.Project = project;
-        vm.Todos = request.ShowAll ? todos : todos.Where(x => !x.IsCompleted).ToList();
+        vm.Todos = todos;
         return vm;
     }
 }

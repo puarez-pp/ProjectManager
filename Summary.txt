@@ -1,0 +1,55 @@
+var scopeCosts = settlement.WorkScopes
+    .Select(ws => new ScopeCostSummaryDto
+    {
+        Id = ws.Id,
+        WorkScopeType = ws.WorkScopeType,
+        Description = ws.Description,
+
+        Offer = ws.Offers.Sum(o => o.Total),
+        Cost  = ws.Costs.Sum(c => c.Total),
+        Profit = ws.Offers.Sum(o => o.Total) - ws.Costs.Sum(c => c.Total)
+    })
+    .OrderBy(x => x.Id)
+    .ToList();
+var totalOffers = scopeCosts.Sum(x => x.Offer);
+var totalCosts  = scopeCosts.Sum(x => x.Cost);
+var totalProfit = scopeCosts.Sum(x => x.Profit);
+var vm = new CostSummaryVm
+{
+    Project = projectDto,
+    Offers = totalOffers,
+    Costs = totalCosts,
+    Profits = totalProfit,
+    ScopeCosts = scopeCosts
+};
+
+
+var scopeCosts = settlement.WorkScopes
+    .GroupBy(ws => ws.Id)
+    .Select(g => new ScopeCostSummaryDto
+    {
+        Id = g.Key,
+        WorkScopeType = g.First().WorkScopeType,
+        Description = g.First().Description,
+
+        Offer = g.Sum(ws => ws.Offers.Sum(o => o.Total)),
+        Cost  = g.Sum(ws => ws.Costs.Sum(c => c.Total)),
+        Profit = g.Sum(ws => ws.Offers.Sum(o => o.Total))
+               - g.Sum(ws => ws.Costs.Sum(c => c.Total))
+    })
+    .OrderBy(x => x.Id)
+    .ToList();
+
+var totalOffers = scopeCosts.Sum(x => x.Offer);
+var totalCosts  = scopeCosts.Sum(x => x.Cost);
+var totalProfit = scopeCosts.Sum(x => x.Profit);
+
+var vm = new CostSummaryVm
+{
+    Project = projectDto,
+    Offers = totalOffers,
+    Costs = totalCosts,
+    Profits = totalProfit,
+    ScopeCosts = scopeCosts
+};
+

@@ -1,7 +1,17 @@
-﻿@using ProjectManager.Application.Todos.Queries.GetProjectTodos
-@model ProjectTodosVm
+﻿
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Todos.Queries.GetProjectTodos
+@inject ICurrentUserService currentUserService
 
-@foreach (var t in Model.Todos)
+@model List<TodoDto>
+@{
+    ViewData["Title"] = "Lista zadań projektu";
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var userId = currentUserService.UserId;
+}
+
+@foreach (var t in Model)
 {
     <div class="card mb-3 shadow-sm todo-item" data-id="@t.Id">
         <div class="card-body d-flex justify-content-between align-items-start">
@@ -17,6 +27,9 @@
                     {
                         <span>• Przypisane do: @t.UserTo.FullName</span>
                     }
+                    <span class="badge @(t.CompletionDate>=DateTime.Now ? "bg-success" : "bg-warning text-dark")">
+                        • Termin wykonania: @t.CompletionDate
+                    </span>
                 </p>
 
                 <p>@t.Body</p>
@@ -25,25 +38,51 @@
                     <span class="badge @(t.IsCompleted ? "bg-success" : "bg-warning text-dark")">
                         @(t.IsCompleted ? "Zakończone" : "W toku")
                     </span>
-
-                    <span class="badge bg-secondary">
-                        Komentarze: @t.PostsNumber
-                    </span>
+                    <span id="postsNumber_@t.Id" class="badge bg-secondary">Komentarze: @t.PostsNumber</span>
                 </div>
             </div>
 
-            <div class="ms-3">
-                <button class="btn btn-sm btn-primary btnEditTodo" data-id="@t.Id">
-                    <i class="fas fa-edit"></i>
-                </button>
+            <div class="ms-1">
+                @if (!t.IsCompleted)
+                {
+                    <button class="btn btn-sm btn-secondary btnAddPost" data-id="@t.Id">
+                        <i class="fas fa-comment"></i>
+                    </button>
 
-                <button class="btn btn-sm btn-secondary btnAddPost" data-id="@t.Id">
-                    <i class="fas fa-comment"></i>
-                </button>
+                    @if (t.UserFrom.Id == userId || roles)
+                    {
+                        <button class="btn btn-sm btn-primary btnEditTodo" data-id="@t.Id"
+                                type="button"
+                                onclick="location.href='@Url.Action("EditTodo", "Todo", new { id = t.Id })'">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    }
 
-                <button class="btn btn-sm btn-danger btnDeleteTodo" data-id="@t.Id">
-                    <i class="fas fa-trash"></i>
+                    @if (roles)
+                    {
+                        <button class="btn btn-sm btn-danger btnDeleteTodo" data-id="@t.Id">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    }
+                }
+                
+            </div>
+        </div>
+        <div class="card-body align-items-start mt-1">
+            <button class="btn btn-sm btn-outline-secondary btnTogglePosts"
+                    data-id="@t.Id">
+                <i class="fas fa-comments"></i> Pokaż komentarze
+            </button>
+            @if (!t.IsCompleted && t.UserFrom.Id == userId)
+            {
+                <button class="btn btn-sm btn-success btnFinishTodo" data-id="@t.Id">
+                    <i class="fas fa-check"></i> Zakończ zadanie
                 </button>
+            }
+
+
+            <div id="postsContainer_@t.Id" class="mt-2" style="display:none;">
+                <!-- posty tutaj -->
             </div>
         </div>
     </div>

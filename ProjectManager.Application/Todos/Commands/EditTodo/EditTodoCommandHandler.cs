@@ -29,6 +29,7 @@ public class EditTodoCommandHandler : IRequestHandler<EditTodoCommand>
         todo.UserFromId = _currentUser.UserId;
         todo.UserToId = request.UserToId;
         todo.ProjectId = request.ProjectId;
+        todo.IsCompleted = request.IsCompleted;
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
     }

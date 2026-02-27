@@ -1,24 +1,25 @@
-﻿
-@using System.Globalization
+﻿@using System.Globalization
+@using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Todos.Queries.GetProjectTodos
 
 @model ProjectTodosVm
 
 @{
     ViewData["Title"] = "Lista zadań projektu";
-    var id = Model.Project.Id;
+    var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
 }
 
 <!-- Modale -->
 <partial name="Modals/_AddPostModal" />
 <partial name="Modals/_DeleteTodoModal" />
+<partial name="Modals/_FinishTodoModal" />
 
-<input type="hidden" id="ProjectId" value="@id" />
+<input type="hidden" id="ProjectId" value="@Model.Project.Id" />
 
 <div class="card shadow-sm mb-4 border-0">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
         <h4 class="mb-0 d-flex align-items-center">
-            <a class="edit-link text-white" href="/Project/Project?id=@id">
+            <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
                 <i class="fas fa-folder-open me-2"></i>
                 @Model.Project.Name
             </a>
@@ -26,163 +27,21 @@
 
         <button class="btn btn-light" id="btnAddTodo"
                 type="button"
-                onclick="location.href='@Url.Action("AddTodo", "Todo", new { id = id })'">
+                onclick="location.href='@Url.Action("AddTodo", "Todo", new { id = Model.Project.Id })'">
             <i class="fas fa-plus"></i> Dodaj zadanie
         </button>
     </div>
 </div>
 
-<div class="d-flex justify-content-end mb-3">
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="switchShowAll" />
-        <label class="form-check-label" for="switchShowAll">Pokaż wszystkie</label>
-    </div>
-</div>
 
 <div id="todosContainer">
-    <partial name="Partials/_TodosList" model="Model" />
+    <partial name="Partials/_TodosList"
+             model="Model.Todos"/>
 </div>
-
-
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-
-            // Przełącznik: wszystkie / nieukończone
-            $("#switchShowAll").change(function () {
-                loadTodos();
-            });
-
-            // Dodawanie zadania
-            $("#btnAddTodo").click(function () {
-            clearTodoForm();
-            loadUsers();
-            $("#addEditTodoModal").modal("show");
-        });
-
-            // Edycja zadania
-            $(document).on("click", ".btnEditTodo", function () {
-            let id = $(this).data("id");
-
-            $.get("/Todo/Get", { id }, function (res) {
-
-                loadUsers();
-
-                setTimeout(() => {
-                    $("#TodoUserToId").val(res.userToId);
-                }, 150);
-
-                $("#TodoId").val(res.id);
-                $("#TodoTitle").val(res.title);
-                $("#TodoBody").val(res.body);
-                $("#TodoIsCompleted").prop("checked", res.isCompleted);
-
-                $("#addEditTodoModal").modal("show");
-            });
-        });
-
-
-            // Zapis zadania nowego
-            $("#btnSaveTodo").click(function () {
-            let todo = {
-                    ProjectId: $("#ProjectId").val(),
-                    Title: $("#TodoTitle").val(),
-                    Body: $("#TodoBody").val(),
-                    CompletionDate: $("#TodoDueDate").val(),
-                    IsCompleted: $("#TodoIsCompleted").is(":checked"),
-                    UserToId: $("#TodoUserToId").val()
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/Todo/AddTodo",
-                    data: todo,
-                    success: function (data) {
-                        if (data.success) {
-                            toastr.success('Zadanie zostało dodane.');
-                            $("#addEditTodoModal").modal("hide");
-                            loadTodos();
-                        } else {
-                            toastr.error('Błąd przy dodawaniu zadania');
-                        }
-                    },
-                    dataType: "json"
-                });
-            });
-
-            // Usuwanie zadania
-            $(document).on("click", ".btnDeleteTodo", function () {
-                let id = $(this).data("id");
-                $("#DeleteTodoId").val(id);
-                $("#deleteTodoModal").modal("show");
-            });
-
-            $("#btnConfirmDeleteTodo").click(function () {
-                let id = $("#DeleteTodoId").val();
-                $.post("/Todo/Delete", { id }, function () {
-                    $("#deleteTodoModal").modal("hide");
-                    loadTodos();
-                });
-            });
-
-            // Dodawanie posta
-            $(document).on("click", ".btnAddPost", function () {
-                let id = $(this).data("id");
-                $("#PostTodoId").val(id);
-                $("#PostBody").val("");
-                $("#addPostModal").modal("show");
-            });
-
-            $("#btnSavePost").click(function () {
-                let dto = {
-                    TodoId: $("#PostTodoId").val(),
-                    Body: $("#PostBody").val()
-                };
-
-                $.post("/Todo/AddPost", dto, function () {
-                    $("#addPostModal").modal("hide");
-                    loadTodos();
-                });
-            });
-
-            // Przeładowanie listy
-            function loadTodos() {
-                let showAll = $("#switchShowAll").is(":checked");
-                let projectId = $("#ProjectId").val();
-
-                $.get("/Todo/List", { projectId, showAll }, function (html) {
-                    $("#todosContainer").html(html);
-                });
-            }
-
-            function clearTodoForm() {
-                const now = new Date();
-                const formatted = now.toISOString().slice(0, 16);
-                    $("#TodoId").val("");
-                    $("#TodoTitle").val("");
-                    $("#TodoBody").val("");
-                    $("#TodoDueDate").val(formatted);
-                    $("#TodoIsCompleted").prop("checked", false);
-            }
-        });
-
-            function loadUsers() {
-            $.get("/User/Users")
-                .done(function (users) {
-                    const select = $("#TodoUserToId");
-                    select.empty();
-                    select.append(`<option value="">-- wybierz użytkownika --</option>`);
-
-                    users.forEach(u => {
-                        select.append(`<option value="${u.id}">${u.fullName}</option>`);
-                    });
-                })
-                .fail(function () {
-                    notify("Nie udało się pobrać listy użytkowników.", "error");
-                });
-        }
 
     </script>
-
-
+    <script src="~/js/todo.js"></script>
 }

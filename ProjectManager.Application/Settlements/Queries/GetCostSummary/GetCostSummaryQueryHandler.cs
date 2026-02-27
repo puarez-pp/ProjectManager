@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
-using ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Settlements.Queries.GetCostSummary;
@@ -37,7 +36,7 @@ public class GetCostSummaryQueryHandler : IRequestHandler<GetCostSummaryQuery, C
             .Assumptions
             .AsNoTracking()
             .Where(x => x.Settlement.ProjectId == request.Id)
-            .Select(x => new {marginGen = x.MarginGen, marginInst = x.MarginInstall })
+            .Select(x => new { marginGen = x.MarginGen, marginInst = x.MarginInstall })
             .FirstOrDefaultAsync();
 
         var settlement = await _context
@@ -76,10 +75,11 @@ public class GetCostSummaryQueryHandler : IRequestHandler<GetCostSummaryQuery, C
             .ToListAsync(cancellationToken);
 
         var workScopes = settlement
-            .GroupBy(g => g.Id)
+            .GroupBy(g => new { g.Id, g.WorkScopeType})
             .Select(s => new ScopeCostSummaryDto
             {
-                Id = s.Key,
+                Id = s.Key.Id,
+                WorkScopeType = s.Key.WorkScopeType,
                 Description = s.First().Description,
                 Offer = s.Sum(g => g.Offers.Sum(o => _financeService.ApplyMargin(o.Quantity * o.NetAmount, s.First().WorkScopeType == WorkScopeType.Agregat ? margins.marginGen : margins.marginInst))),
                 Cost = s.Sum(g => g.Costs.Sum(c => _financeService.RoundAmount(c.Quantity * c.NetAmount))),
@@ -95,6 +95,6 @@ public class GetCostSummaryQueryHandler : IRequestHandler<GetCostSummaryQuery, C
             ScopeCosts = workScopes
         };
         return vm;
-     
+
     }
 }

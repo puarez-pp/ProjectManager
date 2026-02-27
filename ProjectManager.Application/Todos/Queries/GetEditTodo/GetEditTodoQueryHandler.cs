@@ -21,7 +21,7 @@ public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTod
         var project = await _context
             .Projects
             .AsNoTracking()
-            .Where(x => x.Id == request.Id)
+            .Where(x => x.Todos.Any(x=>x.Id == request.Id))
             .Select(x => new ProjectBasicsDto
             {
                 Id = x.Id,
@@ -46,6 +46,7 @@ public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTod
                 ProjectId = x.ProjectId,
                 Title = x.Title,
                 Body = x.Body,
+                CompletionDate = x.CompletionDate,
                 UserToId = x.UserToId,
             }).FirstOrDefaultAsync(cancellationToken);
 

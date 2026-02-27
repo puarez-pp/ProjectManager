@@ -1,8 +1,11 @@
-﻿namespace ProjectManager.Application.Settlements.Queries.GetCostSummary;
+﻿using ProjectManager.Domain.Enums;
+
+namespace ProjectManager.Application.Settlements.Queries.GetCostSummary;
 
 public class ScopeCostSummaryDto
 {
     public int Id { get; set; }
+    public WorkScopeType WorkScopeType { get; set; }
     public string Description { get; set; }
     public decimal Offer { get; set; }
     public decimal Cost { get; set; }
