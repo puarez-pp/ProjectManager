@@ -29,6 +29,7 @@ $("#confirmFinishTodo").on("click", function () {
     });
 });
 
+
 // Usuwanie zadania
 $(document).on("click", ".btnDeleteTodo", function () {
     let id = $(this).data("id");

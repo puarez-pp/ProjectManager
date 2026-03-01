@@ -7,7 +7,9 @@
 @{
     ViewData["Title"] = "Lista zadań projektu";
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var onlyActive = Context.Request.Query["onlyActive"] == "true";
 }
+
 
 <!-- Modale -->
 <partial name="Modals/_AddPostModal" />
@@ -16,15 +18,15 @@
 
 <input type="hidden" id="ProjectId" value="@Model.Project.Id" />
 
-<div class="card shadow-sm mb-4 border-0">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
-        <h4 class="mb-0 d-flex align-items-center">
-            <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
-                <i class="fas fa-folder-open me-2"></i>
-                @Model.Project.Name
-            </a>
-        </h4>
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+    <h4 class="mb-0 d-flex align-items-center">
+        <a class="edit-link text-white" href="/Project/Project?id=@Model.Project.Id">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Project.Name
+        </a>
+    </h4>
 
+    <div class="d-flex align-items-center gap-3">
         <button class="btn btn-light" id="btnAddTodo"
                 type="button"
                 onclick="location.href='@Url.Action("AddTodo", "Todo", new { id = Model.Project.Id })'">
@@ -32,6 +34,7 @@
         </button>
     </div>
 </div>
+
 
 
 <div id="todosContainer">

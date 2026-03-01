@@ -28,15 +28,23 @@
     </li>
 
     <!-- Zadania -->
-    <li class="nav-item @Url.MakeActiveClass("Todo", "UserTodos,Todos")">
+    <li class="nav-item @Url.MakeActiveClass("Todo", "UserTodos")">
         <a asp-controller="Todo" asp-action="UserTodos" class="nav-link align-middle px-0 text-white">
             <i class="fas fa-solid fa-list-check"></i>
-            <span class="d-none d-sm-inline">Zadania</span>
+            <span class="d-none d-sm-inline">Moje Zadania</span>
+        </a>
+    </li>
+
+    <!-- Mierniki -->
+    <li class="nav-item @Url.MakeActiveClass("Tool", "Tools")">
+        <a asp-controller="Tool" asp-action="Tools" class="nav-link align-middle px-0 text-white">
+            <i class="fa-solid fa-gauge"></i>
+            <span class="d-none d-sm-inline">Mierniki</span>
         </a>
     </li>
 
     <!-- Projekty -->
-    <li class="nav-item @Url.MakeActiveClass("Project", "Projects,ProjectsCat,Project,EditProject,GetScope")">
+    <li class="nav-item @Url.MakeActiveClass("Project", "Projects,ProjectsCat,Project")">
         <a asp-controller="Project" asp-action="Projects" class="nav-link align-middle px-0 text-white">
             <i class="fas fa-solid fa-diagram-project"></i>
             <span class="d-none d-sm-inline">Projekty</span>

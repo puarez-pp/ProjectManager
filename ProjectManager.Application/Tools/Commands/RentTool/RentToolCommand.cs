@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace ProjectManager.Application.Tools.RentTool.Commands;
+namespace ProjectManager.Application.Tools.Commands.RentTool;
 
 public class RentToolCommand : IRequest
 {

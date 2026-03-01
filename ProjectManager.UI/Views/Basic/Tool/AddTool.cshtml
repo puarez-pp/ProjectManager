@@ -1,0 +1,115 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Tools.Commands.AddTool
+@using ProjectManager.Domain.Enums
+
+@model AddToolCommand
+@{
+    ViewData["Title"] = "Dodawanie nowego miernika";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_SelectStyles" />
+<partial name="Styles/_DateTimeStyles" />
+}
+
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3 mb-3">
+    <h4 class="mb-0 d-flex align-items-center">
+        <p class="edit-link text-white">
+            <i class="fa-solid fa-gauge"></i>
+            Mierniki i analizatory
+        </p>
+    </h4>
+</div>
+
+<div class="card card-primary card-border-top">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="card-body row">
+            <div class="form-group">
+                @Html.LabelFor(x => x.Name)
+                @Html.TextBoxFor(x => x.Name, new { @class = "form-control", placeholder="Wprowadź nazwę"})
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(x => x.Manufacturer)
+                @Html.TextBoxFor(x => x.Manufacturer, new { @class = "form-control", placeholder = "Wprowadź nazwę producenta" })
+                @Html.ValidationMessageFor(x => x.Manufacturer)
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(x => x.SerialNumber)
+                @Html.TextBoxFor(x => x.SerialNumber, new { @class = "form-control", placeholder = "Wprowadź numer seryjny" })
+                @Html.ValidationMessageFor(x => x.SerialNumber)
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.ToolStatus)
+                <div class="select2-blue">
+                    @Html.DropDownList("ToolStatus", Html.GetEnumSelectList<ToolStatus>(), null, htmlAttributes: new { @class = "form-control select2-ToolStatus", style = "width: 100%;" })
+                    @Html.ValidationMessageFor(x => x.ToolStatus)
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.DateOfPurchase)
+                <div class="input-group date" id="dtpDateOfPurchase" data-target-input="nearest">
+                    <input asp-for="DateOfPurchase" type="text" class="form-control datetimepicker-input" data-target="#dtpDateOfPurchase" />
+                    <div class="input-group-append" data-target="#dtpDateOfPurchase" data-toggle="datetimepicker">
+                        <div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(x => x.DateOfPurchase)
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(x => x.ValidDate)
+                <div class="input-group date" id="dtpValidDate" data-target-input="nearest">
+                    <input asp-for="ValidDate" type="text" class="form-control datetimepicker-input" data-target="#dtpValidDate" />
+                    <div class="input-group-append" data-target="#dtpValidDate" data-toggle="datetimepicker">
+                        <div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(x => x.ValidDate)
+            </div>
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_SelectScripts" />
+    <partial name="Scripts/_DateTimeScripts" />
+
+    <script>
+        $(document).ready(function() {
+
+            $('#dtpDateOfPurchase').datetimepicker({
+            format: 'L',
+            locale: '@locale',
+            defaultDate: moment()
+            });
+
+            $('#dtpValidDate').datetimepicker({
+            format: 'L',
+            locale: '@locale',
+            defaultDate: moment()
+            });
+
+
+            $('.select2-ToolStatus').select2({
+                theme: 'bootstrap-5'
+            });
+        });
+
+    </script>
+}

@@ -18,14 +18,8 @@ class TodoConfiguration : IEntityTypeConfiguration<Todo>
 
         builder
             .HasOne(x => x.UserFrom)
-            .WithMany(x => x.TodosFrom)
+            .WithMany(x => x.Todos)
             .HasForeignKey(x => x.UserFromId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
-            .HasOne(x => x.UserTo)
-            .WithMany(x => x.TodosTo)
-            .HasForeignKey(x => x.UserToId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.Title)

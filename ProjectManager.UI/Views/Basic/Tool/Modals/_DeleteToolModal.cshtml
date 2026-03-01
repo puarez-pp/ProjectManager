@@ -1,0 +1,20 @@
+﻿<div class="modal fade" id="deleteTodoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Usuń zadanie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Czy na pewno chcesz usunąć to zadanie?
+                <input type="hidden" id="DeleteTodoId" />
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                <button class="btn btn-danger" id="btnConfirmDeleteTodo">Usuń</button>
+            </div>
+        </div>
+    </div>
+</div>

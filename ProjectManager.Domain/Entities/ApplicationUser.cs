@@ -21,10 +21,8 @@ public class ApplicationUser : IdentityUser
     public ICollection<EmployeeEvent> EmployeeEvents { get; set; } = new HashSet<EmployeeEvent>();
     public ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     public ICollection<PostReply> PostReplies { get; set; } = new HashSet<PostReply>();
-    public ICollection<Todo> TodosFrom { get; set; } = new HashSet<Todo>();
-    public ICollection<Todo> TodosTo { get; set; } = new HashSet<Todo>();
+    public ICollection<Todo> Todos { get; set; } = new HashSet<Todo>();
     public ICollection<TodoPost> TodoPosts { get; set; } = new HashSet<TodoPost>();
-    public ICollection<TodoPost> TodoPostsRedirect { get; set; } = new HashSet<TodoPost>();
     public ICollection<PositionPost> PositionPosts { get; set; } = new HashSet<PositionPost>();
     public ICollection<ToolRent> Rents { get; set; } = new HashSet<ToolRent>();
     public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();

@@ -20,12 +20,12 @@ namespace ProjectManager.UI.Controllers
         {
             _logger = logger; 
         }
-        public async Task <IActionResult> Todos(int id)
+        public async Task<IActionResult> Todos(int id, int pageIndex = 1)
         {
-            return View(await Mediator.Send(new GetProjectTodosQuery { Id = id}));
+            return View(await Mediator.Send(new GetProjectTodosQuery { Id = id, PageIndex = pageIndex}));
         }
 
-        public async Task<IActionResult> UserTodos()
+        public async Task<IActionResult> UserTodos(int pageIndex = 1)
         {
             return View(await Mediator.Send(new GetUserTodosQuery()));
         }

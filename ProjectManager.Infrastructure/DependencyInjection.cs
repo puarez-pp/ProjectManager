@@ -1,19 +1,20 @@
-﻿using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Domain.Entities;
-using ProjectManager.Infrastructure.Identity;
-using ProjectManager.Infrastructure.Payments;
-using ProjectManager.Infrastructure.Pdf;
-using ProjectManager.Infrastructure.Persistence;
-using ProjectManager.Infrastructure.Services;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Rotativa.AspNetCore;
-using ProjectManager.Infrastructure.Services.SignalR;
+using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Settlements.Calculations;
+using ProjectManager.Domain.Entities;
 using ProjectManager.Infrastructure.Encryption;
+using ProjectManager.Infrastructure.Identity;
+using ProjectManager.Infrastructure.Payments;
+using ProjectManager.Infrastructure.Pdf;
+using ProjectManager.Infrastructure.Persistence;
+using ProjectManager.Infrastructure.Services;
+using ProjectManager.Infrastructure.Services.SignalR;
+using Rotativa.AspNetCore;
 
 
 namespace ProjectManager.Infrastructure;
@@ -75,7 +76,9 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
         services.AddSingleton<IUserNotification, UserNotification>();
-        services.AddSingleton<IFinanceService, FinanceService>();
+        services.AddScoped<IFinanceService, FinanceService>();
+        services.AddScoped<ISettlementService, SettlementService>();
+
 
         return services;
     }

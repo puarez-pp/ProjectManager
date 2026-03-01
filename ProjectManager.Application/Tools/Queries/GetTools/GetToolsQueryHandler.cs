@@ -16,7 +16,8 @@ public class GetToolsQueryHandler : IRequestHandler<GetToolsQuery, List<ToolDto>
     }
     public async Task<List<ToolDto>> Handle(GetToolsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Tools
+        return await _context
+            .Tools
             .AsNoTracking()
             .Select(tool => tool.ToToolDto())
             .ToListAsync(cancellationToken);

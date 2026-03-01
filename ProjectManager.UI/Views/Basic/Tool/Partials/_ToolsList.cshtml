@@ -1,0 +1,65 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Tools.Queries.GetTools
+
+@model List<ToolDto>
+>
+
+@{
+    var canDelete = User.IsInRole(RolesDict.Administrator);
+    var canEdit = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+}
+
+<div class="row">
+    <!-- LISTA MIERNIKÓW -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table id="toolsTable" class="table table-hover mb-0">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Producent</th>
+                            <th>Numer seryjny</th>
+                            <th>Status</th>
+                            <th>Certyfikat do:</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tool in Model)
+                        {
+                            <tr data-tool-id="@tool.Id">
+                                <td>@tool.Name</td>
+                                <td>@tool.Manufacturer</td>
+                                <td>@tool.SerialNumber</td>
+                                <td>@tool.ToolStatus.GetDisplayName()</td>
+                                <td>@tool.ValidDate</td>
+                                <td class="text-end">
+                                    @if (canEdit)
+                                    {
+                                        <button class="btn btn-sm btn-outline-success me-1"
+                                                onclick="location.href='@Url.Action("EditTool", "Tool", new { id = tool.Id })'">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    }
+                                    @if (canDelete)
+                                    {
+                                        <button class="btn btn-sm btn-outline-danger open-delete-tool-confirm"
+                                                data-tool-id="@tool.Id">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    
+</script>

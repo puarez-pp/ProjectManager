@@ -3,12 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Users.Extensions;
 using ProjectManager.Application.Users.Queries.GetUser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectManager.Application.Users.Queries.GetUsers;
 

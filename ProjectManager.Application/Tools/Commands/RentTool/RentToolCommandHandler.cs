@@ -4,7 +4,7 @@ using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
 using ProjectManager.Domain.Enums;
 
-namespace ProjectManager.Application.Tools.RentTool.Commands;
+namespace ProjectManager.Application.Tools.Commands.RentTool;
 
 public class RentToolCommandHandler : IRequestHandler<RentToolCommand>
 {

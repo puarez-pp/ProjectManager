@@ -1,9 +1,10 @@
 ﻿@using ProjectManager.Application.Common.Interfaces
 @using System.Globalization
+@using ProjectManager.Application.Common.Models
 @using ProjectManager.Application.Todos.Queries.GetProjectTodos
 @inject ICurrentUserService currentUserService
 
-@model List<TodoDto>
+@model PaginatedList<TodoDto>
 
 @{
     ViewData["Title"] = "Lista zadań";
@@ -12,7 +13,7 @@
 <!-- Modale -->
 <partial name="Modals/_AddPostModal" />
 <partial name="Modals/_DeleteTodoModal" />
-
+<partial name="Modals/_FinishTodoModal" />
 
 <div class="card shadow-sm mb-4 border-0">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">

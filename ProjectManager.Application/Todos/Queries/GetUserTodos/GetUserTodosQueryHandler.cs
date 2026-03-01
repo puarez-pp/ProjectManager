@@ -1,13 +1,15 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Common.Models;
 using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
 using ProjectManager.Application.Todos.Queries.GetProjectTodos;
 using ProjectManager.Application.Users.Queries.GetUser;
 
 namespace ProjectManager.Application.Todos.Queries.GetUserTodos;
 
-public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, List<TodoDto>>
+public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, PaginatedList<TodoDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUser;
@@ -19,8 +21,9 @@ public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, List<
         _context = context;
         _currentUser = currentUser;
     }
-    public async Task<List<TodoDto>> Handle(GetUserTodosQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedList<TodoDto>> Handle(GetUserTodosQuery request, CancellationToken cancellationToken)
     {
+        const int pageSize = 5;
         var todos = await _context
             .Todos
             .AsNoTracking()
@@ -49,7 +52,7 @@ public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, List<
                 PostsNumber = x.TodoPosts.Count()
             })
             .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync();
+            .PaginatedListAsync(request.PageIndex, pageSize);
         return todos;
     }
 }

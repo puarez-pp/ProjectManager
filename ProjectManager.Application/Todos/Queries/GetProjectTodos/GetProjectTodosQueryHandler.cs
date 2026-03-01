@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
@@ -17,6 +18,7 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
     }
     public async Task<ProjectTodosVm> Handle(GetProjectTodosQuery request, CancellationToken cancellationToken)
     {
+        const int pageSize = 5;
         var project = await _context
            .Projects
            .AsNoTracking()
@@ -29,10 +31,9 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
            })       
            .FirstOrDefaultAsync ();
 
-        var todos = await _context
+        var todos = await  _context 
             .Todos
             .AsNoTracking()
-            .Where(x => x.ProjectId == request.Id)
             .Select(x => new TodoDto
             {
                 Id = x.Id,
@@ -49,16 +50,15 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
                     Employee = new EmployeeDto()
                 },
                 UserTo = new UserDto
-                { 
+                {
                     Id = x.UserToId,
                     FullName = $"{x.UserTo.FirstName} {x.UserTo.LastName}",
                     Employee = new EmployeeDto()
                 },
                 PostsNumber = x.TodoPosts.Count()
             })
-            .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync();
-        
+            .PaginatedListAsync(request.PageIndex, pageSize);
+
         var vm = new ProjectTodosVm();
         vm.Project = project;
         vm.Todos = todos;

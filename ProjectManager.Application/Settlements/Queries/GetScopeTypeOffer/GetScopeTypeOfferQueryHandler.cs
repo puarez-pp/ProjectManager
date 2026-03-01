@@ -2,36 +2,33 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
+using ProjectManager.Application.Settlements.Calculations;
 using ProjectManager.Domain.Enums;
-using System.Linq.Dynamic.Core;
 
 namespace ProjectManager.Application.Settlements.Queries.GetScopeTypeOffer;
 
 public class GetScopeTypeOfferQueryHandler : IRequestHandler<GetScopeTypeOfferQuery, WorkScopeTypeVm>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IFinanceService _financeService;
+    private readonly ISettlementService _calc;
 
     public GetScopeTypeOfferQueryHandler(
         IApplicationDbContext context,
-        IFinanceService financeService)
+        ISettlementService calc)
     {
         _context = context;
-        _financeService = financeService;
+        _calc = calc;
     }
+
     public async Task<WorkScopeTypeVm> Handle(GetScopeTypeOfferQuery request, CancellationToken cancellationToken)
     {
-
-        var margin = await _context
-            .Assumptions
+        var margin = await _context.Assumptions
             .AsNoTracking()
             .Where(x => x.Settlement.ProjectId == request.Id)
             .Select(x => request.ScopeType == WorkScopeType.Agregat ? x.MarginGen : x.MarginInstall)
             .FirstOrDefaultAsync(cancellationToken);
 
-
-        var project = await _context
-            .Projects
+        var project = await _context.Projects
             .AsNoTracking()
             .Where(x => x.Id == request.Id)
             .Select(s => new ProjectBasicsDto
@@ -42,65 +39,38 @@ public class GetScopeTypeOfferQueryHandler : IRequestHandler<GetScopeTypeOfferQu
             })
             .FirstOrDefaultAsync(cancellationToken);
 
-        var rawScopes = await _context
-            .WorkScopes
+        var rawScopes = await _context.WorkScopes
             .AsNoTracking()
             .Where(x => x.Settlement.ProjectId == request.Id && x.WorkScopeType == request.ScopeType)
-            .Select(s => new
+            .Select(s => new RawWorkScopeOffer
             {
-                s.Id,
-                s.Description,
-                s.Order,
-                Offers = s.WorkScopeOffers.Select(y => new
+                Id = s.Id,
+                Description = s.Description,
+                Order = s.Order,
+                Offers = s.WorkScopeOffers.Select(y => new RawOfferItem
                 {
-                    y.Id,
-                    y.Description,
-                    y.Order,
-                    y.IsUsed,
-                    y.UnitType,
-                    y.Quantity,
-                    y.NetAmount,
+                    Id = y.Id,
+                    Description = y.Description,
+                    Order = y.Order,
+                    IsUsed = y.IsUsed,
+                    UnitType = y.UnitType,
+                    Quantity = y.Quantity,
+                    NetAmount = y.NetAmount,
                     SubContractor = y.SubContractor.Name
-                }).OrderBy(o => o.Order).ToList()
+                }).ToList()
             })
             .OrderBy(x => x.Order)
             .ToListAsync(cancellationToken);
 
-        //Logika domenowa (ApplyMargin) wykonywana w pamięci
-        var workScopes = rawScopes.Select(s => new WorkScopeDto
-        {
-            Id = s.Id,
-            Description = s.Description,
-            Order = s.Order,
+        var workScopes = _calc.CalculateScopeTypeOffer(rawScopes, margin);
 
-            Offers = s.Offers.Select(o => new WorkScopeOfferDto
-            {
-                Id = o.Id,
-                Description = o.Description,
-                Order = o.Order,
-                IsUsed = o.IsUsed,
-                UnitType = o.UnitType,
-                Quantity = o.Quantity,
-                NetAmount = o.NetAmount,
-                Total = _financeService.ApplyMargin(o.Quantity * o.NetAmount, margin),
-                SubContractor = o.SubContractor
-            }).ToList(),
-
-            Total = s.Offers.Sum(o => _financeService.ApplyMargin(o.Quantity * o.NetAmount, margin))
-        })
-        .OrderBy(x => x.Order)
-        .ToList();
-
-        var vm = new WorkScopeTypeVm
+        return new WorkScopeTypeVm
         {
             Project = project,
             WorkScopeType = request.ScopeType,
             Margin = margin,
             Total = workScopes.Sum(x => x.Total),
-            WorkScopes = workScopes
+            WorkScopes = workScopes.ToList()
         };
-
-        return vm;
     }
-
 }

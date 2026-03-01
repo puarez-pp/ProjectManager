@@ -11,12 +11,12 @@ using ProjectManager.Domain.Enums;
 namespace ProjectManager.UI.Controllers
 {
     [Authorize()]
-    public class ToolController : BaseController
+    public class PostController : BaseController
     {
         private readonly IDateTimeService _dateTimeService;
-        private readonly ILogger<ToolController> _logger;
-        public ToolController(IDateTimeService dateTimeService,
-            ILogger<ToolController> logger)
+        private readonly ILogger<PostController> _logger;
+        public PostController(IDateTimeService dateTimeService,
+            ILogger<PostController> logger)
         {
             _dateTimeService = dateTimeService;
             _logger = logger;
