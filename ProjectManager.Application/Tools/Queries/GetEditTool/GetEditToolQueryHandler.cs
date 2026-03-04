@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Tools.Commands.AddTool;
 using ProjectManager.Application.Tools.Commands.EditTool;
 
 namespace ProjectManager.Application.Tools.Queries.GetEditTool;
@@ -32,7 +31,8 @@ public class GetEditToolQueryHandler : IRequestHandler<GetEditToolQuery, EditToo
             Manufacturer = tool.Manufacturer,
             ToolStatus = tool.ToolStatus,
             DateOfPurchase = tool.DateOfPurchase,
-            ValidDate = tool.ValidDate
+            ValidDate = tool.ValidDate ?? DateTime.Today
+
         };
     }
 }

@@ -13,5 +13,6 @@ public static class SettingsDict
     public const string BannerVisible = "BannerVisible";
     public const string FooterColor = "FooterColor";
     public const string AdminEmail = "AdminEmail";
+    public const string EmailOnNewTodo = "EmailOnNewTodo";
 
 }

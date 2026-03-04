@@ -72,6 +72,16 @@ static class ModelBuilderExtensionsSettingsPosition
             new SettingsPosition
             {
                 Id = 7,
+                Key = SettingsDict.EmailOnNewTodo,
+                Value = "False",
+                Description = "Czy wysłać email adresatowi nowego zadania?",
+                Type = Domain.Enums.SettingsType.Boolean,
+                SettingsId = 1,
+                Order = 7
+            },
+            new SettingsPosition
+            {
+                Id = 8,
                 Key = SettingsDict.BannerVisible,
                 Value = "True",
                 Description = "Czy wyświetlać banner na stronie głównej?",
@@ -81,7 +91,7 @@ static class ModelBuilderExtensionsSettingsPosition
             },
             new SettingsPosition
             {
-                Id = 8,
+                Id = 9,
                 Key = SettingsDict.FooterColor,
                 Value = "#dc3545",
                 Description = "Folor footera strona głównej",
@@ -91,7 +101,7 @@ static class ModelBuilderExtensionsSettingsPosition
             },
             new SettingsPosition
             {
-                Id = 9,
+                Id = 10,
                 Key = SettingsDict.AdminEmail,
                 Value = "integri.pp@gmail.com",
                 Description = "Główny adres e-mail administratora",

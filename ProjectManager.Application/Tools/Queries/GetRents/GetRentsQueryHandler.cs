@@ -18,9 +18,9 @@ public class GetRentsQueryHandler : IRequestHandler<GetRentsQuery, List<ToolRent
     {
         var rents = await _context
             .Rents
-            .OrderByDescending(x => x.RentDate)
+            .AsNoTracking ()
             .Where(x => x.ToolId == request.Id)
-            .Select(x => x.ToToolRentDto())
+            .Select(x=>x.ToToolRentDto())
             .ToListAsync(cancellationToken);
         return rents;
     }

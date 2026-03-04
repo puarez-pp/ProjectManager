@@ -20,5 +20,5 @@ public class AddToolCommand : IRequest<int>
     [DisplayName("Data zakupu")]
     public DateTime? DateOfPurchase { get; set; }
     [DisplayName("Termin ważności badań")]
-    public DateTime ValidDate { get; set; }
+    public DateTime? ValidDate { get; set; }
 }

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Tools.Commands.AddTool;
+using ProjectManager.Application.Tools.Commands.DeleteTool;
 using ProjectManager.Application.Tools.Commands.EditTool;
 using ProjectManager.Application.Tools.Commands.RentTool;
 using ProjectManager.Application.Tools.Commands.ReturnTool;
 using ProjectManager.Application.Tools.Queries.GetEditTool;
+using ProjectManager.Application.Tools.Queries.GetRents;
 using ProjectManager.Application.Tools.Queries.GetTools;
 using ProjectManager.Application.Tools.Queries.GetUserRents;
 
@@ -27,6 +29,11 @@ public class ToolController : BaseController
     public async Task<IActionResult> UserRents()
     {
         return View(await Mediator.Send(new GetUserRentsQuery()));
+    }
+
+    public async Task<IActionResult> ToolRents()
+    {
+        return View(await Mediator.Send(new GetRentsQuery()));
     }
 
     public async Task<IActionResult> AddTool()
@@ -95,6 +102,26 @@ public class ToolController : BaseController
         {
             await Mediator.Send(
                 new ReturnToolCommand
+                {
+                    Id = id
+                });
+
+            return Json(new { success = true });
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, null);
+            return Json(new { success = false });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteTool(int id)
+    {
+        try
+        {
+            await Mediator.Send(
+                new DeleteToolQuery
                 {
                     Id = id
                 });

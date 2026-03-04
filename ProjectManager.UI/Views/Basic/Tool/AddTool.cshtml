@@ -15,11 +15,9 @@
 }
 
 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3 mb-3">
-    <h4 class="mb-0 d-flex align-items-center">
-        <p class="edit-link text-white">
-            <i class="fa-solid fa-gauge"></i>
-            Mierniki i analizatory
-        </p>
+    <h4 class="mb-0 d-flex align-items-center edit-link">
+        <i class="fa-solid fa-gauge" style="margin-right:5px"></i>
+        Mierniki i analizatory
     </h4>
 </div>
 
@@ -67,9 +65,9 @@
 
             <div class="form-group col-md-4">
                 @Html.LabelFor(x => x.ValidDate)
-                <div class="input-group date" id="dtpValidDate" data-target-input="nearest">
-                    <input asp-for="ValidDate" type="text" class="form-control datetimepicker-input" data-target="#dtpValidDate" />
-                    <div class="input-group-append" data-target="#dtpValidDate" data-toggle="datetimepicker">
+                <div class="input-group date" id="dtpDateOfValid" data-target-input="nearest">
+                    <input asp-for="ValidDate" type="text" class="form-control datetimepicker-input" data-target="#dtpDateOfValid" />
+                    <div class="input-group-append" data-target="#dtpDateOfValid" data-toggle="datetimepicker">
                         <div class="input-group-text calendar"><i class="fa fa-calendar"></i></div>
                     </div>
                 </div>
@@ -99,12 +97,11 @@
             defaultDate: moment()
             });
 
-            $('#dtpValidDate').datetimepicker({
+            $('#dtpDateOfValid').datetimepicker({
             format: 'L',
             locale: '@locale',
             defaultDate: moment()
             });
-
 
             $('.select2-ToolStatus').select2({
                 theme: 'bootstrap-5'

@@ -1,16 +1,18 @@
 ﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Tools.Queries.GetTools
-
+@using ProjectManager.Domain.Enums
+@inject ICurrentUserService currentUserService
 @model List<ToolDto>
->
 
 @{
     var canDelete = User.IsInRole(RolesDict.Administrator);
     var canEdit = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var userId = currentUserService.UserId;
 }
 
-<div class="row">
+<div class="row mt-2">
     <!-- LISTA MIERNIKÓW -->
     <div class="col-12">
         <div class="card shadow-sm border-0">
@@ -29,27 +31,42 @@
                     <tbody>
                         @foreach (var tool in Model)
                         {
-                            <tr data-tool-id="@tool.Id">
+                            <tr data-id="@tool.Id">
                                 <td>@tool.Name</td>
                                 <td>@tool.Manufacturer</td>
                                 <td>@tool.SerialNumber</td>
                                 <td>@tool.ToolStatus.GetDisplayName()</td>
-                                <td>@tool.ValidDate</td>
+                                <td>@tool.ValidDate.ToString("yyyy-MM-dd")</td>
                                 <td class="text-end">
                                     @if (canEdit)
                                     {
                                         <button class="btn btn-sm btn-outline-success me-1"
-                                                onclick="location.href='@Url.Action("EditTool", "Tool", new { id = tool.Id })'">
+                                                onclick="location.href='@Url.Action("EditTool", "Tool", new { id = tool.Id })'"
+                                                title="Edytuj">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                     }
                                     @if (canDelete)
                                     {
                                         <button class="btn btn-sm btn-outline-danger open-delete-tool-confirm"
-                                                data-tool-id="@tool.Id">
+                                                data-id="@tool.Id"
+                                                title="Usuń">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     }
+                                    @if (tool.ToolStatus == ToolStatus.Available)
+                                    {
+                                        <button class="btn btn-sm btn-outline-dark open-rent-tool-confirm"
+                                                data-id="@tool.Id"
+                                                title="Wypożycz">
+                                            <i class="fa-solid fa-hand-holding"></i>
+                                        </button>
+                                    }
+                                    <button class="btn btn-sm btn-outline-secondary me-1"
+                                            onclick="location.href='@Url.Action("ToolRents", "Tool", new { id = tool.Id })'"
+                                            title="Szczegóły">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </button>
                                 </td>
                             </tr>
                         }

@@ -10,6 +10,6 @@ public class Tool
     public string Manufacturer { get; set; }
     public ToolStatus ToolStatus { get; set; }
     public DateTime? DateOfPurchase { get; set; }
-    public DateTime ValidDate { get; set; }
+    public DateTime? ValidDate { get; set; }
     public ICollection<ToolRent> Rents { get; set; } = new HashSet<ToolRent>();
 }

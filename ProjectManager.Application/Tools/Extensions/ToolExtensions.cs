@@ -21,7 +21,7 @@ public static class ToolExtensions
             Name = tool.Name,
             SerialNumber = tool.SerialNumber,
             ToolStatus = tool.ToolStatus,
-            ValidDate = tool.ValidDate
+            ValidDate = tool.ValidDate ?? DateTime.Today
         };
     }
 
@@ -34,6 +34,7 @@ public static class ToolExtensions
         {
             Id = rent.Id,
             User = rent.User.ToUserDto().FullName,
+            Name = rent.Tool.Name,
             RentDate = rent.RentDate,
             ReturnDate = rent.ReturnDate,
         };

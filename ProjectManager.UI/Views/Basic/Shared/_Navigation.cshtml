@@ -103,5 +103,12 @@
                 <span class="d-none d-sm-inline">Role</span>
             </a>
         </li>
+        <!-- Ustawienia -->
+        <li class="nav-item @Url.MakeActiveClass("Settings", "Settings")">
+            <a asp-controller="Settings" asp-action="Settings" class="nav-link align-middle px-0 text-white">
+                <i class="fas fa-solid fa-screwdriver-wrench"></i>
+                <span class="d-none d-sm-inline">Ustawienia</span>
+            </a>
+        </li>
     }
 </ul>

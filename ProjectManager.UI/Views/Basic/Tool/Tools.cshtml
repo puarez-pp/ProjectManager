@@ -1,12 +1,14 @@
 ﻿@using System.Globalization
+@using ProjectManager.Application.Common.Interfaces
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Tools.Queries.GetTools
-
+@inject ICurrentUserService currentUserService
 @model List<ToolDto>
 
 @{
     ViewData["Title"] = "Lista analizatorów i mierników";
     var onlyAvaiable = Context.Request.Query["onlyAvaiable"] == "true";
+    var userId = currentUserService.UserId;
 }
 
 <!-- Modale -->
@@ -15,23 +17,24 @@
 <partial name="Modals/_ReturnToolModal" />
 
 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
-    <h4 class="mb-0 d-flex align-items-center">
-        <p class="edit-link text-white">
-            <i class="fa-solid fa-gauge"></i>
+    <h4 class="mb-0 d-flex align-items-center edit-link">
+            <i class="fa-solid fa-gauge" style="margin-right:5px"></i>
             Mierniki i analizatory
-        </p>
     </h4>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-light"
+                type="button"
+                onclick="location.href='@Url.Action("UserTool", "Tool")'">
+            <i class="fa-solid fa-id-card"></i> Mój panel
+        </button>
 
-    <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-light" id="btnAddTool"
+        <button class="btn btn-outline-light" id="btnAddTool"
                 type="button"
                 onclick="location.href='@Url.Action("AddTool", "Tool")'">
             <i class="fas fa-plus"></i> Dodaj miernik
         </button>
     </div>
 </div>
-
-
 
 <div id="toolsContainer">
     <partial name="Partials/_ToolsList"
@@ -40,6 +43,62 @@
 
 @section Scripts {
     <script>
+                // Usuwanie
+        $(document).on("click", ".open-delete-tool-confirm", function () {
+            let id = $(this).data("id");
+            $("#DeleteToolId").val(id);
+            $("#deleteToolModal").modal("show");
+        });
+
+        $(document).on("click", "#btnConfirmDeleteTool", function () {
+            console.log("klik");
+
+            let id = $("#DeleteToolId").val();
+            $.ajax({
+                type: "POST",
+                url: "/Tool/DeleteTool",
+                data: { id: id },
+                success: function (data) {
+                    if (data.success) {
+                        $('[data-id="' + id + '"]').remove();
+                        $("#deleteToolModal").modal("hide");
+                        toastr.success('Urządzenie zostało usunięte.');
+                        
+                    } else {
+                        toastr.error('Błąd przy usuwaniu urządzenia');
+                    }
+                },
+                dataType: "json"
+            });
+        });
+
+        // wypożycz
+        $(document).on("click", ".open-rent-tool-confirm", function () {
+            let id = $(this).data("id");
+            $("#RentToolId").val(id);
+            $("#rentToolModal").modal("show");
+        });
+
+        $(document).on("click", "#confirmRentTool", function () {
+            let id = $("#RentToolId").val();
+            $.ajax({
+                type: "POST",
+                url: "/Tool/RentTool",
+                data: { id: id },
+                success: function (data) {
+                    if (data.success) {
+                        $("#toolsContainer")
+                        .load("/Tool/Tools #toolsTable", function () { 
+                            $("#rentToolModal").modal("hide"); 
+                            toastr.success("Urządzenie wypożyczone."); 
+                        });
+                    } else {
+                        toastr.error('Błąd, nie udało się potwierdzić wypożyczenia');
+                    }
+                },
+                dataType: "json"
+            });
+        });
 
     </script>
 }

@@ -3,7 +3,6 @@
 using ProjectManager.Application.Settings.Queries.Dtos;
 using ProjectManager.Application.Settings.Queries.GetSettings;
 using ProjectManager.Domain.Entities;
-using System.Linq;
 
 namespace ProjectManager.Application.Settings.Extensions;
 public static class SettingsExtensions
