@@ -1,0 +1,66 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Tools.Queries.GetRents
+@using ProjectManager.Application.Tools.Queries.GetUserRents
+@using ProjectManager.Domain.Enums
+@model List<UserRentsDto>
+
+@{
+    var canDelete = User.IsInRole(RolesDict.Administrator);
+    var canEdit = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
+    var order = 1;
+}
+
+<div class="row mt-2">
+    <!-- REJESTR WYPOŻYCZEŃ -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table id="userTable" class="table table-hover mb-0">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th style="width:40px;">Lp.</th>
+                            <th>Nazwa urządzenia</th>
+                            <th>Data wypożyczenia</th>
+                            <th>Data zwrotu</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var rent in Model)
+                        {
+                            <tr data-id="@rent.Id">
+                                <td>@order</td>
+                                <td>@rent.ToolName</td>
+                                <td>@rent.RentDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (rent.ReturnDate.HasValue)
+                                    {
+                                        <p>@rent.ReturnDate.Value.ToString("yyyy-MM-dd")</p>
+                                    }
+                                    else
+                                    {
+                                        <p></p>
+                                    }
+                                </td>
+
+                                <td class="text-end">
+                                    @if (rent.ReturnDate == null)
+                                    {
+                                        <button class="btn btn-sm btn-outline-dark open-return-tool-confirm"
+                                                data-id="@rent.Id">
+                                            <i class="fa fa-undo me-1"></i> Zwróć urządzenie
+                                        </button>
+
+                                    }
+                                </td>
+                            </tr>
+                            order++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

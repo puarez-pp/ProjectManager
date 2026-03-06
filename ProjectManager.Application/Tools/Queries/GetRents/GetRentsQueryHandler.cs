@@ -20,7 +20,14 @@ public class GetRentsQueryHandler : IRequestHandler<GetRentsQuery, List<ToolRent
             .Rents
             .AsNoTracking ()
             .Where(x => x.ToolId == request.Id)
-            .Select(x=>x.ToToolRentDto())
+            .OrderByDescending(x => x.RentDate)
+            .Select(x=>new ToolRentsDto
+            {
+                Id = x.Id,
+                User = $"{x.User.FirstName} {x.User.LastName}",
+                RentDate = x.RentDate,
+                ReturnDate = x.ReturnDate,
+            })
             .ToListAsync(cancellationToken);
         return rents;
     }

@@ -12,7 +12,7 @@
     </li>
 
     <!-- Pulpit -->
-    <li class="nav-item @Url.MakeActiveClass("User", "Dashboard")">
+    <li class="nav-item @Url.MakeActiveClass("User", "Dashboard, UserTodos")">
         <a asp-controller="User" asp-action="Dashboard" class="nav-link align-middle px-0 text-white">
             <i class="fas fa-solid fa-gauge"></i>
             <span class="d-none d-sm-inline">Pulpit</span>
@@ -24,14 +24,6 @@
         <a asp-controller="User" asp-action="User" class="nav-link align-middle px-0 text-white">
             <i class="fas fa-solid fa-user"></i>
             <span class="d-none d-sm-inline">Moje dane</span>
-        </a>
-    </li>
-
-    <!-- Zadania -->
-    <li class="nav-item @Url.MakeActiveClass("Todo", "UserTodos")">
-        <a asp-controller="Todo" asp-action="UserTodos" class="nav-link align-middle px-0 text-white">
-            <i class="fas fa-solid fa-list-check"></i>
-            <span class="d-none d-sm-inline">Moje Zadania</span>
         </a>
     </li>
 

@@ -8,6 +8,7 @@
 
 @{
     ViewData["Title"] = "Lista zadań";
+    var userId= ViewBag.UserId;
 }
 
 <!-- Modale -->
@@ -21,11 +22,19 @@
             <i class="fas fa-solid fa-list-check me-2"></i>
             Moje zadania
         </h4>
+        
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-light"
+                    type="button"
+                    onclick="location.href='@Url.Action("Dashboard", "User")'">
+                <i class="fa-solid fa-id-card"></i> Mój panel
+            </button>
+        </div>
     </div>
 </div>
 
 <div id="todosContainer">
-    <partial name="Partials/_TodosList" model="Model" />
+    <partial name="Partials/_UserTodosList" model="Model" />
 </div>
 
 @section Scripts {

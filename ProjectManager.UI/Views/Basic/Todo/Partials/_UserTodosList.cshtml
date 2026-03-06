@@ -3,13 +3,13 @@
 @using ProjectManager.Application.Common.Models
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Todos.Queries.GetProjectTodos
-@inject ICurrentUserService currentUserService
+
 
 @model PaginatedList<TodoDto>
 @{
     ViewData["Title"] = "Lista zadań projektu";
     var roles = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
-    var userId = currentUserService.UserId;
+    var userId = ViewBag.UserId;
 }
 <nav class="mt-2">
     <ul class="pagination">
@@ -54,6 +54,7 @@
                             • Termin wykonania: @t.CompletionDate
                         </span>
                     }
+
                 </p>
 
                 <p>@t.Body</p>
@@ -72,22 +73,6 @@
                     <button class="btn btn-sm btn-secondary btnAddPost" data-id="@t.Id">
                         <i class="fas fa-comment"></i>
                     </button>
-
-                    @if (t.UserFrom.Id == userId || roles)
-                    {
-                        <button class="btn btn-sm btn-primary btnEditTodo" data-id="@t.Id"
-                                type="button"
-                                onclick="location.href='@Url.Action("EditTodo", "Todo", new { id = t.Id })'">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    }
-
-                    @if (roles)
-                    {
-                        <button class="btn btn-sm btn-danger btnDeleteTodo" data-id="@t.Id">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    }
                 }
                 
             </div>
@@ -97,7 +82,7 @@
                     data-id="@t.Id">
                 <i class="fas fa-comments"></i> Pokaż komentarze
             </button>
-            @if (!t.IsCompleted && t.UserFrom.Id == userId)
+            @if (!t.IsCompleted && t.UserTo.Id == userId)
             {
                 <button class="btn btn-sm btn-success btnFinishTodo" data-id="@t.Id">
                     <i class="fas fa-check"></i> Zakończ zadanie

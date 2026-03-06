@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Dictionaries;
 using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Todos.Commands.AddTodo;

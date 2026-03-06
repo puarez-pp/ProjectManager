@@ -33,7 +33,7 @@ public static class ToolExtensions
         return new ToolRentsDto
         {
             Id = rent.Id,
-            User = rent.User.ToUserDto().FullName,
+            User = $"{rent.User.FirstName} {rent.User.LastName}",
             Name = rent.Tool.Name,
             RentDate = rent.RentDate,
             ReturnDate = rent.ReturnDate,

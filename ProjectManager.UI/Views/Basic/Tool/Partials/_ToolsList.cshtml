@@ -1,15 +1,12 @@
 ﻿@using ProjectManager.Application.Common.Extensions
-@using ProjectManager.Application.Common.Interfaces
 @using ProjectManager.Application.Dictionaries
 @using ProjectManager.Application.Tools.Queries.GetTools
 @using ProjectManager.Domain.Enums
-@inject ICurrentUserService currentUserService
 @model List<ToolDto>
 
 @{
     var canDelete = User.IsInRole(RolesDict.Administrator);
     var canEdit = User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik);
-    var userId = currentUserService.UserId;
 }
 
 <div class="row mt-2">
@@ -20,6 +17,7 @@
                 <table id="toolsTable" class="table table-hover mb-0">
                     <thead class="table-secondary">
                         <tr>
+                            <th style="width:40px;">Lp.</th>
                             <th>Nazwa</th>
                             <th>Producent</th>
                             <th>Numer seryjny</th>
@@ -32,6 +30,7 @@
                         @foreach (var tool in Model)
                         {
                             <tr data-id="@tool.Id">
+                                <td class="row-number"></td>
                                 <td>@tool.Name</td>
                                 <td>@tool.Manufacturer</td>
                                 <td>@tool.SerialNumber</td>
@@ -63,7 +62,7 @@
                                         </button>
                                     }
                                     <button class="btn btn-sm btn-outline-secondary me-1"
-                                            onclick="location.href='@Url.Action("ToolRents", "Tool", new { id = tool.Id })'"
+                                            onclick="location.href='@Url.Action("ToolRents", "Tool", new {id = tool.Id, name = tool.Name })'"
                                             title="Szczegóły">
                                         <i class="fa-solid fa-circle-info"></i>
                                     </button>

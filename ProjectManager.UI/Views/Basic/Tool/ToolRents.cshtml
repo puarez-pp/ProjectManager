@@ -1,0 +1,39 @@
+﻿@using System.Globalization
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Tools.Queries.GetRents
+@inject ICurrentUserService currentUserService
+@model List<ToolRentsDto>
+
+@{
+    ViewData["Title"] = ViewBag.ToolName;
+    var userId = currentUserService.UserId;
+}
+
+<!-- Modale -->
+<partial name="Modals/_ReturnToolModal" />
+
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+    <h4 class="mb-0 d-flex align-items-center edit-link">
+        <i class="fa-solid fa-arrows-left-right" style="margin-right:5px"></i>
+            Rejestr wypożyczeń
+    </h4>
+    <button class="btn btn-outline-light" id="btnAddTool"
+            type="button"
+            onclick="location.href='@Url.Action("Tools", "Tool")'">
+        <i class="fa-solid fa-arrow-left"></i>
+        Powrót do listy mierników
+    </button>
+</div>
+
+<div id="toolsContainer">
+    <partial name="Partials/_ToolRentsList"
+             model="Model"/>
+</div>
+
+@section Scripts {
+    <script>
+     
+
+    </script>
+}

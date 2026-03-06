@@ -1,9 +1,10 @@
-﻿using ProjectManager.Application.Dictionaries;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.Application.Dictionaries;
+using ProjectManager.Application.Users.Commands.DeleteUser;
+using ProjectManager.Application.Users.Queries.GetClientDashboard;
 using ProjectManager.Application.Users.Queries.GetEditUser;
 using ProjectManager.Application.Users.Queries.GetUser;
-using ProjectManager.Application.Users.Commands.DeleteUser;
 using ProjectManager.Application.Users.Queries.GetUsers;
 
 namespace ProjectManager.UI.Controllers;
@@ -20,7 +21,8 @@ public class UserController : BaseController
 
     public async Task<IActionResult> Dashboard()
     {
-        return View();
+        return View(await Mediator.Send(new GetUserDashboardQuery { UserId = UserId }));
+
     }
 
     public async Task<IActionResult> User()

@@ -1,6 +1,4 @@
-﻿using ProjectManager.Application.Charts.Queries.Dtos;
-using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Domain.Entities;
+﻿using ProjectManager.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,20 +6,24 @@ namespace ProjectManager.Application.Users.Queries.GetClientDashboard;
 public class GetUserDashboardQueryHandler : IRequestHandler<GetUserDashboardQuery, GetUserDashboardVm>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IDateTimeService _dateTimeService;
 
     public GetUserDashboardQueryHandler(
-        IApplicationDbContext context,
-        IDateTimeService dateTimeService)
+        IApplicationDbContext context
+        )
     {
         _context = context;
-        _dateTimeService = dateTimeService;
     }
 
     public async Task<GetUserDashboardVm> Handle(GetUserDashboardQuery request, CancellationToken cancellationToken)
     {
-        var vm = new GetUserDashboardVm();
-        
+        var user = await _context
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == request.UserId);
+        var vm = new GetUserDashboardVm
+        {
+            Email = user.Email
+        };
         return vm;
     }
 

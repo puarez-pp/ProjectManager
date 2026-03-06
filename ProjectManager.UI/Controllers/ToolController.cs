@@ -28,12 +28,13 @@ public class ToolController : BaseController
 
     public async Task<IActionResult> UserRents()
     {
-        return View(await Mediator.Send(new GetUserRentsQuery()));
+        return View(await Mediator.Send(new GetUserRentsQuery { UserId = UserId}));
     }
 
-    public async Task<IActionResult> ToolRents()
+    public async Task<IActionResult> ToolRents(int id, string name)
     {
-        return View(await Mediator.Send(new GetRentsQuery()));
+        ViewBag.ToolName = name;
+        return View(await Mediator.Send(new GetRentsQuery { Id = id}));
     }
 
     public async Task<IActionResult> AddTool()

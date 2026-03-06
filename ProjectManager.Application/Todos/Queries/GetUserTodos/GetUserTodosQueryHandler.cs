@@ -12,14 +12,11 @@ namespace ProjectManager.Application.Todos.Queries.GetUserTodos;
 public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, PaginatedList<TodoDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _currentUser;
 
     public GetUserTodosQueryHandler(
-        IApplicationDbContext context,
-        ICurrentUserService currentUser)
+        IApplicationDbContext context)
     {
         _context = context;
-        _currentUser = currentUser;
     }
     public async Task<PaginatedList<TodoDto>> Handle(GetUserTodosQuery request, CancellationToken cancellationToken)
     {
@@ -27,7 +24,7 @@ public class GetUserTodosQueryHandler : IRequestHandler<GetUserTodosQuery, Pagin
         var todos = await _context
             .Todos
             .AsNoTracking()
-            .Where(x => x.UserToId == _currentUser.UserId)
+            .Where(x => x.UserToId == request.UserId)
             .Select(x => new TodoDto
             {
                 Id = x.Id,

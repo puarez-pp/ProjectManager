@@ -27,7 +27,8 @@ namespace ProjectManager.UI.Controllers
 
         public async Task<IActionResult> UserTodos(int pageIndex = 1)
         {
-            return View(await Mediator.Send(new GetUserTodosQuery()));
+            ViewBag.UserId = UserId;
+            return View(await Mediator.Send(new GetUserTodosQuery { UserId = UserId }));
         }
 
        
