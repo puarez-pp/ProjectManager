@@ -17,7 +17,7 @@ namespace ProjectManager.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.2")
+                .HasAnnotation("ProductVersion", "6.0.36")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -261,11 +261,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Alarm", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AlarmType")
                         .HasColumnType("int");
@@ -477,14 +475,9 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PlantId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Devices", (string)null);
                 });
@@ -1961,11 +1954,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2114,11 +2105,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2520,11 +2509,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2571,11 +2558,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2663,11 +2648,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2732,12 +2715,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Plant", (string)null);
                 });
@@ -3830,6 +3808,16 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
+                            Description = "Czy wysłać email adresatowi nowego zadania?",
+                            Key = "EmailOnNewTodo",
+                            Order = 7,
+                            SettingsId = 1,
+                            Type = 1,
+                            Value = "False"
+                        },
+                        new
+                        {
+                            Id = 8,
                             Description = "Czy wyświetlać banner na stronie głównej?",
                             Key = "BannerVisible",
                             Order = 1,
@@ -3839,7 +3827,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 8,
+                            Id = 9,
                             Description = "Folor footera strona głównej",
                             Key = "FooterColor",
                             Order = 2,
@@ -3849,7 +3837,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 10,
                             Description = "Główny adres e-mail administratora",
                             Key = "AdminEmail",
                             Order = 3,
@@ -4019,9 +4007,6 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Body")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -4037,8 +4022,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("TodoId");
 
@@ -4074,7 +4057,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("ToolStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ValidDate")
+                    b.Property<DateTime?>("ValidDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -5475,14 +5458,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Devices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Plant");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceHeader", b =>
@@ -5593,16 +5569,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Plants")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
@@ -5835,14 +5801,13 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "UserFrom")
-                        .WithMany("TodosFrom")
+                        .WithMany("Todos")
                         .HasForeignKey("UserFromId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "UserTo")
-                        .WithMany("TodosTo")
-                        .HasForeignKey("UserToId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("UserToId");
 
                     b.Navigation("Project");
 
@@ -5853,10 +5818,6 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.TodoPost", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", null)
-                        .WithMany("TodoPostsRedirect")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("ProjectManager.Domain.Entities.Todo", "Todo")
                         .WithMany("TodoPosts")
                         .HasForeignKey("TodoId")
@@ -5962,15 +5923,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("DesignEng");
 
-                    b.Navigation("Devices");
-
                     b.Navigation("ElectricEng");
 
                     b.Navigation("Employee");
 
                     b.Navigation("EmployeeEvents");
-
-                    b.Navigation("Plants");
 
                     b.Navigation("PositionPosts");
 
@@ -5994,11 +5951,7 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("TodoPosts");
 
-                    b.Navigation("TodoPostsRedirect");
-
-                    b.Navigation("TodosFrom");
-
-                    b.Navigation("TodosTo");
+                    b.Navigation("Todos");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Client", b =>

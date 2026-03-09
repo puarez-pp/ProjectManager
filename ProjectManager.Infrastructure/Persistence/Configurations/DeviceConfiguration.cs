@@ -12,11 +12,6 @@ class DeviceConfiguration : IEntityTypeConfiguration<Device>
         builder.ToTable("Devices");
 
         builder
-           .HasOne(x => x.User)
-           .WithMany(x => x.Devices)
-           .HasForeignKey(x => x.UserId)
-           .OnDelete(DeleteBehavior.Restrict);
-        builder
            .HasOne(x => x.Plant)
            .WithMany(x => x.Devices)
            .HasForeignKey(x => x.PlantId)

@@ -19,7 +19,6 @@ public class GetPlantQueryHandlercs : IRequestHandler<GetPlantQuery, GetPlantVm>
         var plant = await _context
            .Plants
            .AsNoTracking()
-           .Include(x => x.User)
            .Include(x => x.Devices)
            .FirstOrDefaultAsync(x => x.Id == request.Id);
 

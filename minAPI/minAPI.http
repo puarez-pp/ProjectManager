@@ -1,6 +1,0 @@
-@minAPI_HostAddress = http://localhost:5282
-
-GET {{minAPI_HostAddress}}/todos/
-Accept: application/json
-
-###

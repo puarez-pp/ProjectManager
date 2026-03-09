@@ -38,7 +38,6 @@ public class AddDeviceCommandHandler : IRequestHandler<AddDeviceCommand>
             Name = request.Name,
             Description = request.Description,
             DeviceType = request.DeviceType,
-            UserId = _userService.UserId,
             CreatedAt = _timeService.Now
         };
 

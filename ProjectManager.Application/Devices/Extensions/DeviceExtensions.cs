@@ -19,7 +19,6 @@ public static class DeviceExtensions
             Name = device.Name,
             Description = device.Description,
             DeviceType = device.DeviceType,
-            User = (device.User.ToUserDto()).FullName,
             CreatedAt = device.CreatedAt,
             IsConfigured = device.IsConfigured
         };

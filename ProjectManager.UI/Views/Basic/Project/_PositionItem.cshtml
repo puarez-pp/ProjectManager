@@ -42,18 +42,18 @@
             </button>
         </h2>
         <div class="d-flex m-1 justify-content-end">
-            <button class="btn btn-sm btn-outline-success open-edit-position-modal m-sm-1"
+            
+            @if (canDelete)
+            {<button class="btn btn-sm btn-outline-success open-edit-position-modal m-sm-1"
                     data-position="@Model.Id"
                     type="button">
                 <i class="fas fa-pen-to-square"></i>
             </button>
-            @if (canDelete)
-            {
-                <button class="btn btn-sm btn-outline-danger open-delete-position-confirm m-sm-1"
-                        data-position="@Model.Id"
-                        type="button">
-                    <i class="fas fa-trash"></i>
-                </button>
+            <button class="btn btn-sm btn-outline-danger open-delete-position-confirm m-sm-1"
+                    data-position="@Model.Id"
+                    type="button">
+                <i class="fas fa-trash"></i>
+            </button>
             }
         </div>
 

@@ -26,18 +26,17 @@ public static class DependencyInjection
     {
         //"Sw6o00uMZuSWCgv/W3yuSY5tAKYbXxGCo2YKHpVASGM="
         //"Wy9syH0GLrOpHoYchOXgDg=="
-        var keyInfo = new KeyInfo();
-        var encryptionService = new EncryptionService(new KeyInfo("Sw6o00uMZuSWCgv/W3yuSY5tAKYbXxGCo2YKHpVASGM=", "Wy9syH0GLrOpHoYchOXgDg=="));
-        services.AddSingleton<IEncryptionService>(encryptionService);
+        //var keyInfo = new KeyInfo();
+        //var encryptionService = new EncryptionService(new KeyInfo("Sw6o00uMZuSWCgv/W3yuSY5tAKYbXxGCo2YKHpVASGM=", "Wy9syH0GLrOpHoYchOXgDg=="));
+        //services.AddSingleton<IEncryptionService>(encryptionService);
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-
-
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString)
             .EnableSensitiveDataLogging());
+
+       
         services.AddHostedService<LongRunningService>();
         services.AddSingleton<IBackgroundWorkerQueue, BackgroundWorkerQueue>();
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>

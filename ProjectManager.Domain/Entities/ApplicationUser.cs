@@ -27,7 +27,5 @@ public class ApplicationUser : IdentityUser
     public ICollection<ToolRent> Rents { get; set; } = new HashSet<ToolRent>();
     public ICollection<Schedule> Schedules { get; set; } = new HashSet<Schedule>();
     public ICollection<Activity> Activities { get; set; } = new HashSet<Activity>();
-    public ICollection<Plant> Plants { get; set; } = new HashSet<Plant>();
-    public ICollection<Device> Devices { get; set; } = new HashSet<Device>();
     public ICollection<Settlement> Settlements { get; set; } = new HashSet<Settlement>();
 }

@@ -1,9 +1,6 @@
-﻿
-using ProjectManager.Application.SubContractors.Commands.EditSubContractor;
-using ProjectManager.Application.Tools.Queries.GetRents;
+﻿using ProjectManager.Application.Tools.Queries.GetRents;
 using ProjectManager.Application.Tools.Queries.GetTools;
 using ProjectManager.Application.Tools.Queries.GetUserRents;
-using ProjectManager.Application.Users.Extensions;
 using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Tools.Extensions;
@@ -19,6 +16,7 @@ public static class ToolExtensions
         {
             Id = tool.Id,
             Name = tool.Name,
+            Manufacturer = tool.Manufacturer,
             SerialNumber = tool.SerialNumber,
             ToolStatus = tool.ToolStatus,
             ValidDate = tool.ValidDate ?? DateTime.Today

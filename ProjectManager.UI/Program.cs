@@ -1,14 +1,10 @@
 using AspNetCore.ReCaptcha;
 using DataTables.AspNet.AspNetCore;
-using FluentValidation;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using NLog.Web;
 using ProjectManager.Application;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Settlements.Commands.AddSettlement;
 using ProjectManager.Infrastructure;
-using ProjectManager.Infrastructure.Services.SignalR;
 using ProjectManager.UI.Extensions;
 using ProjectManager.UI.Middlewares;
 

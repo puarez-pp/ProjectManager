@@ -6,8 +6,13 @@
 @model List<ToolRentsDto>
 
 @{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     ViewData["Title"] = ViewBag.ToolName;
     var userId = currentUserService.UserId;
+}
+
+@section Styles {
+    <partial name="Styles/_DataTablesStyles" />
 }
 
 <!-- Modale -->
@@ -32,8 +37,19 @@
 </div>
 
 @section Scripts {
+    <partial name="Scripts/_DataTablesScripts" />
     <script>
-     
+        $(document).ready(function () {
+               $('#toolsTable').DataTable({
+                   paging: true,
+                   searching: true,
+                   info: false,
+                   ordering: false,
+                   language: {
+                       url: `/lib/datatables/lang/${'@locale'}.json`
+                   }
+               });
+           });
 
     </script>
 }

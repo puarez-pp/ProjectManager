@@ -19,7 +19,6 @@ public static class DeviceHeaderExtensions
             Id = plant.Id,
             Name = plant.Name,
             Location = plant.Location,
-            User = (plant.User.ToUserDto()).FullName,
             CreatedAt = plant.CreatedAt
         };
     }

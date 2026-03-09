@@ -1,12 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectManager.Application.Plants.Commands.EditPlant;
 
@@ -35,7 +29,6 @@ public class EditPlantCommandHandler : IRequestHandler<EditPlantCommand>
         plant.Id = request.Id;
         plant.Name = request.Name;
         plant.Location = request.Location;
-        plant.UserId = _currentUser.UserId;
         plant.CreatedAt = _dateTime.Now;
 
         await _context.SaveChangesAsync(cancellationToken);

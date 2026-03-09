@@ -39,6 +39,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Activity> Activities { get; set; }
     public DbSet<Predecessor> Predecessors { get; set; }
+    public DbSet<Assumption> Assumptions { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
+    public DbSet<Settlement> Settlements { get; set; }
+    public DbSet<WorkScope> WorkScopes { get; set; }
+    public DbSet<WorkScopeCost> WorkScopeCosts { get; set; }
+    public DbSet<WorkScopeOffer> WorkScopeOffers { get; set; }
+    public DbSet<WorkScopePositionTemplate> WorkScopePositionTemplates { get; set; }
+    public DbSet<WorkScopeTemplate> WorkScopeTemplates { get; set; }
+    public DbSet<ProjectScopeTemplate> ProjectScopeTemplates { get; set; }
+    public DbSet<ProjectScopePositionTemplate> ProjectScopePositionTemplates { get; set; }
     public DbSet<Plant> Plants { get; set; }
     public DbSet<Device> Devices { get; set; }
     public DbSet<DeviceTemplate> DeviceTemplates { get; set; }
@@ -50,16 +60,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<HeatCounter> HeatCounters { get; set; }
     public DbSet<GasCounter> GasCounters { get; set; }
     public DbSet<Engine> Engines { get; set; }
-    public DbSet<Assumption> Assumptions { get; set; }
-    public DbSet<Invoice> Invoices { get; set; }
-    public DbSet<Settlement> Settlements { get; set; }
-    public DbSet<WorkScope> WorkScopes { get; set; }
-    public DbSet<WorkScopeCost> WorkScopeCosts { get; set; }
-    public DbSet<WorkScopeOffer> WorkScopeOffers { get; set; }
-    public DbSet<WorkScopePositionTemplate> WorkScopePositionTemplates { get; set; }
-    public DbSet<WorkScopeTemplate> WorkScopeTemplates { get; set; }
-    public DbSet<ProjectScopeTemplate> ProjectScopeTemplates { get; set; }
-    public DbSet<ProjectScopePositionTemplate> ProjectScopePositionTemplates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -71,12 +71,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         modelBuilder.SeedSettingsPosition();
         modelBuilder.SeedRoles();
         modelBuilder.SeedSubContractor();
-        modelBuilder.SeedTemplates();
-        modelBuilder.SeedTemplatePositions();
         modelBuilder.SeedWorkScopeTemplates();
         modelBuilder.SeedWorkScopePositionTemplates();
         modelBuilder.SeedProjectScopeTemplates();
         modelBuilder.SeedProjectScopePositionTemplates();
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.SeedTemplates();
+        modelBuilder.SeedTemplatePositions();
 
         base.OnModelCreating(modelBuilder);
     }

@@ -4,11 +4,17 @@
 @model List<UserRentsDto>
 
 @{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     ViewData["Title"] = "Rejestr wypożyczeń";
+}
+
+@section Styles {
+    <partial name="Styles/_DataTablesStyles" />
 }
 
 <!-- Modale -->
 <partial name="Modals/_ReturnToolModal" />
+
 
 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
     <h4 class="mb-0 d-flex align-items-center edit-link">
@@ -28,7 +34,19 @@
 </div>
 
 @section Scripts {
+    <partial name="Scripts/_DataTablesScripts" />
     <script>
+        $(document).ready(function () {
+            $('#userTable').DataTable({
+                paging: true,
+                searching: true,
+                info: false,
+                ordering: false,
+                language: {
+                    url: `/lib/datatables/lang/${'@locale'}.json`
+                }
+            });
+        });
         
     </script>
     <script src="~/js/tool.js"></script>

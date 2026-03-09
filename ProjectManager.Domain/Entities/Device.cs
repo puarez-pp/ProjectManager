@@ -10,8 +10,6 @@ public class Device
     public Plant Plant { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public string UserId { get; set; }
-    public ApplicationUser User { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsConfigured { get; set; }
     public ICollection<Engine> LogEngines { get; set; } = new HashSet<Engine>();

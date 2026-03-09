@@ -10,12 +10,6 @@ class PlantConfiguration : IEntityTypeConfiguration<Plant>
     {
         builder.ToTable("Plant");
 
-        builder
-           .HasOne(x => x.User)
-           .WithMany(x => x.Plants)
-           .HasForeignKey(x => x.UserId)
-           .OnDelete(DeleteBehavior.Restrict);
-
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(200);
