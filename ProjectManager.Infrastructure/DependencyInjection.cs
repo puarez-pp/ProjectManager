@@ -77,6 +77,7 @@ public static class DependencyInjection
         services.AddSingleton<IUserNotification, UserNotification>();
         services.AddScoped<IFinanceService, FinanceService>();
         services.AddScoped<ISettlementService, SettlementService>();
+        services.AddScoped<ICriticalPathService, CriticalPathService>();
 
 
         return services;

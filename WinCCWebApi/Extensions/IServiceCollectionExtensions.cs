@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using Microsoft.OpenApi.Models;
+using System.Globalization;
+using WinCCWebApi.Model;
 
 namespace WinCCWebApi.Extensions;
 
@@ -21,5 +23,26 @@ public static class IServiceCollectionExtensions
             options.SupportedCultures = supportedCultures;
             options.SupportedUICultures = supportedCultures;
         });
+    }
+
+    public static void AddSwaggerBearerAuthorization(this IServiceCollection service)
+    {
+        service.AddSwaggerGen(swagger =>
+        {
+            swagger.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "ASP.NET 6.0 WinCCWebApi 1"
+            });
+            swagger.SwaggerDoc("v2", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "ASP.NET 6.0 WinCCWebApi 2"
+            });
+            swagger.ResolveConflictingActions(x => x.First());
+            swagger.OperationFilter<RemoveVersionFromParameter>();
+            swagger.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+        });
+       
     }
 }

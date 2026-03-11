@@ -1,0 +1,45 @@
+public class GetCriticalPathQueryHandler 
+    : IRequestHandler<GetCriticalPathQuery, List<ScheduleTaskDto>>
+{
+    private readonly IScheduleRepository _scheduleRepository;
+    private readonly ICriticalPathService _criticalPathService;
+
+    public GetCriticalPathQueryHandler(
+        IScheduleRepository scheduleRepository,
+        ICriticalPathService criticalPathService)
+    {
+        _scheduleRepository = scheduleRepository;
+        _criticalPathService = criticalPathService;
+    }
+
+    public async Task<List<ScheduleTaskDto>> Handle(
+        GetCriticalPathQuery request, 
+        CancellationToken cancellationToken)
+    {
+        var schedule = await _scheduleRepository.GetByIdAsync(request.ScheduleId);
+
+        var tasks = schedule.Stages
+            .SelectMany(s => s.Tasks)
+            .ToList();
+
+        var criticalPath = _criticalPathService.CalculateCriticalPath(tasks);
+
+        return criticalPath
+            .Select(t => new ScheduleTaskDto(t))
+            .ToList();
+    }
+}
+jak wykorzystać
+[HttpGet("{scheduleId}/critical-path")]
+public async Task<ActionResult<CriticalPathResult>> GetCriticalPath(Guid scheduleId)
+{
+    var result = await _mediator.Send(new GetCriticalPathQuery(scheduleId));
+    return Ok(result);
+}
+
+[HttpGet]
+    public async Task<IActionResult> CriticalPath(Guid id)
+    {
+        var result = await _mediator.Send(new GetCriticalPathQuery(id));
+        return View(result);
+    }

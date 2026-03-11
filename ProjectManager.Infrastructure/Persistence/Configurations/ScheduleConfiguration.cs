@@ -11,17 +11,19 @@ class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
         builder.ToTable("Schedules");
 
         builder
-            .HasOne(x => x.User)
-            .WithMany(x => x.Schedules)
-            .HasForeignKey(x => x.UserID)
-            .OnDelete(DeleteBehavior.Restrict);
-        builder
            .HasOne(x => x.Project)
            .WithMany(x => x.Schedules)
            .HasForeignKey(x => x.ProjectId)
            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(x => x.Title)
+        builder
+           .HasOne(x => x.User)
+           .WithMany(x => x.Schedules)
+           .HasForeignKey(x => x.UserId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(x => x.Name)
+            .IsRequired()
             .HasMaxLength(200);
 
     }

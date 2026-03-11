@@ -36,9 +36,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<PositionPost> PositionPosts { get; set; }
     public DbSet<Tool> Tools { get; set; }
     public DbSet<ToolRent> Rents { get; set; }
-    public DbSet<Schedule> Schedules { get; set; }
-    public DbSet<Activity> Activities { get; set; }
-    public DbSet<Predecessor> Predecessors { get; set; }
     public DbSet<Assumption> Assumptions { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<Settlement> Settlements { get; set; }
@@ -60,6 +57,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<HeatCounter> HeatCounters { get; set; }
     public DbSet<GasCounter> GasCounters { get; set; }
     public DbSet<Engine> Engines { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<ScheduleStage> ScheduleStages { get; set; }
+    public DbSet<ScheduleTask> ScheduleTasks {  get; set; }
+    public DbSet<TaskDependency> TaskDependencies {  get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,6 +79,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.SeedTemplates();
         modelBuilder.SeedTemplatePositions();
+        
 
         base.OnModelCreating(modelBuilder);
     }

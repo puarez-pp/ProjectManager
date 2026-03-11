@@ -48,6 +48,10 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<HeatCounter> HeatCounters { get; set; }
         DbSet<GasCounter> GasCounters { get; set; }
         DbSet<Engine> Engines { get; set; }
+        DbSet<Schedule> Schedules { get; set; }
+        DbSet<ScheduleStage> ScheduleStages { get; set; }
+        DbSet<ScheduleTask> ScheduleTasks { get; set; }
+        DbSet<TaskDependency> TaskDependencies { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

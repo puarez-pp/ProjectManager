@@ -4,7 +4,7 @@ namespace ProjectManager.Application.Devices.Queries.GetDevice;
 
 public class GasCounterDto : IDeviceParam
 {
-    public Guid Id { get; set; }
+    public long Id { get; set; }
     public DateTime TimeStamp { get; set; }
     public float Parametr1 { get; set; }
     public float Parametr2 { get; set; }

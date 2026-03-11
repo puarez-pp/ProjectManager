@@ -15,6 +15,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.6" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
@@ -27,6 +28,12 @@
 
   <ItemGroup>
     <None Include="Settlements\Commands\AddWorkScopeOffer\AddWorkScopeOfferCommand.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Schedules\Extension\" />
+    <Folder Include="Schedules\Queries\GetStages\" />
+    <Folder Include="Schedules\Queries\GetTasks\" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
 public class GasCounter
 {
-    public Guid Id { get; set; }
+    public long Id { get; set; }
     public int DeviceId { get; set; }
     public Device Device { get; set; }
     public DateTime TimeStamp { get; set; }

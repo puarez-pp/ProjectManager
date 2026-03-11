@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
-using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Devices.Commands.AddDevice;
 

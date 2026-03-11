@@ -1,0 +1,35 @@
+﻿@using ProjectManager.Application.Schedules.Dto
+@model CriticalPathResultDto
+
+<h2>Ścieżka krytyczna</h2>
+
+@await Html.PartialAsync("_GanttWithDependencies", Model)
+
+<h4>Szczegóły CPM</h4>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Zadanie</th>
+            <th>ES</th>
+            <th>EF</th>
+            <th>LS</th>
+            <th>LF</th>
+            <th>Slack</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model.Tasks.OrderBy(x => x.ES))
+        {
+            var critical = t.IsCritical ? "table-danger" : "";
+            <tr class="@critical">
+                <td>@t.Name</td>
+                <td>@t.ES</td>
+                <td>@t.EF</td>
+                <td>@t.LS</td>
+                <td>@t.LF</td>
+                <td>@t.Slack</td>
+            </tr>
+        }
+    </tbody>
+</table>

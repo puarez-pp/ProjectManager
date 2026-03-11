@@ -1,0 +1,163 @@
+﻿@model CriticalPathResultDto
+@using System.Text.Json
+@using ProjectManager.Application.Schedules.Dto
+
+@{
+    var tasksJson = JsonSerializer.Serialize(Model.Tasks);
+}
+
+<div class="mb-3">
+    <h4>Wykres Gantta z zależnościami</h4>
+
+    <div class="d-flex gap-3 mb-2">
+        <span class="badge bg-danger">Ścieżka krytyczna</span>
+        <span class="badge bg-primary">Zadania niekrytyczne</span>
+        <span class="badge bg-dark">Strzałki zależności</span>
+    </div>
+
+    <div id="gantt-wrapper" style="position: relative;">
+        <svg id="gantt-arrows" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></svg>
+
+        <div id="gantt-container" class="border p-2"
+             style="position: relative; height: 500px; overflow-y: auto;">
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .gantt-row {
+            position: relative;
+            height: 32px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .gantt-label {
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 180px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            height: 18px;
+            top: 7px;
+            border-radius: 4px;
+        }
+
+        .gantt-bar-critical {
+            background-color: #dc3545;
+        }
+
+        .gantt-bar-normal {
+            background-color: #0d6efd;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        (function () {
+            const tasks = @Html.Raw(tasksJson);
+
+            if (!tasks || tasks.length === 0) {
+                document.getElementById('gantt-container').innerHTML = '<p>Brak danych.</p>';
+                return;
+            }
+
+            const container = document.getElementById('gantt-container');
+            const arrowsSvg = document.getElementById('gantt-arrows');
+
+            const validTasks = tasks.filter(t => t.plannedStart && t.plannedEnd);
+
+            const minStart = Math.min(...validTasks.map(t => new Date(t.plannedStart).getTime()));
+            const maxEnd = Math.max(...validTasks.map(t => new Date(t.plannedEnd).getTime()));
+
+            const totalMs = maxEnd - minStart;
+            const pxPerMs = 800 / totalMs;
+
+            const barPositions = {}; // TaskId → { x, y, width }
+
+            validTasks
+                .sort((a, b) => new Date(a.plannedStart) - new Date(b.plannedStart))
+                .forEach((t, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'gantt-row';
+
+                    const label = document.createElement('div');
+                    label.className = 'gantt-label';
+                    label.textContent = t.name;
+
+                    const bar = document.createElement('div');
+                    bar.className = 'gantt-bar ' + (t.isCritical ? 'gantt-bar-critical' : 'gantt-bar-normal');
+
+                    const start = new Date(t.plannedStart).getTime();
+                    const end = new Date(t.plannedEnd).getTime();
+
+                    const left = (start - minStart) * pxPerMs;
+                    const width = Math.max((end - start) * pxPerMs, 4);
+
+                    bar.style.left = (180 + left) + 'px';
+                    bar.style.width = width + 'px';
+
+                    barPositions[t.taskId] = {
+                        x: 180 + left + width,
+                        y: index * 32 + 16,
+                        startX: 180 + left,
+                        width: width
+                    };
+
+                    row.appendChild(label);
+                    row.appendChild(bar);
+                    container.appendChild(row);
+                });
+
+            // Rysowanie strzałek
+            validTasks.forEach(t => {
+                const from = barPositions[t.taskId];
+                if (!from) return;
+
+                t.successorIds.forEach(succId => {
+                    const to = barPositions[succId];
+                    if (!to) return;
+
+                    const startX = from.x;
+                    const startY = from.y;
+
+                    const endX = to.startX;
+                    const endY = to.y;
+
+                    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    arrow.setAttribute("stroke", "#000");
+                    arrow.setAttribute("stroke-width", "1.5");
+                    arrow.setAttribute("fill", "none");
+
+                    const midX = (startX + endX) / 2;
+
+                    const d = `
+                        M ${startX} ${startY}
+                        C ${midX} ${startY}, ${midX} ${endY}, ${endX} ${endY}
+                    `;
+
+                    arrow.setAttribute("d", d);
+
+                    const arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    arrowHead.setAttribute("points", `
+                        ${endX},${endY}
+                        ${endX - 6},${endY - 4}
+                        ${endX - 6},${endY + 4}
+                    `);
+                    arrowHead.setAttribute("fill", "#000");
+
+                    arrowsSvg.appendChild(arrow);
+                    arrowsSvg.appendChild(arrowHead);
+                });
+            });
+        })();
+    </script>
+}

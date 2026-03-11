@@ -4,7 +4,7 @@ namespace ProjectManager.Domain.Entities;
 
 public class Alarm
 {
-    public Guid Id { get; set; }
+    public long Id { get; set; }
     public AlarmType AlarmType { get; set; }
     public int DeviceId { get; set; }
     public Device Device { get; set; }
