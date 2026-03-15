@@ -1,0 +1,14 @@
+﻿@using ProjectManager.Application.Schedules.Commands.CreateSchedule
+@model ScheduleEditVm
+@{
+    ViewData["Title"] = "Nowy harmonogram";
+}
+
+<div class="card card-primary card-border-top">
+    @Html.PartialAsync("~/Views/Basics/Schedule/Partial/_ScheduleEditForm.cshtml", Model)
+</div>
+
+@section Scripts {
+    <script src="~/js/schedule/schedule-edit.js"></script>
+}
+

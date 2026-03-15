@@ -31,8 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Schedules\Commands\AddStage\" />
+    <Folder Include="Schedules\Commands\AddTask\" />
     <Folder Include="Schedules\Extension\" />
-    <Folder Include="Schedules\Queries\GetStages\" />
+    <Folder Include="Schedules\Queries\GetCriticalPath\" />
     <Folder Include="Schedules\Queries\GetTasks\" />
   </ItemGroup>
 

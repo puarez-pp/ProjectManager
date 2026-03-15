@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManager.Application.Schedules.Commands.AddStage;
-using ProjectManager.Application.Schedules.Commands.AddTask;
+using ProjectManager.Application.Schedules.Commands.CreateSchedule;
 using ProjectManager.Application.Schedules.Commands.UpdateTaskStatus;
-using ProjectManager.Application.Schedules.CriticalPath;
+using ProjectManager.Application.Schedules.Queries.GetAddSchedule;
 using ProjectManager.Application.Schedules.Queries.GetSchedule;
+using ProjectManager.Application.Schedules.Queries.GetSchedules;
 
 namespace ProjectManager.UI.Controllers;
 
@@ -18,65 +18,54 @@ public class ScheduleController : BaseController
         _logger = logger;
     }
 
-    public async Task<IActionResult> Schedule (int id)
+    public async Task<IActionResult> Schedules(int projectId)
     {
-        return View(await Mediator.Send(new GetScheduleQuery { Id = id}));
+        var vm = await Mediator.Send(new GetSchedulesQuery { ProjectId = projectId});
+        ViewBag.ProjectId = projectId;
+        return View(vm);
     }
 
-
-    public async Task<IActionResult> StageList(int scheduleId)
+    public async Task<IActionResult> Schedule(int id)
     {
-        var vm = await Mediator.Send(new GetScheduleQuery {Id = scheduleId });
-        return PartialView("_StageList", vm.Stages);
+        var vm = await Mediator.Send(new GetScheduleQuery { Id = id});
+        return View(vm);
     }
 
-    public async Task<IActionResult> CriticalPath(int id)
+    [HttpGet]
+    public IActionResult Create(int projectId)
     {
-        var result = await Mediator.Send(new GetCriticalPathQuery { ScheduleId = id});
-        return View(result);
+        var vm = new ScheduleEditVm { ProjectId = projectId };
+        return View(vm);
     }
-
-    //public async Task<IActionResult> TaskList(Guid stageId)
-    //{
-    //    var vm = await Mediator.Send(new GetTasksQuery(stageId));
-    //    return PartialView("_TaskList", vm);
-    //}
-
 
     [HttpPost]
-    public async Task<IActionResult> AddStage(AddStageCommand command)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ScheduleEditVm model)
     {
-        var result = await MediatorSendValidate(command);
-        if(!result.IsValid)
-            return View(command);
+        if (!ModelState.IsValid)
+            return View(model);
 
-        var vm = await Mediator.Send(new GetScheduleQuery { Id = command.ScheduleId });
-        return PartialView("_StageList", vm.Stages);
+        var id = await Mediator.Send(new CreateScheduleCommand { Model = model});
+        return RedirectToAction(nameof(Schedule), new { id });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var vm = await Mediator.Send(new GetEditScheduleQuery { Id = id});
+        return View(vm);
+    }
 
-    //[HttpPost]
-    //public async Task<IActionResult> AddTask(AddTaskCommand command)
-    //{
-    //    var result = await MediatorSendValidate(command);
-    //    if (!result.IsValid)
-    //        return View(command);
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(ScheduleEditVm model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
 
-    //    var tasks = await Mediator.Send(new GetTasksQuery(command.StageId));
-    //    return PartialView("_TaskList", tasks);
-    //}
-
-
-    //[HttpPost]
-    //public async Task<IActionResult> UpdateTaskStatus(UpdateTaskStatusCommand command)
-    //{
-    //    var result = await MediatorSendValidate(command);
-    //    if (!result.IsValid)
-    //        return View(command);
-
-    //    var tasks = await Mediator.Send(new GetTasksQuery(command.StageId));
-    //    return PartialView("_TaskList", tasks);
-    //}
+        await Mediator.Send(new UpdateScheduleCommand { Model = model});
+        return RedirectToAction(nameof(Schedule), new { id = model.Id });
+    }
 
 }
 

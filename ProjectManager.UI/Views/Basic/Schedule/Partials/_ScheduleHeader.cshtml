@@ -1,0 +1,19 @@
+﻿@using ProjectManager.Application.Schedules.Queries.GetSchedule
+@model ScheduleVm
+
+<div class="schedule-header" data-schedule-id="@Model.Id">
+    <h2 class="mb-1">
+        <i class="fa fa-calendar-alt"></i> @Model.Name
+    </h2>
+    <div class="text-muted small">
+        Projekt: @Model.ProjectName |
+        Utworzony: @Model.CreatedAt.ToString("yyyy-MM-dd") |
+        Ostatnia edycja: @Model.EditAt.ToString("yyyy-MM-dd")
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.Comment))
+    {
+        <div class="mt-2">
+            @Model.Comment
+        </div>
+    }
+</div>

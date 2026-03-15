@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Schedules.Dto;
 
 namespace ProjectManager.Application.Schedules.Queries.GetSchedules;
 
-public class GetSchedulesQueryHandler : IRequestHandler<GetSchedulesQuery, IEnumerable<ScheduleBasicsDto>>
+public class GetSchedulesQueryHandler : IRequestHandler<GetSchedulesQuery, List<ScheduleDto>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -14,16 +15,23 @@ public class GetSchedulesQueryHandler : IRequestHandler<GetSchedulesQuery, IEnum
         _context = context;
     }
 
-    public async Task<IEnumerable<ScheduleBasicsDto>> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
+    public async Task<List<ScheduleDto>> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
     {
         return await _context
             .Schedules
-            .Where(x => x.ProjectId == request.ProjectId)
-            .Select(x => new ScheduleBasicsDto
+            .Where(s => s.ProjectId == request.ProjectId)
+            .OrderByDescending(s => s.CreatedAt)
+            .Select(s => new ScheduleDto
             {
-                Id = x.Id,
-                ProjectId = x.ProjectId,
-                Name = x.Name,
-            }).ToListAsync(cancellationToken);
+                Id = s.Id,
+                Name = s.Name,
+                Comment = s.Comment,
+                CreatedAt = s.CreatedAt,
+                EditAt = s.EditAt,
+                UserName = $"{s.User.FirstName} {s.User.LastName}",
+                StagesCount = s.Stages.Count(),
+                TasksCount = s.Stages.SelectMany(s => s.Tasks).Count()
+            })
+            .ToListAsync(cancellationToken);
     }
 }

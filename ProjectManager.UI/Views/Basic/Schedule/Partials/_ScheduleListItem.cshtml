@@ -1,0 +1,26 @@
+﻿@using ProjectManager.Application.Schedules.Dto
+@model ScheduleDto
+
+<tr data-schedule-id="@Model.Id" class="schedule-list-row">
+    <td>@Model.Name</td>
+    <td>@Model.CreatedAt.ToString("yyyy-MM-dd")</td>
+    <td>@Model.EditAt.ToString("yyyy-MM-dd")</td>
+    <td>@Model.UserName</td>
+    <td>@Model.StagesCount</td>
+    <td>@Model.TasksCount</td>
+    <td class="text-end">
+        <button class="btn btn-sm btn-outline-primary"
+                type="button"
+                onclick="location.href='@Url.Action("Schedule", "Schedule", new { id = Model.Id })'">
+            <i class="fa fa-eye"></i>
+        </button>
+
+        <button class="btn btn-sm btn-outline-secondary"
+                type="button"
+                onclick="location.href='@Url.Action("Edit", "Schedule", new { id = Model.Id })'">
+            <i class="fa fa-edit"></i>
+        </button>
+    </td>
+</tr>
+
+

@@ -1,46 +1,69 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Schedules.Dto;
 
 namespace ProjectManager.Application.Schedules.Queries.GetSchedule;
 
-public class GetScheduleQueryHandler : IRequestHandler<GetScheduleQuery, ScheduleDto>
+public class GetScheduleQueryHandler : IRequestHandler<GetScheduleQuery, ScheduleVm>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICriticalPathService _criticalPath;
 
-    public GetScheduleQueryHandler(IApplicationDbContext context)
+    public GetScheduleQueryHandler(IApplicationDbContext context,
+        ICriticalPathService criticalPath)
     {
         _context = context;
+        _criticalPath = criticalPath;
     }
 
-    public async Task<ScheduleDto> Handle(GetScheduleQuery request, CancellationToken cancellationToken)
+    public async Task<ScheduleVm> Handle(GetScheduleQuery request, CancellationToken cancellationToken)
     {
-        return await _context
-           .Schedules
-           .Where(x => x.Id == request.Id)
-           .Select(x => new ScheduleDto
-           {
-               Id = x.Id,
-               ProjectId = x.ProjectId,
-               Name = x.Name,
-               Comment = x.Comment,
-               Stages = x.Stages.Select(s => new StageDto
-               {
-                   Id = s.Id,
-                   Name = s.Name,
-                   PlannedStart = s.PlannedStart,
-                   PlannedEnd = s.PlannedEnd,
-                   Tasks = s.Tasks.Select(t => new TaskDto
-                   {
-                       Id = t.Id,
-                       Name = t.Name,
-                       Status = t.Status,
-                       PlannedStart = t.PlannedStart,
-                       PlannedEnd = t.PlannedEnd
-                   }).ToList()
-               }).ToList()
-           })
-           .FirstOrDefaultAsync(cancellationToken);
+        var schedule = await _context.Schedules
+            .Include(s => s.Stages)
+                .ThenInclude(st => st.Tasks)
+                    .ThenInclude(t => t.Dependencies)
+            .FirstOrDefaultAsync(s => s.Id == request.Id);
+
+        var allTasks = schedule.Stages.SelectMany(st => st.Tasks).ToList();
+        var cpmResult = _criticalPath.CalculateDetailedCriticalPathDto(allTasks);
+
+        var criticalIds = cpmResult.Tasks
+            .Where(t => t.Slack == TimeSpan.Zero)
+            .Select(t => t.TaskId)
+            .ToHashSet();
+
+        return new ScheduleVm
+        {
+            Id = schedule.Id,
+            Name = schedule.Name,
+            Comment = schedule.Comment,
+            ProjectName = schedule.Project.Name,
+            CreatedAt = schedule.CreatedAt,
+            EditAt = schedule.EditAt,
+            CriticalPath = cpmResult,
+            Stages = schedule.Stages
+                .OrderBy(st => st.Order)
+                .Select(st => new ScheduleStageVm
+                {
+                    Id = st.Id,
+                    Name = st.Name,
+                    Order = st.Order,
+                    PlannedStart = st.PlannedStart,
+                    PlannedEnd = st.PlannedEnd,
+                    Tasks = st.Tasks
+                        .OrderBy(t => t.Order)
+                        .Select(t => new ScheduleTaskVm
+                        {
+                            Id = t.Id,
+                            Name = t.Name,
+                            PlannedStart = t.PlannedStart,
+                            PlannedEnd = t.PlannedEnd,
+                            AssignedUser = $"{ t.AssignedUser.FirstName } { t.AssignedUser.LastName}",
+                            IsCritical = criticalIds.Contains(t.Id),
+                            Slack = cpmResult.Tasks
+                                .First(x => x.TaskId == t.Id).Slack
+                        }).ToList()
+                }).ToList()
+        };
     }
 }

@@ -1,0 +1,34 @@
+﻿@using ProjectManager.Application.Schedules.Queries.GetSchedule
+@model ScheduleVm
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    @Html.PartialAsync("~/Views/Basics/Schedule/Partial/_ScheduleListItem.cshtml", Model)
+    <button class="btn btn-secondary"
+            type="button"
+            onclick="location.href='@Url.Action("Edit", "Schedule", new { id = Model.Id })'">
+        <i class="fa fa-edit"></i>
+    </button>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h5>Struktura</h5>
+        @* Lista etapów i zadań (read-only) *@
+        @* @await Component.InvokeAsync("_ScheduleStageList", new { scheduleId = Model.Id }) *@
+    </div>
+
+    <div class="col-md-8">
+        <h5>Szczegóły / Gantt (placeholder)</h5>
+        <div id="schedule-gantt-container"
+             data-schedule-id="@Model.Id">
+            @* tutaj docelowo mini-gantt / timeline *@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/schedule/schedule-details.js"></script>
+}

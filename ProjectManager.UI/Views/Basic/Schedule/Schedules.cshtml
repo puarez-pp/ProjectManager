@@ -1,0 +1,44 @@
+﻿@using ProjectManager.Application.Schedules.Dto
+@model List<ScheduleDto>
+@{
+    ViewData["Title"] = "Harmonogramy";
+    var projectId = (int)ViewBag.ProjectId;
+}
+<!-- NAGŁÓWEK KARTY -->
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+    <h4 class="mb-0 d-flex align-items-center">
+        <i class="fas fa-folder-open me-2"></i>
+    </h4>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-light btn-sm"
+                type="button"
+                onclick="location.href='@Url.Action("Create", "Schedule", new { id = projectId })'">
+            <i class="fa fa-plus"></i> Nowy harmonogram
+        </button>
+    </div>
+</div>
+
+<table class="table table-hover" id="schedule-list-table"
+       data-project-id="@projectId">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Utworzony</th>
+            <th>Ostatnia edycja</th>
+            <th>Utworzył</th>
+            <th>Etapy</th>
+            <th>Zadania</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            @Html.PartialAsync("~/Views/Basics/Schedule/Partial/_ScheduleListItem.cshtml", s)
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/js/schedule/schedule-list.js"></script>
+}
