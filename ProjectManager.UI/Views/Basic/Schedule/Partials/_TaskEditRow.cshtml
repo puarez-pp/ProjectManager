@@ -1,1 +1,47 @@
-﻿
+﻿@using ProjectManager.Application.Schedules.Commands.CreateSchedule
+@model ScheduleTaskEditVm
+@{
+    var sIndex = (string)ViewData["stageIndex"];
+    var tIndex = (string)ViewData["taskIndex"];
+}
+
+<div class="row align-items-end mb-2 schedule-task-edit"
+     data-stage-index="@sIndex"
+     data-task-index="@tIndex">
+    <input type="hidden"
+           name="Stages[@sIndex].Tasks[@tIndex].Order"
+           value="@Model.Order" />
+
+    <div class="col-4">
+        <label class="form-label">Nazwa</label>
+        <input name="Stages[@sIndex].Tasks[@tIndex].Name"
+               value="@Model.Name"
+               class="form-control" />
+    </div>
+    <div class="col-4">
+        <label class="form-label">Opis</label>
+        <input name="Stages[@sIndex].Tasks[@tIndex].Description"
+               value="@Model.Description"
+               class="form-control" />
+    </div>
+    <div class="col-2">
+        <label class="form-label">Start</label>
+        <input type="date"
+               name="Stages[@sIndex].Tasks[@tIndex].PlannedStart"
+               value="@(Model.PlannedStart?.ToString("yyyy-MM-dd"))"
+               class="form-control" />
+    </div>
+    <div class="col-2">
+        <label class="form-label">Koniec</label>
+        <div class="d-flex gap-1">
+            <input type="date"
+                   name="Stages[@sIndex].Tasks[@tIndex].PlannedEnd"
+                   value="@(Model.PlannedEnd?.ToString("yyyy-MM-dd"))"
+                   class="form-control" />
+            <button type="button"
+                    class="btn btn-outline-danger js-remove-task">
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>

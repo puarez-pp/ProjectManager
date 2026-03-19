@@ -25,11 +25,19 @@
             @Model.Project.Name
         </a>
     </h4>
-    <button class="btn btn-outline-light"
-            type="button"
-            onclick="location.href='@Url.Action("Dashboard", "User")'">
-        <i class="fa-solid fa-id-card"></i> Mój panel
-    </button>
+    <div>
+        <button class="btn btn-outline-light"
+                type="button"
+                onclick="location.href='@Url.Action("Dashboard", "User")'">
+            <i class="fa-solid fa-id-card"></i> Mój panel
+        </button>
+
+        <button class="btn btn-outline-light"
+                type="button"
+                onclick="location.href='@Url.Action("AddTodo", "Todo", new { id = Model.Project.Id })'">
+            <i class="fas fa-circle-plus me-1"></i> Dodaj zadanie
+        </button>
+    </div>
 </div>
 
 <div id="todosContainer">

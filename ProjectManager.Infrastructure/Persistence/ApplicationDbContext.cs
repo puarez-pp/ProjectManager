@@ -76,7 +76,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         modelBuilder.SeedWorkScopePositionTemplates();
         modelBuilder.SeedProjectScopeTemplates();
         modelBuilder.SeedProjectScopePositionTemplates();
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.SeedTemplates();
         modelBuilder.SeedTemplatePositions();
         

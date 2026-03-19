@@ -24,6 +24,35 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    RegisterDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Clients",
                 columns: table => new
                 {
@@ -52,6 +81,21 @@ namespace ProjectManager.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Files", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Plant",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plant", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,7 +180,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ToolStatus = table.Column<int>(type: "int", nullable: false),
                     DateOfPurchase = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ValidDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ValidDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,6 +225,139 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeEvents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Start = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    End = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsFullDay = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmployeeEvents_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Position = table.Column<int>(type: "int", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ManagerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    WebsiteUrl = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
+                    WebsiteRaw = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employees_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
                 {
@@ -199,6 +376,95 @@ namespace ProjectManager.Infrastructure.Migrations
                         name: "FK_Addresses_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserPMId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DesignEngId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ElectricEngId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserUpdatorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ProjectType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Number = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Sharepoint = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EditAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FinishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_DesignEngId",
+                        column: x => x.DesignEngId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_ElectricEngId",
+                        column: x => x.ElectricEngId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_UserPMId",
+                        column: x => x.UserPMId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_UserUpdatorId",
+                        column: x => x.UserUpdatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Devices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DeviceType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    PlantId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsConfigured = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Devices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Devices_Plant_PlantId",
+                        column: x => x.PlantId,
+                        principalTable: "Plant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -316,313 +582,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkScopePositionTemplates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    WorkScopeTemplateId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkScopePositionTemplates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkScopePositionTemplates_WorkScopeTemplates_WorkScopeTemplateId",
-                        column: x => x.WorkScopeTemplateId,
-                        principalTable: "WorkScopeTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Activities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    Est = table.Column<int>(type: "int", nullable: false),
-                    Lst = table.Column<int>(type: "int", nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ScheduleId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Predecessor",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ActivityId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Predecessor", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Predecessor_Activities_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "Activities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Alarms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AlarmType = table.Column<int>(type: "int", nullable: false),
-                    DeviceId = table.Column<int>(type: "int", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Alarms", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    RegisterDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ScheduleId = table.Column<int>(type: "int", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EmployeeEvents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Start = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    End = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsFullDay = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmployeeEvents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EmployeeEvents_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Position = table.Column<int>(type: "int", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ManagerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
-                    WebsiteUrl = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
-                    WebsiteRaw = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Employees_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Plant",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Plant", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Plant_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Projects",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserPMId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DesignEngId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ElectricEngId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserUpdatorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ProjectType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Number = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Sharepoint = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EditAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FinishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projects_AspNetUsers_DesignEngId",
-                        column: x => x.DesignEngId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Projects_AspNetUsers_ElectricEngId",
-                        column: x => x.ElectricEngId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Projects_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Projects_AspNetUsers_UserPMId",
-                        column: x => x.UserPMId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Projects_AspNetUsers_UserUpdatorId",
-                        column: x => x.UserUpdatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Projects_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ToolRentals",
                 columns: table => new
                 {
@@ -652,32 +611,22 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Devices",
+                name: "WorkScopePositionTemplates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeviceType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    PlantId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsConfigured = table.Column<bool>(type: "bit", nullable: false)
+                    WorkScopeTemplateId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Devices", x => x.Id);
+                    table.PrimaryKey("PK_WorkScopePositionTemplates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Devices_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Devices_Plant_PlantId",
-                        column: x => x.PlantId,
-                        principalTable: "Plant",
+                        name: "FK_WorkScopePositionTemplates_WorkScopeTemplates_WorkScopeTemplateId",
+                        column: x => x.WorkScopeTemplateId,
+                        principalTable: "WorkScopeTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -744,20 +693,19 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    EditAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Schedules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Schedules_AspNetUsers_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Schedules_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -803,7 +751,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    Body = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FinishDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -825,12 +773,33 @@ namespace ProjectManager.Infrastructure.Migrations
                         name: "FK_Todos_AspNetUsers_UserToId",
                         column: x => x.UserToId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Todos_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Alarms",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AlarmType = table.Column<int>(type: "int", nullable: false),
+                    DeviceId = table.Column<int>(type: "int", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Alarms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Alarms_Devices_DeviceId",
+                        column: x => x.DeviceId,
+                        principalTable: "Devices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -862,7 +831,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "ElectricCounters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -902,7 +871,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "Engines",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1042,7 +1011,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "GasCounters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1072,7 +1041,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "HeatCounters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1102,7 +1071,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "OtherCounters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1187,6 +1156,30 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ScheduleStages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ScheduleId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    PlannedStart = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PlannedEnd = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduleStages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ScheduleStages_Schedules_ScheduleId",
+                        column: x => x.ScheduleId,
+                        principalTable: "Schedules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Assumptions",
                 columns: table => new
                 {
@@ -1240,20 +1233,14 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    Body = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     TodoId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TodoReplies", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TodoReplies_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TodoReplies_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -1262,32 +1249,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_TodoReplies_Todos_TodoId",
-                        column: x => x.TodoId,
-                        principalTable: "Todos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TodoToUsers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TodoId = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TodoToUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TodoToUsers_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TodoToUsers_Todos_TodoId",
                         column: x => x.TodoId,
                         principalTable: "Todos",
                         principalColumn: "Id",
@@ -1323,6 +1284,40 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ScheduleTasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StageId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    PlannedStart = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PlannedEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    AssignedUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduleTasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ScheduleTasks_AspNetUsers_AssignedUserId",
+                        column: x => x.AssignedUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ScheduleTasks_ScheduleStages_StageId",
+                        column: x => x.StageId,
+                        principalTable: "ScheduleStages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Invoices",
                 columns: table => new
                 {
@@ -1333,7 +1328,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     NetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     EuroNetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     EuroRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    SettlementId = table.Column<int>(type: "int", nullable: false),
                     Vendor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WorkScopeId = table.Column<int>(type: "int", nullable: false),
                     OrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -1341,12 +1335,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Invoices_Settlements_SettlementId",
-                        column: x => x.SettlementId,
-                        principalTable: "Settlements",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Invoices_WorkScopes_WorkScopeId",
                         column: x => x.WorkScopeId,
@@ -1397,7 +1385,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     WorkScopeId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true, defaultValue: ""),
                     Order = table.Column<int>(type: "int", nullable: false),
                     IsUsed = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     UnitType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
@@ -1420,6 +1408,33 @@ namespace ProjectManager.Infrastructure.Migrations
                         name: "FK_WorkScopeOffers_WorkScopes_WorkScopeId",
                         column: x => x.WorkScopeId,
                         principalTable: "WorkScopes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaskDependencies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PredecessorTaskId = table.Column<int>(type: "int", nullable: false),
+                    SuccessorTaskId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskDependencies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskDependencies_ScheduleTasks_PredecessorTaskId",
+                        column: x => x.PredecessorTaskId,
+                        principalTable: "ScheduleTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TaskDependencies_ScheduleTasks_SuccessorTaskId",
+                        column: x => x.SuccessorTaskId,
+                        principalTable: "ScheduleTasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1552,7 +1567,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 14, "Wsparcie w złożeniu pierwszego wniosku o wypłatę premii gwarantowanej", 13, 2 },
                     { 15, "Wsparcie w przygotowaniu planu przeprowadzenia testów NCRfG", 14, 2 },
                     { 16, "Przeprowadzenie testów NCRfG", 15, 2 },
-                    { 17, "Rezerwa", 16, 2 },
+                    { 17, "Inne", 16, 2 },
                     { 18, "Okablowanie potrzeb własnych zestawu kogeneracyjnego", 2, 3 },
                     { 19, "Dostawa szaf do sterowania zespołem kogeneracyjnym, urządzeń pomocniczych i synchronizacji z siecią elektroenergetyczną", 3, 3 },
                     { 20, "Wykonanie połączeń elektrycznych i AKPiA do szaf sterowania zespołem kogeneracyjnym", 4, 3 },
@@ -1561,22 +1576,22 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 23, "Wyprowadzenie mocy – SN od tranformatora do rozdzielnicy SN", 7, 3 },
                     { 24, "Modernizacja rozdzielni SN", 8, 3 },
                     { 25, "Przystosowanie szaf AKPiA na potrzeby systemu SCADA - udostępnienie sygnałów", 9, 3 },
-                    { 26, "Rezerwa", 10, 3 },
+                    { 26, "Inne", 10, 3 },
                     { 27, "Układ LT wraz z chłodnicą, orurowaniem, pompą, zaworami, armaturą,", 2, 4 },
                     { 28, "Układ HT wraz z chłodnicą, orurowaniem, pompą, zaworami, armaturą,", 3, 4 },
                     { 29, "Montaż urządzeń wchodzących w skład układu odzysku ciepła (pompy, wymiennik separacyjny, armatura odcinająca i regulacyjna, czujniki)", 4, 4 },
                     { 30, "Wykonanie orurowania", 5, 4 },
                     { 31, "Próby pomontażowe szczelności", 6, 4 },
-                    { 32, "Rezerwa", 7, 4 },
+                    { 32, "Inne", 7, 4 },
                     { 33, "Tłumik hałasu", 2, 5 },
                     { 34, "Wymiennik poziomy spaliny/woda-glikol", 3, 5 },
                     { 35, "Wykonanie i montaż komina wyrzutu spalin", 4, 5 },
                     { 36, "Diverter", 5, 5 },
-                    { 37, "Rezerwa", 6, 5 },
+                    { 37, "Inne", 6, 5 },
                     { 38, "Przewód elastyczny łączący ścieżkę gazową z silnikiem", 2, 6 },
                     { 39, "Ścieżka gazowa wewnątrz maszynowni", 3, 6 },
                     { 40, "System wykrywania niebezpiecznego stężenia gazu - MAG3", 4, 6 },
-                    { 41, "Rezerwa", 5, 6 }
+                    { 41, "Inne", 5, 6 }
                 });
 
             migrationBuilder.InsertData(
@@ -1588,7 +1603,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 43, "Płyn chłodniczy i olej", 3, 7 },
                     { 44, "Dostawa i zalanie układu olejowego olejem silnikowym.", 4, 7 },
                     { 45, "Dostawa i zalanie układu płynem chłodzącym", 5, 7 },
-                    { 46, "Rezerwa", 6, 7 },
+                    { 46, "Inne", 6, 7 },
                     { 47, "Wykonanie obudowy dźwiękochłonnej", 2, 8 },
                     { 48, "Wykonanie kompletnego układu wentylacji do obudowy", 3, 8 },
                     { 49, "Wykonanie instalacji oświetleniowej i gniazd wtyczkowych", 4, 8 },
@@ -1620,9 +1635,10 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 4, "Hasło", "SenderEmailPassword", 4, 1, 4, "" },
                     { 5, "Nazwa nadawcy", "SenderName", 5, 1, 0, "Administrator" },
                     { 6, "Login nadawcy", "SenderLogin", 6, 1, 0, "" },
-                    { 7, "Czy wyświetlać banner na stronie głównej?", "BannerVisible", 1, 2, 1, "True" },
-                    { 8, "Folor footera strona głównej", "FooterColor", 2, 2, 5, "#dc3545" },
-                    { 9, "Główny adres e-mail administratora", "AdminEmail", 3, 2, 0, "integri.pp@gmail.com" }
+                    { 7, "Czy wysłać email adresatowi nowego zadania?", "EmailOnNewTodo", 7, 1, 1, "False" },
+                    { 8, "Czy wyświetlać banner na stronie głównej?", "BannerVisible", 1, 2, 1, "True" },
+                    { 9, "Folor footera strona głównej", "FooterColor", 2, 2, 5, "#dc3545" },
+                    { 10, "Główny adres e-mail administratora", "AdminEmail", 3, 2, 0, "integri.pp@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -1642,8 +1658,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 5, "Skrzynia korbowa", "P145", 5, 1 },
                     { 6, "Odbiornik B", "P270", 6, 1 },
                     { 7, "Napięcie akumulatora", "UAKUM", 7, 1 },
-                    { 8, "Powietrze rozruchowe", "P371", 8, 1 },
-                    { 9, "Powietrze zasysane", "T203", 9, 1 }
+                    { 8, "Powietrze rozruchowe", "P371", 8, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -1651,6 +1666,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Name", "Order", "TemplateId" },
                 values: new object[,]
                 {
+                    { 9, "Powietrze zasysane", "T203", 9, 1 },
                     { 10, "Powietrze zasysane B", "T377", 10, 1 },
                     { 11, "Odbiornik", "T201", 11, 1 },
                     { 12, "Odbiornik B", "T378", 12, 1 },
@@ -1691,8 +1707,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 47, "Komora spalania B1", "T471", 47, 1 },
                     { 48, "Komora spalania B2", "T472", 48, 1 },
                     { 49, "Komora spalania B3", "T473", 49, 1 },
-                    { 50, "Komora spalania B4", "T474", 50, 1 },
-                    { 51, "Komora spalania B5", "T475", 51, 1 }
+                    { 50, "Komora spalania B4", "T474", 50, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -1700,6 +1715,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Name", "Order", "TemplateId" },
                 values: new object[,]
                 {
+                    { 51, "Komora spalania B5", "T475", 51, 1 },
                     { 52, "Komora spalania B6", "T476", 52, 1 },
                     { 53, "Komora spalania B7", "T477", 53, 1 },
                     { 54, "Komora spalania B8", "T478", 54, 1 },
@@ -1740,8 +1756,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 89, "Zadana moc czynna z SCADA", "PSCADA", 89, 1 },
                     { 90, "Zadany wspólczynnik mocy z SCADA", "PFSCADA", 90, 1 },
                     { 91, "Zadana wartość mocy czynnej - OSD", "POSD", 91, 1 },
-                    { 92, "Zadana wartość mocy biernej  - OSD", "QOSD", 92, 1 },
-                    { 93, "Zadana wartość współczynnika mocy  - OSD", "PFOSD", 93, 1 }
+                    { 92, "Zadana wartość mocy biernej  - OSD", "QOSD", 92, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -1749,6 +1764,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Name", "Order", "TemplateId" },
                 values: new object[,]
                 {
+                    { 93, "Zadana wartość współczynnika mocy  - OSD", "PFOSD", 93, 1 },
                     { 94, "Zadana wartość napięcia - OSD", "UOSD", 94, 1 },
                     { 95, "Woda grzewcza przed KWT", "T290", 95, 1 },
                     { 96, "Woda grzewcza przed AWT", "T385", 96, 1 },
@@ -1789,8 +1805,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 131, "Temperatura", "Licznik gazu", 1, 3 },
                     { 132, "Licznik Gazu Ciśnienie P1", "Licznik gazu", 2, 3 },
                     { 133, "Ciśnienie Pb", "Licznik gazu", 3, 3 },
-                    { 134, "Przepływ Qm", "Licznik gazu", 4, 3 },
-                    { 135, "Przepływ Qb", "Licznik gazu", 5, 3 }
+                    { 134, "Przepływ Qm", "Licznik gazu", 4, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -1798,6 +1813,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Name", "Order", "TemplateId" },
                 values: new object[,]
                 {
+                    { 135, "Przepływ Qb", "Licznik gazu", 5, 3 },
                     { 136, "Licznik Vm", "Licznik gazu", 6, 3 },
                     { 137, "Licznik Vb", "Licznik gazu", 7, 3 },
                     { 138, "Licznik energii", "Licznik gazu", 8, 3 },
@@ -1845,8 +1861,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 3, "Fundament", 1, 2 },
                     { 4, "Zagospodarowanie terenu", 2, 2 },
                     { 5, "Przepusty przez ścianę kotłowni", 3, 2 },
-                    { 6, "Kanalizacja deszczowa i technologiczna", 4, 2 },
-                    { 7, "Zabudowa kontenerowa", 5, 2 }
+                    { 6, "Kanalizacja deszczowa i technologiczna", 4, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -1854,6 +1869,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Order", "WorkScopeTemplateId" },
                 values: new object[,]
                 {
+                    { 7, "Zabudowa kontenerowa", 5, 2 },
                     { 8, "Rezerwa", 6, 2 },
                     { 9, "Rezerwa", 7, 2 },
                     { 10, "Obieg LT, chłodnica", 1, 3 },
@@ -1894,8 +1910,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 45, "Olej silnikowy", 36, 3 },
                     { 46, "Mieszanka Glikol/Woda 50/50", 37, 3 },
                     { 47, "Kable grzewcze", 38, 3 },
-                    { 48, "Instalacje technologiczne: gaz, ciepło - kotłownia - kogeneracja", 39, 3 },
-                    { 49, "Układ pompowy - obieg wymiennik spaliny/woda", 40, 3 }
+                    { 48, "Instalacje technologiczne: gaz, ciepło - kotłownia - kogeneracja", 39, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -1903,6 +1918,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Order", "WorkScopeTemplateId" },
                 values: new object[,]
                 {
+                    { 49, "Układ pompowy - obieg wymiennik spaliny/woda", 40, 3 },
                     { 50, "Instalacja odzysku ciepła z bloku silnika oraz spalin", 41, 3 },
                     { 51, "Instalacja odzysku ciepła - wyprowadzenie ciepła", 42, 3 },
                     { 52, "Instalacje technologiczne: gaz, ciepło - kotłownia - kogeneracja", 43, 3 },
@@ -1943,8 +1959,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 87, "Modyfikacja architektury systemu SCADA", 24, 5 },
                     { 88, "Stacja redukcji gazu", 1, 6 },
                     { 89, "Zawór kulowy", 2, 6 },
-                    { 90, "Gazex, zawór odcinający, instalacja bezpieczeństwa", 3, 6 },
-                    { 91, "Wykonanie przyłącza gazowego - od skrzynki gazowej do kontenera", 4, 6 }
+                    { 90, "Gazex, zawór odcinający, instalacja bezpieczeństwa", 3, 6 }
                 });
 
             migrationBuilder.InsertData(
@@ -1952,6 +1967,7 @@ namespace ProjectManager.Infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Order", "WorkScopeTemplateId" },
                 values: new object[,]
                 {
+                    { 91, "Wykonanie przyłącza gazowego - od skrzynki gazowej do kontenera", 4, 6 },
                     { 92, "Licznik gazu + Korektor obiętościowy ", 5, 6 },
                     { 93, "Projekt wykonawczy Elektryka / Automatyka", 1, 7 },
                     { 94, "Projekty wykonawcze kontener", 2, 7 },
@@ -1992,16 +2008,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 129, "Paliwo", 6, 17 },
                     { 130, "Rezerwa", 7, 17 }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Activities_ScheduleId",
-                table: "Activities",
-                column: "ScheduleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Activities_UserId",
-                table: "Activities",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_ClientId",
@@ -2047,11 +2053,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_ScheduleId",
-                table: "AspNetUsers",
-                column: "ScheduleId");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -2073,11 +2074,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "IX_Devices_PlantId",
                 table: "Devices",
                 column: "PlantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Devices_UserId",
-                table: "Devices",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ElectricCounters_DeviceId",
@@ -2111,11 +2107,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 column: "DeviceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_SettlementId",
-                table: "Invoices",
-                column: "SettlementId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Invoices_WorkScopeId",
                 table: "Invoices",
                 column: "WorkScopeId");
@@ -2124,11 +2115,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "IX_OtherCounters_DeviceId",
                 table: "OtherCounters",
                 column: "DeviceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Plant_UserId",
-                table: "Plant",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PositionPosts_PositionId",
@@ -2159,11 +2145,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "IX_Posts_UserId",
                 table: "Posts",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Predecessor_ActivityId",
-                table: "Predecessor",
-                column: "ActivityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_ClientId",
@@ -2231,9 +2212,24 @@ namespace ProjectManager.Infrastructure.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_UserID",
+                name: "IX_Schedules_UserId",
                 table: "Schedules",
-                column: "UserID");
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScheduleStages_ScheduleId",
+                table: "ScheduleStages",
+                column: "ScheduleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScheduleTasks_AssignedUserId",
+                table: "ScheduleTasks",
+                column: "AssignedUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScheduleTasks_StageId",
+                table: "ScheduleTasks",
+                column: "StageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SettingsPositions_SettingsId",
@@ -2258,14 +2254,19 @@ namespace ProjectManager.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_TaskDependencies_PredecessorTaskId",
+                table: "TaskDependencies",
+                column: "PredecessorTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskDependencies_SuccessorTaskId",
+                table: "TaskDependencies",
+                column: "SuccessorTaskId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TemplatePositions_TemplateId",
                 table: "TemplatePositions",
                 column: "TemplateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TodoReplies_ApplicationUserId",
-                table: "TodoReplies",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TodoReplies_TodoId",
@@ -2291,16 +2292,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "IX_Todos_UserToId",
                 table: "Todos",
                 column: "UserToId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TodoToUsers_TodoId",
-                table: "TodoToUsers",
-                column: "TodoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TodoToUsers_UserID",
-                table: "TodoToUsers",
-                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ToolRentals_ToolId",
@@ -2341,89 +2332,10 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "IX_WorkScopes_SettlementId",
                 table: "WorkScopes",
                 column: "SettlementId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Activities_AspNetUsers_UserId",
-                table: "Activities",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Activities_Schedules_ScheduleId",
-                table: "Activities",
-                column: "ScheduleId",
-                principalTable: "Schedules",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Alarms_Devices_DeviceId",
-                table: "Alarms",
-                column: "DeviceId",
-                principalTable: "Devices",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Schedules_ScheduleId",
-                table: "AspNetUsers",
-                column: "ScheduleId",
-                principalTable: "Schedules",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_DesignEngId",
-                table: "Projects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_ElectricEngId",
-                table: "Projects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_UserID",
-                table: "Projects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_UserPMId",
-                table: "Projects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_UserUpdatorId",
-                table: "Projects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Schedules_AspNetUsers_UserID",
-                table: "Schedules");
-
             migrationBuilder.DropTable(
                 name: "Addresses");
 
@@ -2485,9 +2397,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "PostReplies");
 
             migrationBuilder.DropTable(
-                name: "Predecessor");
-
-            migrationBuilder.DropTable(
                 name: "ProjectScopePositionTemplates");
 
             migrationBuilder.DropTable(
@@ -2500,13 +2409,13 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "SubConAddresses");
 
             migrationBuilder.DropTable(
+                name: "TaskDependencies");
+
+            migrationBuilder.DropTable(
                 name: "TemplatePositions");
 
             migrationBuilder.DropTable(
                 name: "TodoReplies");
-
-            migrationBuilder.DropTable(
-                name: "TodoToUsers");
 
             migrationBuilder.DropTable(
                 name: "ToolRentals");
@@ -2533,9 +2442,6 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Activities");
-
-            migrationBuilder.DropTable(
                 name: "ProjectScopeTemplates");
 
             migrationBuilder.DropTable(
@@ -2543,6 +2449,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Settings");
+
+            migrationBuilder.DropTable(
+                name: "ScheduleTasks");
 
             migrationBuilder.DropTable(
                 name: "Templates");
@@ -2569,16 +2478,19 @@ namespace ProjectManager.Infrastructure.Migrations
                 name: "SubContractors");
 
             migrationBuilder.DropTable(
-                name: "Settlements");
+                name: "ScheduleStages");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Settlements");
 
             migrationBuilder.DropTable(
                 name: "Schedules");
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Clients");

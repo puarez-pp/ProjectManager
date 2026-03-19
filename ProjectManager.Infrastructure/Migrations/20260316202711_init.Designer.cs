@@ -12,8 +12,8 @@ using ProjectManager.Infrastructure.Persistence;
 namespace ProjectManager.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260219230644_20-02-2026")]
-    partial class _20022026
+    [Migration("20260316202711_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,45 +180,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Activity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Est")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Lst")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScheduleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Activities", (string)null);
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -263,11 +224,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Alarm", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("AlarmType")
                         .HasColumnType("int");
@@ -346,9 +307,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<DateTime>("RegisterDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ScheduleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -368,8 +326,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("ScheduleId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -479,14 +435,9 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PlantId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Devices", (string)null);
                 });
@@ -1963,11 +1914,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2116,11 +2067,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2522,11 +2473,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2573,11 +2524,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2650,9 +2601,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Vendor")
                         .HasColumnType("nvarchar(max)");
 
@@ -2661,8 +2609,6 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SettlementId");
-
                     b.HasIndex("WorkScopeId");
 
                     b.ToTable("Invoices", (string)null);
@@ -2670,11 +2616,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("DeviceId")
                         .HasColumnType("int");
@@ -2739,12 +2685,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Plant", (string)null);
                 });
@@ -2845,24 +2786,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PostReplies", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Predecessor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ActivityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityId");
-
-                    b.ToTable("Predecessor", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Project", b =>
@@ -3670,35 +3593,117 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EditAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserID")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Schedules", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ScheduleStage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PlannedEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("PlannedStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.ToTable("ScheduleStages", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ScheduleTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AssignedUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PlannedEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("PlannedStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedUserId");
+
+                    b.HasIndex("StageId");
+
+                    b.ToTable("ScheduleTasks", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Settings", b =>
@@ -3837,6 +3842,16 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
+                            Description = "Czy wysłać email adresatowi nowego zadania?",
+                            Key = "EmailOnNewTodo",
+                            Order = 7,
+                            SettingsId = 1,
+                            Type = 1,
+                            Value = "False"
+                        },
+                        new
+                        {
+                            Id = 8,
                             Description = "Czy wyświetlać banner na stronie głównej?",
                             Key = "BannerVisible",
                             Order = 1,
@@ -3846,7 +3861,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 8,
+                            Id = 9,
                             Description = "Folor footera strona głównej",
                             Key = "FooterColor",
                             Order = 2,
@@ -3856,7 +3871,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 10,
                             Description = "Główny adres e-mail administratora",
                             Key = "AdminEmail",
                             Order = 3,
@@ -3969,6 +3984,32 @@ namespace ProjectManager.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.TaskDependency", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("PredecessorTaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SuccessorTaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PredecessorTaskId");
+
+                    b.HasIndex("SuccessorTaskId");
+
+                    b.ToTable("TaskDependencies", (string)null);
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.Property<int>("Id")
@@ -3977,12 +4018,12 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Content")
+                    b.Property<string>("Body")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -4026,10 +4067,7 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
+                    b.Property<string>("Body")
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
@@ -4045,36 +4083,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("TodoId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("TodoReplies", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.TodoToUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("TodoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TodoId");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("TodoToUsers", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Tool", b =>
@@ -4104,7 +4117,7 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("ToolStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ValidDate")
+                    b.Property<DateTime?>("ValidDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -5439,24 +5452,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Activity", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Schedule", "Schedule")
-                        .WithMany("Activities")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Activities")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Schedule");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.Address", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Client", "Client")
@@ -5479,13 +5474,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Device");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ApplicationUser", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Schedule", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ScheduleId");
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.Assumption", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Settlement", "Settlement")
@@ -5505,14 +5493,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Devices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Plant");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceHeader", b =>
@@ -5605,19 +5586,11 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.Settlement", "Settlement")
-                        .WithMany("Invoices")
-                        .HasForeignKey("SettlementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ProjectManager.Domain.Entities.WorkScope", "WorkScope")
                         .WithMany("Invoices")
                         .HasForeignKey("WorkScopeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Settlement");
 
                     b.Navigation("WorkScope");
                 });
@@ -5631,16 +5604,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Plants")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
@@ -5695,17 +5658,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Predecessor", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Activity", "Activity")
-                        .WithMany("Predecessors")
-                        .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Activity");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Project", b =>
@@ -5816,12 +5768,41 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Schedules")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Project");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ScheduleStage", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Schedule", "Schedule")
+                        .WithMany("Stages")
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Schedule");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ScheduleTask", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "AssignedUser")
+                        .WithMany("ScheduleTasks")
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProjectManager.Domain.Entities.ScheduleStage", "Stage")
+                        .WithMany("Tasks")
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AssignedUser");
+
+                    b.Navigation("Stage");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.SettingsPosition", b =>
@@ -5864,6 +5845,25 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("SubContractor");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.TaskDependency", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.ScheduleTask", "PredecessorTask")
+                        .WithMany("Predecessors")
+                        .HasForeignKey("PredecessorTaskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManager.Domain.Entities.ScheduleTask", "SuccessorTask")
+                        .WithMany("Dependencies")
+                        .HasForeignKey("SuccessorTaskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PredecessorTask");
+
+                    b.Navigation("SuccessorTask");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Project", "Project")
@@ -5873,14 +5873,13 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "UserFrom")
-                        .WithMany("TodosFrom")
+                        .WithMany("Todos")
                         .HasForeignKey("UserFromId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "UserTo")
-                        .WithMany("TodosTo")
-                        .HasForeignKey("UserToId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("UserToId");
 
                     b.Navigation("Project");
 
@@ -5891,10 +5890,6 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.TodoPost", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", null)
-                        .WithMany("TodoPostsRedirect")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("ProjectManager.Domain.Entities.Todo", "Todo")
                         .WithMany("TodoPosts")
                         .HasForeignKey("TodoId")
@@ -5904,24 +5899,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
                         .WithMany("TodoPosts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Todo");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.TodoToUser", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Todo", "Todo")
-                        .WithMany("TodoToUsers")
-                        .HasForeignKey("TodoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("TodoToUsers")
-                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Todo");
@@ -6007,26 +5984,15 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("WorkScopeTemplate");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Activity", b =>
-                {
-                    b.Navigation("Predecessors");
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("Activities");
-
                     b.Navigation("DesignEng");
-
-                    b.Navigation("Devices");
 
                     b.Navigation("ElectricEng");
 
                     b.Navigation("Employee");
 
                     b.Navigation("EmployeeEvents");
-
-                    b.Navigation("Plants");
 
                     b.Navigation("PositionPosts");
 
@@ -6044,19 +6010,15 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("Rents");
 
+                    b.Navigation("ScheduleTasks");
+
                     b.Navigation("Schedules");
 
                     b.Navigation("Settlements");
 
                     b.Navigation("TodoPosts");
 
-                    b.Navigation("TodoPostsRedirect");
-
-                    b.Navigation("TodoToUsers");
-
-                    b.Navigation("TodosFrom");
-
-                    b.Navigation("TodosTo");
+                    b.Navigation("Todos");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Client", b =>
@@ -6133,9 +6095,19 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Schedule", b =>
                 {
-                    b.Navigation("Activities");
+                    b.Navigation("Stages");
+                });
 
-                    b.Navigation("Users");
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ScheduleStage", b =>
+                {
+                    b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.ScheduleTask", b =>
+                {
+                    b.Navigation("Dependencies");
+
+                    b.Navigation("Predecessors");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Settings", b =>
@@ -6146,8 +6118,6 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.Settlement", b =>
                 {
                     b.Navigation("Assumption");
-
-                    b.Navigation("Invoices");
 
                     b.Navigation("WorkScopes");
                 });
@@ -6166,8 +6136,6 @@ namespace ProjectManager.Infrastructure.Migrations
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
                     b.Navigation("TodoPosts");
-
-                    b.Navigation("TodoToUsers");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Tool", b =>
