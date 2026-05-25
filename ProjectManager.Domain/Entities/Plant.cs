@@ -5,5 +5,7 @@ public class Plant
     public string Name { get; set; }
     public string Location { get; set; }
     public DateTime CreatedAt { get; set; }
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
     public ICollection<Device> Devices { get; set; } = new HashSet<Device>();
 }

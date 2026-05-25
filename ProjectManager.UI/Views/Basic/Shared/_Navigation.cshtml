@@ -51,6 +51,14 @@
         </a>
     </li>
 
+    <!-- Telemetria -->
+    <li class="nav-item @Url.MakeActiveClass("Plant", "Plants,Plant,AddPlant,EditPlant")">
+        <a asp-controller="Plant" asp-action="Plants" class="nav-link align-middle px-0 text-white">
+            <i class="fa-solid fa-signal"></i>
+            <span class="d-none d-sm-inline">Telemetria</span>
+        </a>
+    </li>
+
     @if (User.IsInRole(RolesDict.Administrator) || User.IsInRole(RolesDict.Kierownik))
     {
         <!-- Klienci -->

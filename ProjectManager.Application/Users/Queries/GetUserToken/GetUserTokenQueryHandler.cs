@@ -1,5 +1,5 @@
 ﻿using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Common.Models.Inovices;
+using ProjectManager.Application.Common.Models.Devices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

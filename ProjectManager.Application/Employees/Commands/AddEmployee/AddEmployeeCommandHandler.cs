@@ -3,6 +3,7 @@ using ProjectManager.Application.Dictionaries;
 using ProjectManager.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.Employees.Commands.AddEmployee;
 public class AddEmployeeCommandHandler : IRequestHandler<AddEmployeeCommand>
@@ -34,7 +35,7 @@ public class AddEmployeeCommandHandler : IRequestHandler<AddEmployeeCommand>
         user.RegisterDateTime = _dateTimeService.Now;
         user.EmailConfirmed = false;
 
-        user.Employee = new Domain.Entities.Employee();
+        user.Employee = new Employee();
         user.Employee.UserId = userId;
         user.Employee.ImageUrl = request.ImageUrl;
         user.Employee.Position = (Position)request.PositionId;

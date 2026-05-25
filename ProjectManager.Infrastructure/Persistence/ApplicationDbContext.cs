@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     }
 
+    public new DbSet<T> Set<T>() where T : class => base.Set<T>();
     public DbSet<Address> Addresses { get; set; }
     public DbSet<SubConAddress> SubConAddresses { get; set; }
     public DbSet<Client> Clients { get; set; }
@@ -52,11 +53,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<DeviceTemplatePosition> DeviceTemplatePositions { get; set; }
     public DbSet<DeviceHeader> DeviceHeaders { get; set; }
     public DbSet<Alarm> Alarms { get; set; }
-    public DbSet<OtherCounter> OtherCounters { get; set; }
-    public DbSet<ElectricCounter> ElectricCounters { get; set; }
-    public DbSet<HeatCounter> HeatCounters { get; set; }
-    public DbSet<GasCounter> GasCounters { get; set; }
-    public DbSet<Engine> Engines { get; set; }
+    public DbSet<DeviceParam> DeviceParams { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<ScheduleStage> ScheduleStages { get; set; }
     public DbSet<ScheduleTask> ScheduleTasks {  get; set; }
@@ -82,5 +79,4 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
         base.OnModelCreating(modelBuilder);
     }
-
 }

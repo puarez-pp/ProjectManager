@@ -1,0 +1,222 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Common.Interfaces
+@using ProjectManager.Application.Dictionaries
+@using ProjectManager.Application.Plants.Queries.GetPlant
+@using ProjectManager.Application.Projects.Commands.AddPosition
+@using ProjectManager.Application.Projects.Queries.GetProject
+@using ProjectManager.Application.Users.Extensions
+@using ProjectManager.Domain.Enums
+@using ProjectManager.Infrastructure.Services
+
+@model PlantDto
+
+@{
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+    <partial name="Styles/_EditorStyles" />
+    <partial name="Styles/_DataTablesStyles" />
+}
+
+<partial name="Modals/_ModalConfirm"
+    model="@(new ModalParams
+    {
+        Id = "modal-confirm-delete-device",
+        Title = "Potwierdź proszę",
+        Description = "Czy na pewno chcesz usunąć wybrane urządzenie?"
+    })" />
+
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            
+            @Model.Name
+        </h4>
+
+        <div class="d-flex gap-2">
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("Plants", "Plant")'">
+                <i class="fa-solid fa-database"></i>Lista instalacji
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("EditPlant", "Plant", new { id = Model.Id })'">
+                    <i class="fas fa-edit me-1"></i> Edytuj
+            </button>
+        </div>
+    </div>
+
+    <!-- TREŚĆ KARTY -->
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <p class="mb-2">
+                    <i class="fa-solid fa-location-dot me-2"></i>
+                    Lokalizacja:
+                    <b>@Model.Location</b>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-user-plus text-secondary me-2"></i>
+                    Data utworzenia:
+                    <b>@Model.CreatedAt</b>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="card card-primary card-border-top">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">
+            <i class="fas fa-solid fa-people-group me-2"></i>Lista urządzeń
+        </h3>
+
+        <a href="/Device/AddDevice?id=@Model.Id" class="btn btn-primary">
+            <i class="fas fa-circle-plus me-1"></i>Dodaj urządzenie
+        </a>
+    </div>
+
+    <div class="card-body">
+
+        <table id="devices" class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width:40px;">Lp.</th>
+                    <th class="desktop">Typ urządzenia</th>
+                    <th class="desktop">Nazwa urządzenia</th>
+                    <th class="desktop text-center" style="width: 180px;">Akcje</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    var lp = 1;
+                }
+                @foreach (var device in Model.Devices)
+                {
+                    <tr>
+                        <td>@lp</td>
+                        <td>@device.DeviceType.GetDisplayName()</td>
+                        <td>
+                            <a class="edit-link fw-semibold"
+                               href="/Device/Device?id=@device.Id">
+                                @device.Name
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+
+                            <a href="/Device/EditDevice?id=@device.Id"
+                               class="btn btn-success btn-sm me-1">
+                                <i class="fas fa-pen-to-square me-1"></i>Edytuj
+                            </a>
+
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="deleteDevice('@device.Id', this)">
+                                <i class="fas fa-trash-can me-1"></i>Usuń
+                            </button>
+
+                        </td>
+                    </tr>
+                    lp++;
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<div id="modal-container"></div>
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_DataTablesScripts" />
+
+    <script>
+
+        let dtDevices;
+        let selectedRow = null;
+        let selectedDeviceId = null;
+
+        $(document).ready(function () {
+
+            dtDevices = $('#devices').DataTable({
+                paging: true,
+                ordering: true,
+                info: true,
+                responsive: true,
+                autoWidth: true,
+                lengthChange: true,
+                language: {
+                    url: `/lib/datatables/lang/${'@locale'}.json`
+                },
+                order: [[0, "asc"]],
+            });
+
+        });
+
+        function refreshTable() {
+            dtDevices.draw();
+        }
+
+        // function deleteDevice(id, btn) {
+        //     selectedRow = btn.closest("tr");
+        //     selectedDeviceId = id;
+
+        //     $('#modal-confirm-delete-device').modal('show');
+        //     $('.loading-overlay').show();
+        // }
+
+        // $('#modal-confirm-delete-device-btn').on('click', function () {
+
+        //     $('#modal-confirm-delete-device').modal('hide');
+
+        //     const errorMessage =
+        //         'Błąd. Nie udało się usunąć wybranego urządzenia. Spróbuj ponownie lub skontaktuj się z administratorem.';
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/Device/DeleteDevice",
+        //         data: { id: selectedDeviceId },
+        //         dataType: "json",
+
+        //         success: function (data) {
+        //             if (data.success) {
+        //                 location.reload();
+        //                 toastr.success('Dane zostały zaktualizowane.');
+        //             } else {
+        //                 toastr.error(errorMessage);
+        //             }
+        //             $('.loading-overlay').hide();
+        //         },
+
+        //         error: function () {
+        //             toastr.error(errorMessage);
+        //             $('.loading-overlay').hide();
+        //         }
+        //     });
+
+        // });
+
+    </script>
+}
+
+        

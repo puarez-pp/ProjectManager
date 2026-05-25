@@ -5,6 +5,8 @@ namespace ProjectManager.Application.Common.Interfaces
 {
     public interface IApplicationDbContext : IDisposable
     {
+        DbSet<T> Set<T>() where T : class;
+
         DbSet<Address> Addresses { get; set; }
         DbSet<SubConAddress> SubConAddresses { get; set; }
         DbSet<ApplicationUser> Users { get; set; }
@@ -43,11 +45,7 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<DeviceTemplatePosition> DeviceTemplatePositions { get; set; }
         DbSet<DeviceHeader> DeviceHeaders { get; set; }
         DbSet<Alarm> Alarms { get; set; }
-        DbSet<OtherCounter> OtherCounters { get; set; }
-        DbSet<ElectricCounter> ElectricCounters { get; set; }
-        DbSet<HeatCounter> HeatCounters { get; set; }
-        DbSet<GasCounter> GasCounters { get; set; }
-        DbSet<Engine> Engines { get; set; }
+        DbSet<DeviceParam> DeviceParams { get; set; }
         DbSet<Schedule> Schedules { get; set; }
         DbSet<ScheduleStage> ScheduleStages { get; set; }
         DbSet<ScheduleTask> ScheduleTasks { get; set; }

@@ -1,4 +1,5 @@
-﻿using ProjectManager.Domain.Enums;
+﻿using ProjectManager.Application.DeviceHeaders.Queries.GetDeviceHeaders;
+using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Devices.Queries.GetDevice
 {
@@ -10,5 +11,6 @@ namespace ProjectManager.Application.Devices.Queries.GetDevice
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsConfigured { get; set; }
+        public List<DeviceHeaderDto> DeviceHeaders { get; set; } = new();
     }
 }

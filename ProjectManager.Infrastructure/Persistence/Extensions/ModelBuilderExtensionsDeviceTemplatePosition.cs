@@ -595,7 +595,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 65,
                 Name = "GKS",
-                Description = "wysterowanie",
+                Description = "Wysterowanie",
                 TemplateId = 1,
                 Order = 65
             },
@@ -666,8 +666,8 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 73,
-                Name = "UL31GNapięcie",
-                Description = "generatora L3-1",
+                Name = "UL31G",
+                Description = "Napięcie generatora L3-1",
                 TemplateId = 1,
                 Order = 73
             },
@@ -711,8 +711,8 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 78,
-                Name = "IL1G2Prąd",
-                Description = "generatora L2",
+                Name = "IL2G",
+                Description = "Prąd generatora L2",
                 TemplateId = 1,
                 Order = 78
             },
@@ -820,7 +820,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 90,
                 Name = "PFSCADA",
-                Description = "Zadany wspólczynnik mocy z SCADA",
+                Description = "Zadany współczynnik mocy z SCADA",
                 TemplateId = 1,
                 Order = 90
             },
@@ -882,7 +882,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 97,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 97
             },
@@ -891,7 +891,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 98,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 98
             },
@@ -900,7 +900,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 99,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 99
             },
@@ -909,7 +909,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 100,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 100
             },
@@ -918,7 +918,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 101,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 101
             },
@@ -927,7 +927,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 102,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 102
             },
@@ -936,7 +936,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 103,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 103
             },
@@ -945,7 +945,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 104,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 104
             },
@@ -954,7 +954,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 105,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 105
             },
@@ -963,7 +963,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 106,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 106
             },
@@ -981,7 +981,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 108,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 108
             },
@@ -990,7 +990,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 109,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 109
             },
@@ -999,7 +999,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 110,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 110
             },
@@ -1008,7 +1008,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 111,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 111
             },
@@ -1017,7 +1017,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 112,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 112
             },
@@ -1026,7 +1026,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 113,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 113
             },
@@ -1035,7 +1035,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 114,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 114
             },
@@ -1044,7 +1044,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 115,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 115
             },
@@ -1053,7 +1053,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 116,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 116
             },
@@ -1062,7 +1062,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 117,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 117
             },
@@ -1071,7 +1071,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 118,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 118
             },
@@ -1080,7 +1080,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 119,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 119
             },
@@ -1089,14 +1089,14 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             {
                 Id = 120,
                 Name = "Rezerwa",
-                Description = "Description",
+                Description = "Opis",
                 TemplateId = 1,
                 Order = 120
             },
             new DeviceTemplatePosition
             {
                 Id = 121,
-                Name = heatCounter,
+                Name = "Vm",
                 Description = "Przepływ chwilowy",
                 TemplateId = 2,
                 Order = 1
@@ -1105,7 +1105,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 122,
-                Name = heatCounter,
+                Name = "Moc",
                 Description = "Moc",
                 TemplateId = 2,
                 Order = 2
@@ -1114,7 +1114,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 123,
-                Name = heatCounter,
+                Name = "Stan",
                 Description = "Stan licznika",
                 TemplateId = 2,
                 Order = 3
@@ -1123,7 +1123,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 124,
-                Name = heatCounter,
+                Name = "Energia",
                 Description = "Energia",
                 TemplateId = 2,
                 Order = 4
@@ -1132,7 +1132,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 125,
-                Name = heatCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 2,
                 Order = 5
@@ -1141,7 +1141,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 126,
-                Name = heatCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 2,
                 Order = 6
@@ -1150,7 +1150,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 127,
-                Name = heatCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 2,
                 Order = 7
@@ -1159,7 +1159,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 128,
-                Name = heatCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 2,
                 Order = 8
@@ -1168,7 +1168,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 129,
-                Name = heatCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 2,
                 Order = 9
@@ -1177,15 +1177,15 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 130,
-                Name = heatCounter,
-                Description = "Powietrze zasysane B",
+                Name = "Rezerwa",
+                Description = "Rezerwa",
                 TemplateId = 2,
                 Order = 10
             },
             new DeviceTemplatePosition
             {
                 Id = 131,
-                Name = gasCounter,
+                Name = "Temperatura",
                 Description = "Temperatura",
                 TemplateId = 3,
                 Order = 1
@@ -1194,7 +1194,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 132,
-                Name = gasCounter,
+                Name = "Licznik",
                 Description = "Licznik Gazu Ciśnienie P1",
                 TemplateId = 3,
                 Order = 2
@@ -1203,7 +1203,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 133,
-                Name = gasCounter,
+                Name = "Pb",
                 Description = "Ciśnienie Pb",
                 TemplateId = 3,
                 Order = 3
@@ -1212,7 +1212,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 134,
-                Name = gasCounter,
+                Name = "Qm",
                 Description = "Przepływ Qm",
                 TemplateId = 3,
                 Order = 4
@@ -1221,7 +1221,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 135,
-                Name = gasCounter,
+                Name = "Qb",
                 Description = "Przepływ Qb",
                 TemplateId = 3,
                 Order = 5
@@ -1230,7 +1230,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 136,
-                Name = gasCounter,
+                Name = "Licznik Vm",
                 Description = "Licznik Vm",
                 TemplateId = 3,
                 Order = 6
@@ -1239,7 +1239,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 137,
-                Name = gasCounter,
+                Name = "Licznik Vb",
                 Description = "Licznik Vb",
                 TemplateId = 3,
                 Order = 7
@@ -1248,7 +1248,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 138,
-                Name = gasCounter,
+                Name = "Licznik energii",
                 Description = "Licznik energii",
                 TemplateId = 3,
                 Order = 8
@@ -1257,7 +1257,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 139,
-                Name = gasCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 3,
                 Order = 9
@@ -1266,7 +1266,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 140,
-                Name = gasCounter,              
+                Name = "Rezerwa",              
                 Description = "Powietrze zasysane B",
                 TemplateId = 3,
                 Order = 10
@@ -1274,7 +1274,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 141,
-                Name = electricCounter,
+                Name = "UL1",
                 Description = "Napięcie UL1",
                 TemplateId = 4,
                 Order = 1
@@ -1282,7 +1282,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 142,
-                Name = electricCounter,
+                Name = "UL2",
                 Description = "Napięcie UL2",
                 TemplateId = 4,
                 Order = 2
@@ -1290,7 +1290,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 143,
-                Name = electricCounter,
+                Name = "UL3",
                 Description = "Napięcie UL3",
                 TemplateId = 4,
                 Order = 3
@@ -1298,15 +1298,15 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 144,
-                Name = electricCounter,
+                Name = "UL12",
                 Description = "Napięcie UL12",
-                TemplateId = 1,
+                TemplateId = 4,
                 Order = 4
             },
             new DeviceTemplatePosition
             {
                 Id = 145,
-                Name = electricCounter,
+                Name = "UL23",
                 Description = "Napięcie UL23",
                 TemplateId = 4,
                 Order = 5
@@ -1314,7 +1314,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 146,
-                Name = electricCounter,
+                Name = "UL31",
                 Description = "Napięcie UL31",
                 TemplateId = 4,
                 Order = 6
@@ -1322,7 +1322,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 147,
-                Name = electricCounter,
+                Name = "IL1",
                 Description = "Prąd IL1",
                 TemplateId = 4,
                 Order = 7
@@ -1330,7 +1330,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 148,
-                Name = electricCounter,
+                Name = "IL2",
                 Description = "Prąd IL2",
                 TemplateId = 4,
                 Order = 8
@@ -1338,7 +1338,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 149,
-                Name = electricCounter,
+                Name = "IL3",
                 Description = "Prąd IL3",
                 TemplateId = 4,
                 Order = 9
@@ -1346,7 +1346,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 150,
-                Name = electricCounter,
+                Name = "F",
                 Description = "Częstotliwość",
                 TemplateId = 4,
                 Order = 10
@@ -1354,7 +1354,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 151,
-                Name = electricCounter,
+                Name = "P",
                 Description = "Moc czynna",
                 TemplateId = 4,
                 Order = 11
@@ -1362,7 +1362,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 152,
-                Name = electricCounter,
+                Name = "Q",
                 Description = "Moc bierna",
                 TemplateId = 4,
                 Order = 12
@@ -1370,7 +1370,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 153,
-                Name = electricCounter,
+                Name = "S",
                 Description = "Moc pozorna",
                 TemplateId = 4,
                 Order = 13
@@ -1378,7 +1378,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 154,
-                Name = electricCounter,
+                Name = "PF",
                 Description = "Współczynnik mocy",
                 TemplateId = 4,
                 Order = 14
@@ -1386,7 +1386,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 155,
-                Name = electricCounter,
+                Name = "Ep",
                 Description = "Energia czynna",
                 TemplateId = 4,
                 Order = 15
@@ -1394,7 +1394,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 156,
-                Name = electricCounter,
+                Name = "Eq",
                 Description = "Energia bierna",
                 TemplateId = 4,
                 Order = 15
@@ -1402,7 +1402,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 157,
-                Name = electricCounter,
+                Name = "Es",
                 Description = "Energia pozorna",
                 TemplateId = 4,
                 Order = 17
@@ -1410,7 +1410,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 158,
-                Name = electricCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 4,
                 Order = 18
@@ -1418,7 +1418,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 159,
-                Name = electricCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 4,
                 Order = 19
@@ -1426,7 +1426,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 160,
-                Name = electricCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 4,
                 Order = 20
@@ -1434,7 +1434,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 161,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 1
@@ -1443,7 +1443,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 162,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 2
@@ -1452,7 +1452,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 163,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 3
@@ -1461,7 +1461,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 164,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 4
@@ -1470,7 +1470,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 165,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 5
@@ -1479,7 +1479,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 166,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 6
@@ -1488,7 +1488,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 167,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 7
@@ -1497,7 +1497,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 168,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 8
@@ -1506,7 +1506,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 169,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Rezerwa",
                 TemplateId = 5,
                 Order = 9
@@ -1515,7 +1515,7 @@ static class ModelBuilderExtensionsDeviceTemplatePosition
             new DeviceTemplatePosition
             {
                 Id = 170,
-                Name = otherCounter,
+                Name = "Rezerwa",
                 Description = "Powietrze zasysane B",
                 TemplateId = 5,
                 Order = 10

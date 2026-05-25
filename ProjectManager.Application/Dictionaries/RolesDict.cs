@@ -7,4 +7,5 @@ public static class RolesDict
     public const string Administrator = "Administrator";
     public const string Pracownik = "Pracownik";
     public const string Kierownik = "Kierownik";
+    public const string Telemetria = "Telemetria";
 }

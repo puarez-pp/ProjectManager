@@ -41,7 +41,6 @@ $(document).on("click", "#modal-confirm-delete-post-btn", function () {
         url: "/Project/DeletePost",
         data: { id: deleteId },
         success: function (data) {
-            console.log(data);
             if (data.success) {
                 $('[data-post-id="' + deleteId + '"]').remove();
                 $('#modal-confirm-delete-post').modal('hide');

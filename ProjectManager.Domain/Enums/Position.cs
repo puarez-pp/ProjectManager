@@ -29,6 +29,9 @@ public enum Position
     [Display(Name = "Stażysta/ka")]
     Trainee,
 
+    [Display(Name = "Telemetria")]
+    Telemetry,
+
     [Display(Name = "Inne stanowisko")]
     Other,
          

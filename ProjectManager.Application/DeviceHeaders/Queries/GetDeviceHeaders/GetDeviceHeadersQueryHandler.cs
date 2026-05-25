@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Devices.Extension;
-using ProjectManager.Application.Plants.Extension;
+using ProjectManager.Application.Devices.Queries.GetDevice;
 
 namespace ProjectManager.Application.DeviceHeaders.Queries.GetDeviceHeaders
 {
-    public class GetDeviceHeadersQueryHandler : IRequestHandler<GetDeviceHeadersQuery, GetDeviceHeadersVm>
+    public class GetDeviceHeadersQueryHandler : IRequestHandler<GetDeviceHeadersQuery, DeviceDto>
     {
         private readonly IApplicationDbContext _context;
 
@@ -15,22 +14,30 @@ namespace ProjectManager.Application.DeviceHeaders.Queries.GetDeviceHeaders
         {
             _context = context;
         }
-        public async Task<GetDeviceHeadersVm> Handle(GetDeviceHeadersQuery request, CancellationToken cancellationToken)
+        public async Task<DeviceDto> Handle(GetDeviceHeadersQuery request, CancellationToken cancellationToken)
         {
             var device = await _context
                 .Devices
                 .AsNoTracking()
-                .Include(x => x.DeviceHeaders)
-                .Where(x => x.Id == request.Id)
-                .ToListAsync();
-
-            var headers = new GetDeviceHeadersVm
-            {
-                Plant = device.FirstOrDefault()?.Plant.ToPlantDto(),
-                Device = device.FirstOrDefault()?.ToDeviceDto(),
-                Headers = device.FirstOrDefault()?.DeviceHeaders.Select(x => x.ToDeviceHeaderDto()).ToList()
-            };
-            return headers;
+                .Where(x=>x.Id == request.Id)
+                .Select(x=> new DeviceDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    DeviceType = x.DeviceType,
+                    IsConfigured = x.IsConfigured,
+                    DeviceHeaders = x.DeviceHeaders.OrderBy(y=>y.Order)
+                    .Select(y=> new DeviceHeaderDto
+                    {
+                        Id = y.Id, 
+                        Name = y.Name,
+                        Description = y.Description,
+                        Order = y.Order
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+            return device;
         }
     }
 }

@@ -14,7 +14,7 @@ class AlarmConfiguration : IEntityTypeConfiguration<Alarm>
            .WithMany(x => x.LogAlarms)
            .HasForeignKey(x => x.DeviceId)
            .OnDelete(DeleteBehavior.Restrict);
-        builder.Property(x => x.Description)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(200);
     }

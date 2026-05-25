@@ -17,7 +17,7 @@ namespace ProjectManager.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.2")
+                .HasAnnotation("ProductVersion", "6.0.36")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -69,6 +69,13 @@ namespace ProjectManager.Infrastructure.Migrations
                             ConcurrencyStamp = "B50B7D83-F6E6-4DE3-8346-7D0E8501EEB5",
                             Name = "Pracownik",
                             NormalizedName = "PRACOWNIK"
+                        },
+                        new
+                        {
+                            Id = "F1E2D3C4-B5A6-7890-1234-56789ABCDEF0",
+                            ConcurrencyStamp = "C1D2E3F4-5678-90AB-CDEF-1234567890AB",
+                            Name = "Telemetria",
+                            NormalizedName = "TELEMETRIA"
                         });
                 });
 
@@ -222,22 +229,20 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Alarm", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AlarmType")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
@@ -433,9 +438,14 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PlantId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Devices", (string)null);
                 });
@@ -473,6 +483,31 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasIndex("DeviceId");
 
                     b.ToTable("DeviceHeaders", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceParam", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("Value")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("DeviceParams", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceTemplate", b =>
@@ -1063,7 +1098,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 65,
-                            Description = "wysterowanie",
+                            Description = "Wysterowanie",
                             Name = "GKS",
                             Order = 65,
                             TemplateId = 1
@@ -1127,8 +1162,8 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 73,
-                            Description = "generatora L3-1",
-                            Name = "UL31GNapięcie",
+                            Description = "Napięcie generatora L3-1",
+                            Name = "UL31G",
                             Order = 73,
                             TemplateId = 1
                         },
@@ -1167,8 +1202,8 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 78,
-                            Description = "generatora L2",
-                            Name = "IL1G2Prąd",
+                            Description = "Prąd generatora L2",
+                            Name = "IL2G",
                             Order = 78,
                             TemplateId = 1
                         },
@@ -1263,7 +1298,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 90,
-                            Description = "Zadany wspólczynnik mocy z SCADA",
+                            Description = "Zadany współczynnik mocy z SCADA",
                             Name = "PFSCADA",
                             Order = 90,
                             TemplateId = 1
@@ -1512,7 +1547,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 121,
                             Description = "Przepływ chwilowy",
-                            Name = "Licznik ciepła",
+                            Name = "Vm",
                             Order = 1,
                             TemplateId = 2
                         },
@@ -1520,7 +1555,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 122,
                             Description = "Moc",
-                            Name = "Licznik ciepła",
+                            Name = "Moc",
                             Order = 2,
                             TemplateId = 2
                         },
@@ -1528,7 +1563,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 123,
                             Description = "Stan licznika",
-                            Name = "Licznik ciepła",
+                            Name = "Stan",
                             Order = 3,
                             TemplateId = 2
                         },
@@ -1536,7 +1571,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 124,
                             Description = "Energia",
-                            Name = "Licznik ciepła",
+                            Name = "Energia",
                             Order = 4,
                             TemplateId = 2
                         },
@@ -1544,7 +1579,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 125,
                             Description = "Rezerwa",
-                            Name = "Licznik ciepła",
+                            Name = "Rezerwa",
                             Order = 5,
                             TemplateId = 2
                         },
@@ -1552,7 +1587,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 126,
                             Description = "Rezerwa",
-                            Name = "Licznik ciepła",
+                            Name = "Rezerwa",
                             Order = 6,
                             TemplateId = 2
                         },
@@ -1560,7 +1595,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 127,
                             Description = "Rezerwa",
-                            Name = "Licznik ciepła",
+                            Name = "Rezerwa",
                             Order = 7,
                             TemplateId = 2
                         },
@@ -1568,7 +1603,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 128,
                             Description = "Rezerwa",
-                            Name = "Licznik ciepła",
+                            Name = "Rezerwa",
                             Order = 8,
                             TemplateId = 2
                         },
@@ -1576,15 +1611,15 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 129,
                             Description = "Rezerwa",
-                            Name = "Licznik ciepła",
+                            Name = "Rezerwa",
                             Order = 9,
                             TemplateId = 2
                         },
                         new
                         {
                             Id = 130,
-                            Description = "Powietrze zasysane B",
-                            Name = "Licznik ciepła",
+                            Description = "Rezerwa",
+                            Name = "Rezerwa",
                             Order = 10,
                             TemplateId = 2
                         },
@@ -1592,7 +1627,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 131,
                             Description = "Temperatura",
-                            Name = "Licznik gazu",
+                            Name = "Temperatura",
                             Order = 1,
                             TemplateId = 3
                         },
@@ -1600,7 +1635,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 132,
                             Description = "Licznik Gazu Ciśnienie P1",
-                            Name = "Licznik gazu",
+                            Name = "Licznik",
                             Order = 2,
                             TemplateId = 3
                         },
@@ -1608,7 +1643,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 133,
                             Description = "Ciśnienie Pb",
-                            Name = "Licznik gazu",
+                            Name = "Pb",
                             Order = 3,
                             TemplateId = 3
                         },
@@ -1616,7 +1651,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 134,
                             Description = "Przepływ Qm",
-                            Name = "Licznik gazu",
+                            Name = "Qm",
                             Order = 4,
                             TemplateId = 3
                         },
@@ -1624,7 +1659,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 135,
                             Description = "Przepływ Qb",
-                            Name = "Licznik gazu",
+                            Name = "Qb",
                             Order = 5,
                             TemplateId = 3
                         },
@@ -1632,7 +1667,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 136,
                             Description = "Licznik Vm",
-                            Name = "Licznik gazu",
+                            Name = "Licznik Vm",
                             Order = 6,
                             TemplateId = 3
                         },
@@ -1640,7 +1675,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 137,
                             Description = "Licznik Vb",
-                            Name = "Licznik gazu",
+                            Name = "Licznik Vb",
                             Order = 7,
                             TemplateId = 3
                         },
@@ -1648,7 +1683,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 138,
                             Description = "Licznik energii",
-                            Name = "Licznik gazu",
+                            Name = "Licznik energii",
                             Order = 8,
                             TemplateId = 3
                         },
@@ -1656,7 +1691,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 139,
                             Description = "Rezerwa",
-                            Name = "Licznik gazu",
+                            Name = "Rezerwa",
                             Order = 9,
                             TemplateId = 3
                         },
@@ -1664,7 +1699,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 140,
                             Description = "Powietrze zasysane B",
-                            Name = "Licznik gazu",
+                            Name = "Rezerwa",
                             Order = 10,
                             TemplateId = 3
                         },
@@ -1672,7 +1707,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 141,
                             Description = "Napięcie UL1",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "UL1",
                             Order = 1,
                             TemplateId = 4
                         },
@@ -1680,7 +1715,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 142,
                             Description = "Napięcie UL2",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "UL2",
                             Order = 2,
                             TemplateId = 4
                         },
@@ -1688,7 +1723,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 143,
                             Description = "Napięcie UL3",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "UL3",
                             Order = 3,
                             TemplateId = 4
                         },
@@ -1696,15 +1731,15 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 144,
                             Description = "Napięcie UL12",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "UL12",
                             Order = 4,
-                            TemplateId = 1
+                            TemplateId = 4
                         },
                         new
                         {
                             Id = 145,
                             Description = "Napięcie UL23",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "UL23",
                             Order = 5,
                             TemplateId = 4
                         },
@@ -1712,7 +1747,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 146,
                             Description = "Napięcie UL31",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "UL31",
                             Order = 6,
                             TemplateId = 4
                         },
@@ -1720,7 +1755,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 147,
                             Description = "Prąd IL1",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "IL1",
                             Order = 7,
                             TemplateId = 4
                         },
@@ -1728,7 +1763,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 148,
                             Description = "Prąd IL2",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "IL2",
                             Order = 8,
                             TemplateId = 4
                         },
@@ -1736,7 +1771,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 149,
                             Description = "Prąd IL3",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "IL3",
                             Order = 9,
                             TemplateId = 4
                         },
@@ -1744,7 +1779,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 150,
                             Description = "Częstotliwość",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "F",
                             Order = 10,
                             TemplateId = 4
                         },
@@ -1752,7 +1787,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 151,
                             Description = "Moc czynna",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "P",
                             Order = 11,
                             TemplateId = 4
                         },
@@ -1760,7 +1795,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 152,
                             Description = "Moc bierna",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Q",
                             Order = 12,
                             TemplateId = 4
                         },
@@ -1768,7 +1803,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 153,
                             Description = "Moc pozorna",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "S",
                             Order = 13,
                             TemplateId = 4
                         },
@@ -1776,7 +1811,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 154,
                             Description = "Współczynnik mocy",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "PF",
                             Order = 14,
                             TemplateId = 4
                         },
@@ -1784,7 +1819,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 155,
                             Description = "Energia czynna",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Ep",
                             Order = 15,
                             TemplateId = 4
                         },
@@ -1792,7 +1827,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 156,
                             Description = "Energia bierna",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Eq",
                             Order = 15,
                             TemplateId = 4
                         },
@@ -1800,7 +1835,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 157,
                             Description = "Energia pozorna",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Es",
                             Order = 17,
                             TemplateId = 4
                         },
@@ -1808,7 +1843,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 158,
                             Description = "Rezerwa",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Rezerwa",
                             Order = 18,
                             TemplateId = 4
                         },
@@ -1816,7 +1851,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 159,
                             Description = "Rezerwa",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Rezerwa",
                             Order = 19,
                             TemplateId = 4
                         },
@@ -1824,7 +1859,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 160,
                             Description = "Rezerwa",
-                            Name = "Licznik energi elektrycznej",
+                            Name = "Rezerwa",
                             Order = 20,
                             TemplateId = 4
                         },
@@ -1832,7 +1867,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 161,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 1,
                             TemplateId = 5
                         },
@@ -1840,7 +1875,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 162,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 2,
                             TemplateId = 5
                         },
@@ -1848,7 +1883,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 163,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 3,
                             TemplateId = 5
                         },
@@ -1856,7 +1891,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 164,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 4,
                             TemplateId = 5
                         },
@@ -1864,7 +1899,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 165,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 5,
                             TemplateId = 5
                         },
@@ -1872,7 +1907,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 166,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 6,
                             TemplateId = 5
                         },
@@ -1880,7 +1915,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 167,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 7,
                             TemplateId = 5
                         },
@@ -1888,7 +1923,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 168,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 8,
                             TemplateId = 5
                         },
@@ -1896,7 +1931,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 169,
                             Description = "Rezerwa",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 9,
                             TemplateId = 5
                         },
@@ -1904,91 +1939,10 @@ namespace ProjectManager.Infrastructure.Migrations
                         {
                             Id = 170,
                             Description = "Powietrze zasysane B",
-                            Name = "Inny",
+                            Name = "Rezerwa",
                             Order = 10,
                             TemplateId = 5
                         });
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr11")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr12")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr13")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr14")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr15")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr16")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr17")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr18")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr19")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr20")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("ElectricCounters", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Employee", b =>
@@ -2063,387 +2017,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("EmployeeEvents", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr100")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr101")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr102")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr103")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr104")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr105")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr106")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr107")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr108")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr109")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr11")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr110")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr111")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr112")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr113")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr114")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr115")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr116")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr117")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr118")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr119")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr12")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr120")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr13")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr14")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr15")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr16")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr17")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr18")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr19")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr20")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr21")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr22")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr23")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr24")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr25")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr26")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr27")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr28")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr29")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr30")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr31")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr32")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr33")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr34")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr35")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr36")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr37")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr38")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr39")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr40")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr41")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr42")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr43")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr44")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr45")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr46")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr47")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr48")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr49")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr50")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr51")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr52")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr53")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr54")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr55")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr56")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr57")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr58")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr59")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr60")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr61")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr62")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr63")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr64")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr65")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr66")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr67")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr68")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr69")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr70")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr71")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr72")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr73")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr74")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr75")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr76")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr77")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr78")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr79")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr80")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr81")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr82")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr83")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr84")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr85")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr86")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr87")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr88")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr89")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr90")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr91")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr92")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr93")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr94")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr95")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr96")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr97")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr98")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr99")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("Engines", (string)null);
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.File", b =>
                 {
                     b.Property<int>("Id")
@@ -2467,108 +2040,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Files", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<long>("Parametr10")
-                        .HasColumnType("bigint");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<long>("Parametr6")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Parametr7")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Parametr8")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Parametr9")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("GasCounters", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("HeatCounters", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
@@ -2612,57 +2083,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.ToTable("Invoices", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Parametr1")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr10")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr2")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr3")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr4")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr5")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr6")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr7")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr8")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Parametr9")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("OtherCounters", (string)null);
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
                 {
                     b.Property<int>("Id")
@@ -2683,7 +2103,14 @@ namespace ProjectManager.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Plant", (string)null);
                 });
@@ -5491,13 +4918,30 @@ namespace ProjectManager.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Plant");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceHeader", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
                         .WithMany("DeviceHeaders")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceParam", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
+                        .WithMany("DeviceParams")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5514,17 +4958,6 @@ namespace ProjectManager.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Template");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.ElectricCounter", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("LogElectricCounters")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Employee", b =>
@@ -5549,39 +4982,6 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.Engine", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("LogEngines")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.GasCounter", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("LogGasCounters")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("ProjectManager.Domain.Entities.HeatCounter", b =>
-                {
-                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("LogHeatCounters")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("ProjectManager.Domain.Entities.Invoice", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.WorkScope", "WorkScope")
@@ -5593,15 +4993,14 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("WorkScope");
                 });
 
-            modelBuilder.Entity("ProjectManager.Domain.Entities.OtherCounter", b =>
+            modelBuilder.Entity("ProjectManager.Domain.Entities.Plant", b =>
                 {
-                    b.HasOne("ProjectManager.Domain.Entities.Device", "Device")
-                        .WithMany("LogOtherCounters")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("ProjectManager.Domain.Entities.ApplicationUser", "User")
+                        .WithOne("Plant")
+                        .HasForeignKey("ProjectManager.Domain.Entities.Plant", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Device");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.PositionPost", b =>
@@ -5992,6 +5391,8 @@ namespace ProjectManager.Infrastructure.Migrations
 
                     b.Navigation("EmployeeEvents");
 
+                    b.Navigation("Plant");
+
                     b.Navigation("PositionPosts");
 
                     b.Navigation("PostReplies");
@@ -6030,17 +5431,9 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     b.Navigation("DeviceHeaders");
 
+                    b.Navigation("DeviceParams");
+
                     b.Navigation("LogAlarms");
-
-                    b.Navigation("LogElectricCounters");
-
-                    b.Navigation("LogEngines");
-
-                    b.Navigation("LogGasCounters");
-
-                    b.Navigation("LogHeatCounters");
-
-                    b.Navigation("LogOtherCounters");
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.DeviceTemplate", b =>

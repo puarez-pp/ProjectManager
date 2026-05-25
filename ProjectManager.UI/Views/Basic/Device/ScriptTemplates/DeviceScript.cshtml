@@ -1,0 +1,87 @@
+﻿@using ProjectManager.Application.Devices.Commands.AddScript
+@model DeviceSriptVm
+@{
+    Layout = null;
+}
+let jwtToken = null;
+
+// --- PREKOMPILACJA TAGÓW ---
+
+const headers = [
+@foreach (var h in Model.Headers.OrderBy(h => h.Order))
+{
+    @:{ name: "@h.Name" },
+}
+];
+
+// Prekompilowane funkcje odczytu wartości
+const readers = [
+@foreach (var h in Model.Headers.Where(h => h.Used).OrderBy(h => h.Order))
+{
+    @:() => Globals.Tags.GetTag("@h.Name").Read(),
+}
+];
+
+// Prealokowana tablica DTO
+const dtoArray = new Array(headers.length);
+for (let i = 0; i < headers.length; i++) {
+    dtoArray[i] = {
+        timeStamp: "",
+        name: headers[i].name,
+        value: 0
+    };
+}
+
+async function authenticate() {
+    try {
+        const response = await fetch('@Model.AuthUrl', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userName: '@Model.Username',
+                password: '@Html.Raw(Model.Password)'
+            })
+        });
+
+        const data = await response.json();
+        jwtToken = data.token;
+    } catch (e) {
+        console.log('Auth error', e);
+    }
+}
+
+async function sendParams() {
+    if (!jwtToken) await authenticate();
+
+    const now = new Date().toISOString();
+
+
+    for (let i = 0; i < dtoArray.length; i++) {
+        dtoArray[i].timeStamp = now;
+        dtoArray[i].value = readers[i]();
+    }
+
+    const payload = {
+        deviceId: @Model.DeviceId,
+        deviceParams: dtoArray
+    };
+
+    try {
+        const response = await fetch('@Model.ApiUrl', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            console.log('Send error', await response.text());
+        }
+    } catch (e) {
+        console.log('Send error', e);
+    }
+}
+
+setInterval(sendParams, @Model.IntervalMs);

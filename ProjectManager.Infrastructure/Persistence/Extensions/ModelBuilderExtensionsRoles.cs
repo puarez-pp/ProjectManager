@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Infrastructure.Persistence.Extensions;
 
@@ -29,6 +28,13 @@ static class ModelBuilderExtensionsRoles
                 Name = "Pracownik",
                 NormalizedName = "PRACOWNIK",
                 ConcurrencyStamp = "B50B7D83-F6E6-4DE3-8346-7D0E8501EEB5"
+            },
+            new IdentityRole
+            {
+                Id = "F1E2D3C4-B5A6-7890-1234-56789ABCDEF0",
+                Name = "Telemetria",
+                NormalizedName = "TELEMETRIA",
+                ConcurrencyStamp = "C1D2E3F4-5678-90AB-CDEF-1234567890AB"
             });
     }
 }

@@ -15,14 +15,13 @@ public class EditDeviceHeaderCommandHandler : IRequestHandler<EditDeviceHeaderCo
     }
     public async Task<Unit> Handle(EditDeviceHeaderCommand request, CancellationToken cancellationToken)
     {
-        var device = await _context
+        var header = await _context
             .DeviceHeaders
             .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
-        if (device != null)
+        if (header != null)
         {
-            device.Name = request.Name;
-            device.Description = request.Description;
-            device.Used = request.Used;
+            header.Name = request.Name;
+            header.Description = request.Description;
             await _context.SaveChangesAsync(cancellationToken);
         }
             return Unit.Value;

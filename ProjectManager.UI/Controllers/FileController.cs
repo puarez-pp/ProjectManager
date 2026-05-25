@@ -1,10 +1,11 @@
-﻿using ProjectManager.Application.Common.Exceptions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManager.Application.Common.Exceptions;
 using ProjectManager.Application.Dictionaries;
 using ProjectManager.Application.Files.Commands.DeleteFile;
+using ProjectManager.Application.Files.Commands.DownloadFile;
 using ProjectManager.Application.Files.Commands.UploadFile;
 using ProjectManager.Application.Files.Queries.GetFiles;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ProjectManager.UI.Controllers;
 
@@ -22,6 +23,8 @@ public class FileController : BaseController
     {
         return View(await Mediator.Send(new GetFilesQuery()));
     }
+
+   
 
     [HttpPost]
     public async Task<IActionResult> Upload(IEnumerable<IFormFile> files)
@@ -105,6 +108,28 @@ public class FileController : BaseController
         {
             _logger.LogError(exception, null);
             return Json(new { success = false });
+        }
+    }
+
+    public async Task<IActionResult> DownloadFile(int id)
+    {
+        try
+        {
+            var file = await Mediator.Send(new DownloadFileCommand { Id = id });
+
+            if (file == null || file.Bytes == null)
+                return BadRequest(new { error = "Plik nie istnieje lub nie można go odczytać." });
+
+            return File(
+                file.Bytes,
+                "application/octet-stream",
+                file.FileName
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Błąd podczas pobierania pliku");
+            return BadRequest(new { error = "Wystąpił błąd podczas pobierania pliku." });
         }
     }
 

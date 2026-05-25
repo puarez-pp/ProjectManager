@@ -11,6 +11,7 @@ public class ApplicationUser : IdentityUser
     public DateTime RegisterDateTime { get; set; }
 
     public Employee Employee { get; set; }
+    public Plant Plant { get; set; }
 
     public ICollection<Project> ProjectsCreator { get; set; } = new HashSet<Project>();
     public ICollection<Project> ProjectsUpdator { get; set; } = new HashSet<Project>();
@@ -29,3 +30,4 @@ public class ApplicationUser : IdentityUser
     public ICollection<ScheduleTask> ScheduleTasks { get; set; } = new HashSet<ScheduleTask>();
     public ICollection<Settlement> Settlements { get; set; } = new HashSet<Settlement>();
 }
+

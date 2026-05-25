@@ -1,5 +1,5 @@
 ﻿using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Common.Models.Inovices;
+using ProjectManager.Application.Common.Models.Devices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,7 +21,7 @@ public class JwtService : IJwtService
 
     public AuthenticateResponse GenerateJwtToken(string userId)
     {
-        var key = Encoding.ASCII.GetBytes(_configuration.GetSection("Secret").Value);
+        var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Secret").Value);
 
         var authClaims = new List<Claim>
         {

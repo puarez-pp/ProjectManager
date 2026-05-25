@@ -1,0 +1,104 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.Devices.Queries.GetDevice
+@using ProjectManager.Domain.Enums
+@model DeviceDto
+
+@section Styles {
+}
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Name
+        </h4>
+
+        <div class="d-flex gap-2">
+            @if (Model.IsConfigured)
+            {
+                <button class="btn btn-outline-light btn-sm generate-script-command"
+                        data-device-id="@Model.Id">
+                    <i class="fa-solid fa-code me-1"></i>Generuj skrypt
+                </button>
+            }
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("Headers", "Device", new { id = Model.Id })'">
+                <i class="fa-solid fa-tags me-1"></i>Edytuj parametry
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("Alarms", "Device", new { id = Model.Id })'">
+                <i class="fa fa-triangle-exclamation me-1"></i>Alarmy
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("SelectParams", "Device", new { id = Model.Id })'">
+                <i class="fa-solid fa-sliders me-1"></i>Parametry
+            </button>
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("EditDevice", "Device", new { id = Model.Id })'">
+                <i class="fas fa-edit me-1"></i> Edytuj urządzenie
+            </button>
+        </div>
+    </div>
+
+    <!-- TREŚĆ KARTY -->
+    <div class="card-body">
+
+        <div class="row">
+
+            <!-- LEWA KOLUMNA -->
+            <div class="col-md-6">
+
+                <p class="mb-2">
+                    <i class="fas fa-info-circle text-secondary me-2"></i>
+                    Typ urządzenia:
+                    <span class="badge bg-info text-dark ms-1">
+                        @Model.DeviceType.GetDisplayName()
+                    </span>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-tags text-secondary me-2"></i>
+                    Opis urządenia:
+                    <b>@Model.Description</b>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-user-tie text-secondary me-2"></i>
+                    Utworzono:
+                    <b>@Model.CreatedAt.ToString("yyyy-MM-dd")</b>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on("click", ".generate-script-command", function () {
+            const errorMessage = "Błąd. Nie udało się wygenerować skryptu.";
+            var positionId = $(this).data("device-id");
+            $.ajax({
+                type: "POST",
+                url: "/Device/GenerateScript",
+                data: { id: positionId },
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success('Skrypt został wygenerowany.');
+                    } else {
+                        toastr.error(errorMessage);
+                    }
+                },
+                dataType: "json"
+            });
+        });
+    </script>
+}

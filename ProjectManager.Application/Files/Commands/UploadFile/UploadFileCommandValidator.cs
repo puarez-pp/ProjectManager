@@ -12,7 +12,7 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 
 public class IFormValidator : AbstractValidator<IFormFile>
 {
-    private string[] _extensions = new string[5] { ".PDF", ".JPG", ".PNG", ".JPEG", ".ICO" };
+    private string[] _extensions = new string[6] { ".PDF", ".JPG", ".PNG", ".JPEG", ".ICO", ".JS" };
 
     public IFormValidator()
     {

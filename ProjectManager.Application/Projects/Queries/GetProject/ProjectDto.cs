@@ -1,4 +1,3 @@
-using ProjectManager.Application.Settlements.Queries.GetAssumption;
 using ProjectManager.Application.Users.Queries.GetUser;
 using ProjectManager.Domain.Enums;
 

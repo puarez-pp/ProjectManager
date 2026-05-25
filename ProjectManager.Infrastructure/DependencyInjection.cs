@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Devices.Queries.GetDeviceParams;
 using ProjectManager.Application.Settlements.Calculations;
 using ProjectManager.Domain.Entities;
 using ProjectManager.Infrastructure.Encryption;
@@ -42,6 +43,7 @@ public static class DependencyInjection
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
             options.SignIn.RequireConfirmedAccount = false;
+            options.User.RequireUniqueEmail = true;
             options.Password = new PasswordOptions
             {
                 RequireDigit = true,
@@ -78,6 +80,9 @@ public static class DependencyInjection
         services.AddScoped<IFinanceService, FinanceService>();
         services.AddScoped<ISettlementService, SettlementService>();
         services.AddScoped<ICriticalPathService, CriticalPathService>();
+        services.AddScoped<IDeviceParamsService, DeviceParamsService>();
+        services.AddScoped<IDeviceScriptService, DeviceScriptService>();
+        services.AddScoped<ScriptTemplateRenderer>();
 
 
         return services;

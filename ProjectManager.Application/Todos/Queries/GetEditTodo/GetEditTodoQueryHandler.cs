@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Dictionaries;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Todos.Commands.EditTodo;
 using ProjectManager.Application.Users.Extensions;
@@ -10,11 +11,14 @@ namespace ProjectManager.Application.Todos.Queries.GetEditTodo;
 public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTodoVm>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IUserRoleManagerService _userRoleManagerService;
 
     public GetEditTodoQueryHandler(
-        IApplicationDbContext context)
+        IApplicationDbContext context,
+        IUserRoleManagerService userRoleManagerService)
     {
         _context = context;
+        _userRoleManagerService = userRoleManagerService;
     }
     public async Task<EditTodoVm> Handle(GetEditTodoQuery request, CancellationToken cancellationToken)
     {
@@ -30,12 +34,13 @@ public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTod
             })
             .FirstOrDefaultAsync(cancellationToken);
 
-        var users = await _context
-            .Users
-            .Include(x => x.Employee)
-            .AsNoTracking()
-            .Select(x => x.ToUserDto())
-            .ToListAsync();
+        var employees = (await _userRoleManagerService
+            .GetUsersInRoleAsync(RolesDict.Pracownik))
+            .Select(x => x.ToEmployeeBasicsDto())
+            .OrderBy(x => x.Name)
+            .ToList();
+
+
 
         var todo = await _context
             .Todos
@@ -53,7 +58,7 @@ public class GetEditTodoQueryHandler : IRequestHandler<GetEditTodoQuery, EditTod
         var vm = new EditTodoVm
         {
             Project = project,
-            AvaiableUsers = users,
+            AvaiableUsers = employees,
             Todo = todo
         };
         return vm;

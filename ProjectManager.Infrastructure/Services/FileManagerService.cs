@@ -18,6 +18,16 @@ public class FileManagerService : IFileManagerService
         File.Delete(fileFullPath);
     }
 
+    public async Task<byte[]> DownloadAsync(string fileName)
+    {
+        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Content", "Files", fileName);
+
+        if (!File.Exists(filePath))
+            return null;
+
+        return await File.ReadAllBytesAsync(filePath);
+    }
+
     public async Task Upload(IEnumerable<IFormFile> files)
     {
         var folderRoot = Path.Combine(_webHostEnvironment.WebRootPath, "Content", "Files");

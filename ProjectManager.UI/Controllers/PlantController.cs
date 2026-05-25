@@ -22,13 +22,14 @@ namespace ProjectManager.UI.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Plant(int Id)
-        {
-            return View(await Mediator.Send(new GetPlantQuery { Id = Id}));
-}
         public async Task<IActionResult> Plants()
         {
-            return View(await Mediator.Send(new GetPlantsBasicQuery()));
+            return View(await Mediator.Send(new GetPlantBasicQuery()));
+        }
+
+        public async Task<IActionResult> Plant(string id)
+        {
+            return View(await Mediator.Send(new GetPlantQuery { Id = id }));
         }
 
         public async Task<IActionResult> AddPlant()
@@ -51,9 +52,9 @@ namespace ProjectManager.UI.Controllers
             return RedirectToAction("Plants");
         }
 
-        public async Task<IActionResult> EditPlant(int Id)
+        public async Task<IActionResult> EditPlant(string id)
         {
-            return View(await Mediator.Send(new GetEditPlantQuery { Id = Id }));
+            return View(await Mediator.Send(new GetEditPlantQuery { UserId = id }));
         }
 
         [HttpPost]
@@ -71,7 +72,7 @@ namespace ProjectManager.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeletePlant(int id)
+        public async Task<IActionResult> DeletePlant(string id)
         {
             try
             {
@@ -89,5 +90,6 @@ namespace ProjectManager.UI.Controllers
                 return Json(new { success = false });
             }
         }
+
     }
 }

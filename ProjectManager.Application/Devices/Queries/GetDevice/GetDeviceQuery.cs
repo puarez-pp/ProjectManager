@@ -2,7 +2,7 @@
 
 namespace ProjectManager.Application.Devices.Queries.GetDevice;
 
-public class GetDeviceQuery: IRequest<GetDeviceVm>
+public class GetDeviceQuery: IRequest<DeviceDto>
 {
     public int Id { get; set; }
 }

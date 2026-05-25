@@ -8,27 +8,24 @@ namespace ProjectManager.Application.Devices.Commands.AddDevice;
 public class AddDeviceCommandHandler : IRequestHandler<AddDeviceCommand>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _userService;
     private readonly IDateTimeService _timeService;
 
     public AddDeviceCommandHandler(
         IApplicationDbContext context,
-        ICurrentUserService userService,
         IDateTimeService timeService)
     {
         _context = context;
-        _userService = userService;
         _timeService = timeService;
     }
     public async Task<Unit> Handle(AddDeviceCommand request, CancellationToken cancellationToken)
     {
-        var template = await _context
+        var templates = await _context
             .DeviceTemplates
             .AsNoTracking ()
             .Include(t => t.TemplatePositions)
             .FirstOrDefaultAsync(t => t.DeviceType == request.DeviceType);
 
-        if (template == null)
+        if (templates == null)
             throw new Exception("Nie znaleionu właściwego szablonu");
 
         var device = new Device
@@ -40,13 +37,14 @@ public class AddDeviceCommandHandler : IRequestHandler<AddDeviceCommand>
             CreatedAt = _timeService.Now
         };
 
-        foreach (var pos in template.TemplatePositions.OrderBy(p => p.Order)) 
-        { 
-            device.DeviceHeaders.Add(new DeviceHeader 
-            { 
-                Name = pos.Name, 
-                Description = pos.Description, 
-                Order = pos.Order 
+        foreach (var pos in templates.TemplatePositions.OrderBy(p => p.Order)) 
+        {
+            device.DeviceHeaders.Add(new DeviceHeader
+            {
+                Name = pos.Name,
+                Description = pos.Description,
+                Order = pos.Order,
+                Used = true
             }); 
         }
         _context.Devices.Add(device); 

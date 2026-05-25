@@ -1,9 +1,0 @@
-﻿@using ProjectManager.Application.Schedules.Queries.GetSchedule
-@model ScheduleVm
-
-<ul class="list-group schedule-stage-list">
-    @foreach (var stage in Model.Stages.OrderBy(s => s.Order))
-    {
-        @Html.PartialAsync("~/Views/Basics/Schedule/Partial/_StageItem.cshtml", stage)
-    }
-</ul>

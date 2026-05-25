@@ -2,7 +2,7 @@
 
 namespace ProjectManager.Application.Plants.Queries.GetPlant;
 
-public class GetPlantQuery:IRequest<GetPlantVm>
+public class GetPlantQuery:IRequest<PlantDto>
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 }

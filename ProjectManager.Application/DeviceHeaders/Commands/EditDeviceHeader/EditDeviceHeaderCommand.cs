@@ -7,6 +7,7 @@ namespace ProjectManager.Application.DeviceHeaders.Commands.EditDeviceHeader;
 public class EditDeviceHeaderCommand: IRequest
 {
     public int Id { get; set; }
+    public int DeviceId { get; set; }
 
     [Required(ErrorMessage = "Pole 'Nazwa parametru' jest wymagane")]
     [DisplayName("Nazwa parametru")]

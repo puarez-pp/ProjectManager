@@ -1,6 +1,8 @@
 ﻿using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Employees.Commands.EditEmployee;
 using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
+using ProjectManager.Application.Plants.Commands.EditPlant;
+using ProjectManager.Application.Plants.Queries.GetPlantsBasic;
 using ProjectManager.Application.Users.Commands.EditUser;
 using ProjectManager.Application.Users.Queries.GetUser;
 using ProjectManager.Domain.Entities;
@@ -49,6 +51,18 @@ public static class UserExtensions
         };
     }
 
+    public static PlantBasicDto ToPlantBasicDto(this ApplicationUser user)
+    {
+        if (user == null)
+            return null;
+
+        return new PlantBasicDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+        };
+    }
+
 
     public static EditUserCommand ToEditUser(this ApplicationUser user)
     {
@@ -82,6 +96,20 @@ public static class UserExtensions
             ManagerId = user.Employee?.ManagerId,
             ImageUrl = user.Employee?.ImageUrl,
             PositionId = (int?)user.Employee?.Position ?? (int)Domain.Enums.Position.Electric
+        };
+    }
+
+    public static EditPlantCommand ToEditPlantCommand(this ApplicationUser user)
+    {
+        if (user == null)
+            return null;
+
+        return new EditPlantCommand
+        {
+            Email = user.Email,
+            Id = user.Id,
+            Name = user.Plant?.Name,
+            Location = user.Plant?.Location
         };
     }
 }

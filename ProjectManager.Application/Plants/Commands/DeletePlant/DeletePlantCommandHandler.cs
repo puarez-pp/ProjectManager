@@ -16,7 +16,7 @@ public class DeletePlantCommandHandler : IRequestHandler<DeletePlantCommand>
     {
         var plant = await _context
             .Plants
-            .FirstOrDefaultAsync(x => x.Id == request.Id);
+            .FirstOrDefaultAsync(x => x.UserId == request.Id);
 
 
         if (plant != null)

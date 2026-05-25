@@ -36,6 +36,8 @@
     <Folder Include="Schedules\Extension\" />
     <Folder Include="Schedules\Queries\GetCriticalPath\" />
     <Folder Include="Schedules\Queries\GetTasks\" />
+    <Folder Include="Telemetries\Extensions\" />
+    <Folder Include="Telemetries\Queries\" />
   </ItemGroup>
 
 </Project>

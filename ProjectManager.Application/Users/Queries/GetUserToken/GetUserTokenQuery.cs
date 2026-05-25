@@ -1,4 +1,4 @@
-﻿using ProjectManager.Application.Common.Models.Inovices;
+﻿using ProjectManager.Application.Common.Models.Devices;
 using MediatR;
 
 

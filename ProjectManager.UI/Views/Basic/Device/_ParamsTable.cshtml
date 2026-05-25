@@ -1,0 +1,37 @@
+﻿
+@using ProjectManager.Application.Devices.Queries.GetDevice
+@using ProjectManager.Application.Devices.Queries.GetDeviceParams
+@model DeviceSelectedParamsDto
+
+<table id="paramsValue" class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th style="width: 120px;">Lp</th>
+            <th class="text-center" style="width: 180px;">Data i czas</th>
+            @foreach(var collumn in Model.DeviceParamsPivot.Columns)
+            {
+                <th class="text-center">@collumn</th>
+            }
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            int index = 1;
+        }
+        @foreach (var value in Model.DeviceParamsPivot.Rows)
+        {
+            <tr>
+                <td class="fw-semibold">@index</td>
+                <td class="fw-semibold">@value.TimeStamp</td>
+                @foreach(var val in value.Values)
+                {
+                    <td class="text-center align-middle">@val.Value</td>
+                }
+            </tr>
+            index++;
+        }
+    </tbody>
+</table>
+
+

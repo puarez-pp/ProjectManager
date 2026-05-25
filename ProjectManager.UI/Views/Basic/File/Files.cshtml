@@ -117,6 +117,9 @@
                             Usuń
                         </button>
 
+                        <button class="btn btn-primary btn-sm mb-4" onclick="downloadFile('@file.Id')">
+                            <i class="fa-solid fa-download mx-1"></i>Pobierz
+                        </button>
                     </div>
                 }
 
@@ -203,6 +206,42 @@
     document.querySelector("#actions .cancel").onclick = function (){
         myDropzone.removeAllFiles(true);
     }
+
+        function downloadFile(id) {
+
+        fetch(`/File/DownloadFile?id=${id}`)
+            .then(async response => {
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    toastr.error(error.error);
+                    return;
+                }
+
+                const blob = await response.blob();
+                const contentDisposition = response.headers.get("Content-Disposition");
+
+                let fileName = "plik";
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?(.+)"?/);
+                    if (match) fileName = match[1];
+                }
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = fileName;
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                toastr.success("Plik został pobrany.");
+            })
+            .catch(() => {
+                toastr.error("Wystąpił błąd podczas pobierania pliku.");
+            });
+        }
+
+
 
     function deleteFile(id) {
         selectedFileId = id;

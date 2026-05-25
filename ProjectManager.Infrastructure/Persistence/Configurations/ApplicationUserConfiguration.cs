@@ -20,6 +20,14 @@ class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             .HasForeignKey<Employee>(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder
+            .HasOne(x => x.Plant)
+            .WithOne(x => x.User)
+            .HasForeignKey<Plant>(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+ 
+
     }
 }
 

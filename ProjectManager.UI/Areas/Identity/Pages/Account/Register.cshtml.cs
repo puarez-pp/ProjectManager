@@ -2,23 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using ProjectManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 using ProjectManager.Application.Dictionaries;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Enums;
@@ -37,6 +26,7 @@ namespace ProjectManager.UI.Areas.Identity.Pages.Account
         private readonly IDateTimeService _dateTimeService;
         private readonly IBackgroundWorkerQueue _backgroundWorkerQueue;
         private readonly IApplicationDbContext _context;
+        private readonly IUserRoleManagerService _roleManagerService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -46,7 +36,8 @@ namespace ProjectManager.UI.Areas.Identity.Pages.Account
             IEmail email,
             IDateTimeService dateTimeService,
             IBackgroundWorkerQueue backgroundWorkerQueue,
-            IApplicationDbContext context)
+            IApplicationDbContext context,
+            IUserRoleManagerService roleManagerService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -57,6 +48,7 @@ namespace ProjectManager.UI.Areas.Identity.Pages.Account
             _dateTimeService = dateTimeService;
             _backgroundWorkerQueue = backgroundWorkerQueue;
             _context = context;
+            _roleManagerService = roleManagerService;
         }
 
         /// <summary>
@@ -141,7 +133,11 @@ namespace ProjectManager.UI.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
 
                     await _userManager.AddToRoleAsync(user, RolesDict.Pracownik);
-
+                    var usersInRole = await _roleManagerService.GetUsersInRoleAsync(RolesDict.Administrator);
+                    if (!usersInRole.Any())
+                    {
+                        await _userManager.AddToRoleAsync(user, RolesDict.Administrator);
+                    }
                     var userEm = await _context.Users
                     .Include(x => x.Employee)
                     .FirstOrDefaultAsync(x => x.Id == userId);

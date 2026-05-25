@@ -1,0 +1,89 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.DeviceHeaders.Queries.GetDeviceHeaders
+@using ProjectManager.Application.Devices.Queries.GetDevice
+@using ProjectManager.Application.Devices.Queries.GetDeviceParams
+@using ProjectManager.Domain.Enums
+@using System.Globalization
+@model DeviceSelectedParamsDto
+
+@{
+    ViewData["Title"] = "Wybrane parametry";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+    <partial name="Styles/_DataTablesStyles" />
+}
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Name
+        </h4>
+
+        <div class="d-flex gap-2">
+
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("SelectParams", "Device", new { id = Model.Id })'">
+                <i class="fa-solid fa-arrow-left me-1"></i> Powrót
+            </button>
+        </div>
+    </div>
+
+    <!-- TREŚĆ KARTY -->
+    <div class="card-body">
+
+        <div class="row">
+
+            <!-- LEWA KOLUMNA -->
+            <div class="col-md-6">
+
+                <p class="mb-2">
+                    <i class="fas fa-info-circle text-secondary me-2"></i>
+                    Typ urządzenia:
+                    <span class="badge bg-info text-dark ms-1">
+                        @Model.DeviceType.GetDisplayName()
+                    </span>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-tags text-secondary me-2"></i>
+                    Opis urządenia:
+                    <b>@Model.Description</b>
+                </p>
+            </div>
+        </div>
+        <div id="headers-container">
+            <partial name="_ParamsTable" model="Model" />
+        </div>
+    </div>
+</div>
+<div id="modal-container"></div>
+
+@section Scripts {
+
+    <partial name="Scripts/_DataTablesScripts" />
+
+    <script>
+       $(document).ready(function () {
+
+               dtParamsValue = $('#paramsValue').DataTable({
+               paging: true,
+               ordering: false,
+               info: true,
+               responsive: true,
+               autoWidth: false,
+               lengthChange: true,
+               language: {
+                   url: `/lib/datatables/lang/${'@locale'}.json`
+               },
+           });
+
+       });
+        
+    </script>
+}

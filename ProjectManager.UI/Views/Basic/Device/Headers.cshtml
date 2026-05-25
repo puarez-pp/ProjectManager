@@ -1,0 +1,227 @@
+﻿@using ProjectManager.Application.Common.Extensions
+@using ProjectManager.Application.DeviceHeaders.Queries.GetDeviceHeaders
+@using ProjectManager.Application.Devices.Queries.GetDevice
+@using ProjectManager.Domain.Enums
+@using System.Globalization
+@model DeviceDto
+
+@{
+    ViewData["Title"] = "Nazwy parametrów";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+    <partial name="Styles/_DataTablesStyles" />
+}
+
+<partial name="Modals/_ModalConfirm"
+         model="@(new ModalParams
+         {
+             Id = "modal-confirm-delete",
+             Title = "Potwierdź proszę",
+             Description = "Czy na pewno chcesz usunąć wybrany element?"
+         })" />
+
+<div class="card shadow-sm mb-4 border-0">
+
+    <!-- NAGŁÓWEK KARTY -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center mt-3">
+        <h4 class="mb-0 d-flex align-items-center">
+            <i class="fas fa-folder-open me-2"></i>
+            @Model.Name
+        </h4>
+
+        <div class="d-flex gap-2">
+            @if (!Model.IsConfigured)
+            {
+                <button class="btn btn-outline-light btn-sm confirm-headers"
+                        type="button"
+                        data-device-id="@Model.Id">
+                    <i class="fa-solid fa-check me-1"></i> Zatwierdź
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-outline-light btn-sm confirm-headers"
+                        type="button"
+                        data-device-id="@Model.Id"
+                        data-device-configured="@Model.IsConfigured">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Cofnij
+                </button>
+            }
+            <button class="btn btn-outline-light btn-sm"
+                    type="button"
+                    onclick="location.href='@Url.Action("Device", "Device", new { id = Model.Id })'">
+                <i class="fa-solid fa-arrow-left me-1"></i> Powrót
+            </button>
+        </div>
+    </div>
+
+    <!-- TREŚĆ KARTY -->
+    <div class="card-body">
+
+        <div class="row">
+
+            <!-- LEWA KOLUMNA -->
+            <div class="col-md-6">
+
+                <p class="mb-2">
+                    <i class="fas fa-info-circle text-secondary me-2"></i>
+                    Typ urządzenia:
+                    <span class="badge bg-info text-dark ms-1">
+                        @Model.DeviceType.GetDisplayName()
+                    </span>
+                </p>
+
+                <p class="mb-2">
+                    <i class="fas fa-tags text-secondary me-2"></i>
+                    Opis urządenia:
+                    <b>@Model.Description</b>
+                </p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="headers-container">
+                <partial name="_HeadersTable" model="Model" />
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-container"></div>
+
+@section Scripts {
+
+    <partial name="Scripts/_DataTablesScripts" />
+
+    <script>
+        let dtHeaders;
+        let selectedRow = null;
+        let selectedHeaderId = null;
+
+        $(document).ready(function () {
+
+                dtHeaders = $('#headers').DataTable({
+                paging: false,
+                ordering: false,
+                info: true,
+                responsive: true,
+                autoWidth: true,
+                lengthChange: true,
+                language: {
+                    url: `/lib/datatables/lang/${'@locale'}.json`
+                },
+            });
+        });
+
+        $(document).on("click", ".open-delete-header-modal", function () {
+            selectedHeaderId = $(this).data("position");
+            selectedRow = $(this).closest("tr");
+            $("#modal-confirm-delete").modal('show');
+        });
+
+        $(document).on("click", "#modal-confirm-delete-btn", function () {
+            const errorMessage = 'Błąd. Nie udało się usunąć wybranego elementu.';
+            $("#modal-confirm-delete").modal('hide');
+            $.ajax({
+                type: "POST",
+                url: "/Device/DeleteHeader",
+                data: { id: selectedHeaderId },
+                success: function (data) {
+                    if (data.success) {
+                        dtHeaders.row(selectedRow).remove().draw();
+                        toastr.success('Dane zostały pomyślnie zaktualizowane.');
+                    }
+                    else
+                        toastr.error('Błąd. ' + data.message);
+                },
+                dataType: "json",
+                error: function () {
+                    toastr.error(errorMessage);
+                    }
+            });
+        });
+         
+        $(document).on("click", ".confirm-headers", function () {
+            var deviceId = $(this).data("device-id");
+            console.log("exists:", $(".confirm-headers").length);
+
+            $.ajax({
+                type: "POST",
+                url: "/Device/ConfirmHeaders",
+                data: { id: deviceId },
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success('Lista została pomyślnie zaktualizowa.');
+                        location.reload();
+                    }
+                    else
+                        toastr.error('Błąd. ' + data.message);
+                },
+                dataType: "json",
+                error: function () {
+                        toastr.error('Błąd w trakcie aktualizacji.');
+                }
+            });
+        });
+
+    
+    $(document).on("click", ".open-edit-header-modal", function () {
+        var positionId = $(this).data("position");
+        $.ajax({
+            url: "/Device/EditHeader",
+            type: "GET",
+            data: { id: positionId },
+            success: function (result) {
+                $("#modal-container").html(result);
+                $("#modal-edit-header").modal('show');
+            }
+        });
+    });
+
+    $(document).on("submit", "#edit-header-form", function (e) {
+        e.preventDefault(); // zatrzymanie submitu
+        const errorMessage = "Błąd. Nie udało się zaktualizować danych.";
+        $.ajax({
+            type: "POST",
+            url: "/Device/EditHeader",
+            data: $(this).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    toastr.success('Dane zostały zaktualizowane.');
+                    $('#modal-edit-header').modal('hide');
+                        reloadHeadersTable(data.deviceId);
+                } else {
+                    toastr.error(errorMessage);
+                }
+            },
+            dataType: "json"
+        });
+    });
+
+        $('#modal-edit-header').on('hidden.bs.modal', function () {
+            $(this).remove(); // usuwa modal z DOM po zamknięciu
+        });
+
+        function reloadHeadersTable(deviceId) {
+
+            $.get("/Device/GetHeadersTable", { id: deviceId }, function (html) {
+
+                // usuń starą tabelę
+                $("#headers-container").html(html);
+
+                // reinit DataTables
+                $('#headers').DataTable({
+                    paging: false,
+                    ordering: false,
+                    info: true,
+                    responsive: true,
+                    autoWidth: true,
+                    lengthChange: true,
+                    language: {
+                        url: `/lib/datatables/lang/${'@locale'}.json`
+                    }
+                });
+            });
+        }
+    </script>
+}

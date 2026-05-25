@@ -34,7 +34,7 @@
         @for (int i = 0; i < Model.AvaiableUsers.Count(); i++)
         {
             @Html.HiddenFor(x => x.AvaiableUsers[i].Id)
-            @Html.HiddenFor(x => x.AvaiableUsers[i].FullName)
+            @Html.HiddenFor(x => x.AvaiableUsers[i].Name)
         }
         <div class="card-body row">
             <div class="form-group">
@@ -46,7 +46,7 @@
             <div class="form-group col-md-6">
                 @Html.LabelFor(x => x.Todo.UserToId)
                 <div class="select2-blue">
-                    @Html.DropDownList("Todo.UserToId", @Model.AvaiableUsers.Select(x => new SelectListItem(x.FullName, x.Id)), null, htmlAttributes: new { @class = "form-control select2-UserId", style = "width: 100%;" })
+                    @Html.DropDownList("Todo.UserToId", @Model.AvaiableUsers.Select(x => new SelectListItem(x.Name, x.Id)), null, htmlAttributes: new { @class = "form-control select2-UserId", style = "width: 100%;" })
                     @Html.ValidationMessageFor(x => x.Todo.UserToId)
                 </div>
             </div>

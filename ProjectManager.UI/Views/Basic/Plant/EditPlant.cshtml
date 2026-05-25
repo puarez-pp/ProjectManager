@@ -1,0 +1,93 @@
+﻿
+@using System.Globalization
+@using ProjectManager.Application.Plants.Commands.EditPlant
+@using ProjectManager.Domain.Enums
+
+@model EditPlantCommand
+
+@{
+    ViewData["Title"] = "Edycja instalacji";
+    var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
+
+@section Styles {
+<partial name="Styles/_DateTimeStyles" />
+<partial name="Styles/_EditorStyles" />
+<partial name="Styles/_SelectStyles" />
+}
+
+
+<div class="card card-primary card-border-top">
+
+    @using (Html.BeginForm("EditPlant", "Plant"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Id)
+
+        <div class="card-body">
+
+             <div class="form-group">
+                @Html.LabelFor(x => x.Email)
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder="Wprowadź e-mail"})
+                @Html.ValidationMessageFor(x => x.Email)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Password)
+                @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder="Wprowadź hasło"})
+                @Html.ValidationMessageFor(x => x.Password)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.ConfirmPassword)
+                @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder="Potwierdź hasło"})
+                @Html.ValidationMessageFor(x => x.ConfirmPassword)
+            </div> 
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Name)
+                @Html.TextBoxFor(x => x.Name, new { @class = "form-control", placeholder="Wprowadź nazwę instalacji"})
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Location)
+                @Html.TextBoxFor(x => x.Location, new { @class = "form-control", placeholder="Wprowadź lokalizację"})
+                @Html.ValidationMessageFor(x => x.Location)
+            </div>
+
+        </div>
+
+        <div class="card-footer">
+             <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-solid fa-circle-check"></i>Zapisz
+            </button>
+        </div>
+
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="Scripts/_ValidationScriptsPartial" />
+    <partial name="Scripts/_DateTimeScripts" />
+    <partial name="Scripts/_EditorScripts" />
+    <partial name="Scripts/_SelectScripts" />
+    <script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+
+    <script>
+
+        var selectedFileBrowseId;
+
+        $(document).ready(function() {
+
+
+            $('.select2-PositionId').select2({
+                theme: 'bootstrap-5'
+            });
+
+        });
+    </script>
+}
