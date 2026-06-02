@@ -19,12 +19,8 @@ public class AddClientCommandHandler : IRequestHandler<AddClientCommand>
         client.Email = request.Email;
         client.PhoneNumber = request.PhoneNumber;
         await _context.Clients.AddAsync(client);
-        await _context.SaveChangesAsync(cancellationToken);
-        var clientid = client.Id;
-
         client.Address = new Address
         {
-            ClientId = clientid,
             City = request.City,
             Street = request.Street,
             StreetNumber = request.StreetNumber,

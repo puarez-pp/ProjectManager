@@ -27,6 +27,7 @@ namespace ProjectManager.Application.Common.Interfaces
         DbSet<SubContractor> SubContractors { get; set; }
         DbSet<Todo> Todos { get; set; }
         DbSet<TodoPost> TodoPosts { get; set; }
+        DbSet<TodoNotificationLog> TodoNotificationLogs { get; set; }
         DbSet<Tool> Tools { get; set; }
         DbSet<ToolRent> Rents { get; set; }
         DbSet<Assumption> Assumptions { get; set; }

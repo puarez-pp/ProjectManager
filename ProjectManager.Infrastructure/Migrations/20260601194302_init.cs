@@ -991,6 +991,27 @@ namespace ProjectManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TodoNotificationLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TodoId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Channel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TodoNotificationLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TodoNotificationLogs_Todos_TodoId",
+                        column: x => x.TodoId,
+                        principalTable: "Todos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TodoReplies",
                 columns: table => new
                 {
@@ -1399,14 +1420,14 @@ namespace ProjectManager.Infrastructure.Migrations
                 {
                     { 1, "Host", "HostSmtp", 1, 1, 0, "smtp.gmail.com" },
                     { 2, "Port", "Port", 2, 1, 2, "587" },
-                    { 3, "Adres e-mail nadawcy", "SenderEmail", 3, 1, 0, "" },
-                    { 4, "Hasło", "SenderEmailPassword", 4, 1, 4, "" },
+                    { 3, "Adres e-mail nadawcy", "SenderEmail", 3, 1, 0, "integri.pp@gmail.com" },
+                    { 4, "Hasło", "SenderEmailPassword", 4, 1, 4, "kegq dlmi bjan jexa" },
                     { 5, "Nazwa nadawcy", "SenderName", 5, 1, 0, "Administrator" },
                     { 6, "Login nadawcy", "SenderLogin", 6, 1, 0, "" },
                     { 7, "Czy wysłać email adresatowi nowego zadania?", "EmailOnNewTodo", 7, 1, 1, "False" },
                     { 8, "Czy wyświetlać banner na stronie głównej?", "BannerVisible", 1, 2, 1, "True" },
                     { 9, "Folor footera strona głównej", "FooterColor", 2, 2, 5, "#dc3545" },
-                    { 10, "Główny adres e-mail administratora", "AdminEmail", 3, 2, 0, "integri.pp@gmail.com" }
+                    { 10, "Główny adres e-mail administratora", "AdminEmail", 3, 2, 0, "ppiatkowski@interia.pl" }
                 });
 
             migrationBuilder.InsertData(
@@ -1536,30 +1557,30 @@ namespace ProjectManager.Infrastructure.Migrations
                     { 94, "Zadana wartość napięcia - OSD", "UOSD", 94, 1 },
                     { 95, "Woda grzewcza przed KWT", "T290", 95, 1 },
                     { 96, "Woda grzewcza przed AWT", "T385", 96, 1 },
-                    { 97, "Description", "Rezerwa", 97, 1 },
-                    { 98, "Description", "Rezerwa", 98, 1 },
-                    { 99, "Description", "Rezerwa", 99, 1 },
-                    { 100, "Description", "Rezerwa", 100, 1 },
-                    { 101, "Description", "Rezerwa", 101, 1 },
-                    { 102, "Description", "Rezerwa", 102, 1 },
-                    { 103, "Description", "Rezerwa", 103, 1 },
-                    { 104, "Description", "Rezerwa", 104, 1 },
-                    { 105, "Description", "Rezerwa", 105, 1 },
-                    { 106, "Description", "Rezerwa", 106, 1 },
+                    { 97, "Opis", "Rezerwa", 97, 1 },
+                    { 98, "Opis", "Rezerwa", 98, 1 },
+                    { 99, "Opis", "Rezerwa", 99, 1 },
+                    { 100, "Opis", "Rezerwa", 100, 1 },
+                    { 101, "Opis", "Rezerwa", 101, 1 },
+                    { 102, "Opis", "Rezerwa", 102, 1 },
+                    { 103, "Opis", "Rezerwa", 103, 1 },
+                    { 104, "Opis", "Rezerwa", 104, 1 },
+                    { 105, "Opis", "Rezerwa", 105, 1 },
+                    { 106, "Opis", "Rezerwa", 106, 1 },
                     { 107, "Description", "Rezerwa", 107, 1 },
-                    { 108, "Description", "Rezerwa", 108, 1 },
-                    { 109, "Description", "Rezerwa", 109, 1 },
-                    { 110, "Description", "Rezerwa", 110, 1 },
-                    { 111, "Description", "Rezerwa", 111, 1 },
-                    { 112, "Description", "Rezerwa", 112, 1 },
-                    { 113, "Description", "Rezerwa", 113, 1 },
-                    { 114, "Description", "Rezerwa", 114, 1 },
-                    { 115, "Description", "Rezerwa", 115, 1 },
-                    { 116, "Description", "Rezerwa", 116, 1 },
-                    { 117, "Description", "Rezerwa", 117, 1 },
-                    { 118, "Description", "Rezerwa", 118, 1 },
-                    { 119, "Description", "Rezerwa", 119, 1 },
-                    { 120, "Description", "Rezerwa", 120, 1 },
+                    { 108, "Opis", "Rezerwa", 108, 1 },
+                    { 109, "Opis", "Rezerwa", 109, 1 },
+                    { 110, "Opis", "Rezerwa", 110, 1 },
+                    { 111, "Opis", "Rezerwa", 111, 1 },
+                    { 112, "Opis", "Rezerwa", 112, 1 },
+                    { 113, "Opis", "Rezerwa", 113, 1 },
+                    { 114, "Opis", "Rezerwa", 114, 1 },
+                    { 115, "Opis", "Rezerwa", 115, 1 },
+                    { 116, "Opis", "Rezerwa", 116, 1 },
+                    { 117, "Opis", "Rezerwa", 117, 1 },
+                    { 118, "Opis", "Rezerwa", 118, 1 },
+                    { 119, "Opis", "Rezerwa", 119, 1 },
+                    { 120, "Opis", "Rezerwa", 120, 1 },
                     { 121, "Przepływ chwilowy", "Vm", 1, 2 },
                     { 122, "Moc", "Moc", 2, 2 },
                     { 123, "Stan licznika", "Stan", 3, 2 },
@@ -2029,6 +2050,11 @@ namespace ProjectManager.Infrastructure.Migrations
                 column: "TemplateId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TodoNotificationLogs_TodoId",
+                table: "TodoNotificationLogs",
+                column: "TodoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TodoReplies_TodoId",
                 table: "TodoReplies",
                 column: "TodoId");
@@ -2161,6 +2187,9 @@ namespace ProjectManager.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TemplatePositions");
+
+            migrationBuilder.DropTable(
+                name: "TodoNotificationLogs");
 
             migrationBuilder.DropTable(
                 name: "TodoReplies");

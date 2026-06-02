@@ -19,6 +19,7 @@ public class GetEditSubContractorQueryHandler : IRequestHandler<GetEditSubContra
     {
         var subContractor = (await _context
             .SubContractors
+            .Include(x => x.Address)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id))
             .ToEditSubContractorCommand();

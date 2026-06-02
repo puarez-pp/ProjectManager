@@ -29,9 +29,19 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(function () {
+            var overdueCount = @ViewBag.OverdueTodosCount;
 
-@* <div id="userContainer">
-    
-</div> *@
+            if (overdueCount > 0) {
+                toastr.warning(
+                    "Liczba Twoich zadań, których termin realizacji minął: " + overdueCount,
+                    "Przypomnienie");
+            }
+        });
+    </script>
+}
+
 
 

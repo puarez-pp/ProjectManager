@@ -13,25 +13,33 @@ public class EditClientCommandHandler : IRequestHandler<EditClientCommand>
     {
         _context = context;
     }
+
     public async Task<Unit> Handle(EditClientCommand request, CancellationToken cancellationToken)
     {
-        var client = await _context
-            .Clients
+        var client = await _context.Clients
             .Include(x => x.Address)
-            .FirstOrDefaultAsync(x => x.Id == request.Id);
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+
+        if (client == null)
+            throw new Exception($"Client with id {request.Id} not found");
 
         client.Name = request.Name;
         client.ContactPerson = request.ContactPerson;
         client.Email = request.Email;
         client.PhoneNumber = request.PhoneNumber;
+
         if (client.Address == null)
             client.Address = new Address();
+
+        client.Address.ClientId = client.Id;
         client.Address.City = request.City;
         client.Address.Street = request.Street;
         client.Address.StreetNumber = request.StreetNumber;
         client.Address.ZipCode = request.ZipCode;
 
         await _context.SaveChangesAsync(cancellationToken);
+
         return Unit.Value;
     }
 }

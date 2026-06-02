@@ -211,56 +211,75 @@ for (let i = 0; i < headers.length; i++) {
     };
 }
 
-async function authenticate() {
-    try {
-        const response = await fetch('https://localhost:7245/api/tokens', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userName: 'dako@eneria.pl',
-                password: 'AQAAAAEAACcQAAAAEFG6mYrUpDiYNa7d0bGK1yF/98FFDYNNI6G/bE/sR3PmgvuXpAKldAy+wOYbAwPkjg=='
-            })
-        });
+// --- AUTORYZACJA ---
 
-        const data = await response.json();
+function authenticate() {
+    var req = HMIRuntime.HttpRequest("https://localhost:7245/api/tokens");
+
+    req.Method = "POST";
+    req.SetHeader("Content-Type", "application/json");
+
+    var body = JSON.stringify({
+        userName: "dako@eneria.pl",
+        password: "AQAAAAEAACcQAAAAEFG6mYrUpDiYNa7d0bGK1yF/98FFDYNNI6G/bE/sR3PmgvuXpAKldAy+wOYbAwPkjg=="
+    });
+
+    req.Send(body);
+
+    var resp = req.GetResponseString();
+    if (!resp) {
+        HMIRuntime.Trace("Auth error: empty response");
+        return;
+    }
+
+    try {
+        var data = JSON.parse(resp);
         jwtToken = data.token;
     } catch (e) {
-        console.log('Auth error', e);
+        HMIRuntime.Trace("Auth parse error: " + e);
     }
 }
 
-async function sendParams() {
-    if (!jwtToken) await authenticate();
+// --- WYSYŁANIE PARAMETRÓW ---
 
-    const now = new Date().toISOString();
+function sendParams() {
 
+    if (!jwtToken) {
+        authenticate();
+        if (!jwtToken) {
+            HMIRuntime.Trace("Auth failed, skipping send");
+            return;
+        }
+    }
 
+    var now = new Date().toISOString();
+
+    // Wypełnianie DTO
     for (let i = 0; i < dtoArray.length; i++) {
         dtoArray[i].timeStamp = now;
         dtoArray[i].value = readers[i]();
     }
 
-    const payload = {
+    var payload = {
         deviceId: 1,
         deviceParams: dtoArray
     };
 
-    try {
-        const response = await fetch('https://localhost:7245/api/telemetries/params', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jwtToken
-            },
-            body: JSON.stringify(payload)
-        });
+    var req = HMIRuntime.HttpRequest("https://localhost:7245/api/telemetries/params");
+    req.Method = "POST";
+    req.SetHeader("Content-Type", "application/json");
+    req.SetHeader("Authorization", "Bearer " + jwtToken);
 
-        if (!response.ok) {
-            console.log('Send error', await response.text());
-        }
-    } catch (e) {
-        console.log('Send error', e);
+    var json = JSON.stringify(payload);
+
+    req.Send(json);
+
+    var resp = req.GetResponseString();
+    if (!resp) {
+        HMIRuntime.Trace("Send error: empty response");
     }
 }
 
-setInterval(sendParams, 10000);
+// --- INTERWAŁ ---
+
+HMIRuntime.SetInterval(sendParams, 60000);

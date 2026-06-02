@@ -12,7 +12,7 @@ using ProjectManager.Infrastructure.Persistence;
 namespace ProjectManager.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260521145255_init")]
+    [Migration("20260601194302_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1356,7 +1356,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 97,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 97,
                             TemplateId = 1
@@ -1364,7 +1364,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 98,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 98,
                             TemplateId = 1
@@ -1372,7 +1372,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 99,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 99,
                             TemplateId = 1
@@ -1380,7 +1380,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 100,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 100,
                             TemplateId = 1
@@ -1388,7 +1388,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 101,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 101,
                             TemplateId = 1
@@ -1396,7 +1396,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 102,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 102,
                             TemplateId = 1
@@ -1404,7 +1404,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 103,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 103,
                             TemplateId = 1
@@ -1412,7 +1412,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 104,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 104,
                             TemplateId = 1
@@ -1420,7 +1420,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 105,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 105,
                             TemplateId = 1
@@ -1428,7 +1428,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 106,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 106,
                             TemplateId = 1
@@ -1444,7 +1444,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 108,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 108,
                             TemplateId = 1
@@ -1452,7 +1452,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 109,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 109,
                             TemplateId = 1
@@ -1460,7 +1460,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 110,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 110,
                             TemplateId = 1
@@ -1468,7 +1468,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 111,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 111,
                             TemplateId = 1
@@ -1476,7 +1476,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 112,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 112,
                             TemplateId = 1
@@ -1484,7 +1484,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 113,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 113,
                             TemplateId = 1
@@ -1492,7 +1492,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 114,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 114,
                             TemplateId = 1
@@ -1500,7 +1500,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 115,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 115,
                             TemplateId = 1
@@ -1508,7 +1508,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 116,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 116,
                             TemplateId = 1
@@ -1516,7 +1516,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 117,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 117,
                             TemplateId = 1
@@ -1524,7 +1524,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 118,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 118,
                             TemplateId = 1
@@ -1532,7 +1532,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 119,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 119,
                             TemplateId = 1
@@ -1540,7 +1540,7 @@ namespace ProjectManager.Infrastructure.Migrations
                         new
                         {
                             Id = 120,
-                            Description = "Description",
+                            Description = "Opis",
                             Name = "Rezerwa",
                             Order = 120,
                             TemplateId = 1
@@ -3234,7 +3234,7 @@ namespace ProjectManager.Infrastructure.Migrations
                             Order = 3,
                             SettingsId = 1,
                             Type = 0,
-                            Value = ""
+                            Value = "integri.pp@gmail.com"
                         },
                         new
                         {
@@ -3244,7 +3244,7 @@ namespace ProjectManager.Infrastructure.Migrations
                             Order = 4,
                             SettingsId = 1,
                             Type = 4,
-                            Value = ""
+                            Value = "kegq dlmi bjan jexa"
                         },
                         new
                         {
@@ -3304,7 +3304,7 @@ namespace ProjectManager.Infrastructure.Migrations
                             Order = 3,
                             SettingsId = 2,
                             Type = 0,
-                            Value = "integri.pp@gmail.com"
+                            Value = "ppiatkowski@interia.pl"
                         });
                 });
 
@@ -3484,6 +3484,30 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.HasIndex("UserToId");
 
                     b.ToTable("Todos", (string)null);
+                });
+
+            modelBuilder.Entity("ProjectManager.Domain.Entities.TodoNotificationLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Channel")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TodoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TodoId");
+
+                    b.ToTable("TodoNotificationLogs", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.TodoPost", b =>
@@ -5287,6 +5311,17 @@ namespace ProjectManager.Infrastructure.Migrations
                     b.Navigation("UserTo");
                 });
 
+            modelBuilder.Entity("ProjectManager.Domain.Entities.TodoNotificationLog", b =>
+                {
+                    b.HasOne("ProjectManager.Domain.Entities.Todo", "Todo")
+                        .WithMany("TodoNotificationLogs")
+                        .HasForeignKey("TodoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Todo");
+                });
+
             modelBuilder.Entity("ProjectManager.Domain.Entities.TodoPost", b =>
                 {
                     b.HasOne("ProjectManager.Domain.Entities.Todo", "Todo")
@@ -5528,6 +5563,8 @@ namespace ProjectManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectManager.Domain.Entities.Todo", b =>
                 {
+                    b.Navigation("TodoNotificationLogs");
+
                     b.Navigation("TodoPosts");
                 });
 

@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Application.Employees.Queries.GetEmployeeBasicsQuery;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
 using ProjectManager.Application.Todos.Commands.AddTodo;
-using ProjectManager.Application.Users.Extensions;
+using ProjectManager.Application.Users.Queries.GetUser;
 
 namespace ProjectManager.Application.Todos.Queries.GetAddTodo;
 
@@ -31,9 +32,14 @@ public class GetAddTodoQueryHandler : IRequestHandler<GetAddTodoQuery, AddTodoVm
 
         var users = await _context
             .Users
-            .Include(x => x.Employee)
             .AsNoTracking()
-            .Select(x => x.ToUserDto())
+            .Select(x => new UserDto
+            {
+                Id = x.Id,
+                Email = x.Email,
+                FullName = $"{x.FirstName} {x.LastName}",
+                Employee =  new EmployeeDto()
+            })
             .ToListAsync();
 
         var vm = new AddTodoVm

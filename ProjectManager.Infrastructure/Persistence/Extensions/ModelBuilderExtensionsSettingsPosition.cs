@@ -33,7 +33,7 @@ static class ModelBuilderExtensionsSettingsPosition
             {
                 Id = 3,
                 Key = SettingsDict.SenderEmail,
-                Value = "",
+                Value = "integri.pp@gmail.com",
                 Description = "Adres e-mail nadawcy",
                 Type = Domain.Enums.SettingsType.Text,
                 SettingsId = 1,
@@ -43,7 +43,7 @@ static class ModelBuilderExtensionsSettingsPosition
             {
                 Id = 4,
                 Key = SettingsDict.SenderEmailPassword,
-                Value = "",
+                Value = "kegq dlmi bjan jexa",
                 Description = "Hasło",
                 Type = Domain.Enums.SettingsType.Password,
                 SettingsId = 1,
@@ -103,7 +103,7 @@ static class ModelBuilderExtensionsSettingsPosition
             {
                 Id = 10,
                 Key = SettingsDict.AdminEmail,
-                Value = "integri.pp@gmail.com",
+                Value = "ppiatkowski@interia.pl",
                 Description = "Główny adres e-mail administratora",
                 Type = Domain.Enums.SettingsType.Text,
                 SettingsId = 2,

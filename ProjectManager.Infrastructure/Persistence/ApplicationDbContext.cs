@@ -32,6 +32,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<Post> Posts { get; set; }
     public DbSet<Todo> Todos { get; set; }
     public DbSet<TodoPost> TodoPosts { get; set; }
+    public DbSet<TodoNotificationLog> TodoNotificationLogs { get; set; }
     public DbSet<ProjectScopePosition> ProjectScopePositions { get; set; }
     public DbSet<PostReply> PostReplies { get; set; }
     public DbSet<PositionPost> PositionPosts { get; set; }

@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Devices.Queries.GetDeviceParams;
 using ProjectManager.Application.Settlements.Calculations;
 using ProjectManager.Domain.Entities;
-using ProjectManager.Infrastructure.Encryption;
 using ProjectManager.Infrastructure.Identity;
 using ProjectManager.Infrastructure.Payments;
 using ProjectManager.Infrastructure.Pdf;
@@ -16,6 +14,8 @@ using ProjectManager.Infrastructure.Persistence;
 using ProjectManager.Infrastructure.Services;
 using ProjectManager.Infrastructure.Services.SignalR;
 using Rotativa.AspNetCore;
+using Hangfire;
+using Hangfire.SqlServer;
 
 
 namespace ProjectManager.Infrastructure;
@@ -83,7 +83,24 @@ public static class DependencyInjection
         services.AddScoped<IDeviceParamsService, DeviceParamsService>();
         services.AddScoped<IDeviceScriptService, DeviceScriptService>();
         services.AddScoped<ScriptTemplateRenderer>();
+        services.AddScoped<ITodoNotificationService, TodoNotificationService>();
 
+        //var hangfireConn = configuration.GetConnectionString("Hangfire") ?? configuration.GetConnectionString("DefaultConnection");
+        //services.AddHangfire(cfg => cfg
+        //    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+        //    .UseSimpleAssemblyNameTypeSerializer()
+        //    .UseRecommendedSerializerSettings()
+        //    .UseSqlServerStorage(hangfireConn, new SqlServerStorageOptions
+        //    {
+        //        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        //        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        //        QueuePollInterval = TimeSpan.Zero,
+        //        UseRecommendedIsolationLevel = true,
+        //        UsePageLocksOnDequeue = true,
+        //        DisableGlobalLocks = true
+        //    }));
+
+        //services.AddHangfireServer();
 
         return services;
     }

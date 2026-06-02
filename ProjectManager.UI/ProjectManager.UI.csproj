@@ -9,6 +9,7 @@
     <PackageReference Include="AspNetCore.ReCaptcha" Version="1.5.1" />
     <PackageReference Include="DataTables.AspNet.AspNetCore" Version="2.0.2" />
     <PackageReference Include="DataTables.AspNet.Core" Version="2.0.2" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.23" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.36" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.36" />
     <PackageReference Include="Microsoft.Azure.StackExchangeRedis" Version="3.2.0" />

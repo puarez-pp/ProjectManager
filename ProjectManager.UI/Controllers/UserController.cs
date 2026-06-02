@@ -21,8 +21,9 @@ public class UserController : BaseController
 
     public async Task<IActionResult> Dashboard()
     {
-        return View(await Mediator.Send(new GetUserDashboardQuery { UserId = UserId }));
-
+        var dashboardVm = await Mediator.Send(new GetUserDashboardQuery { UserId = UserId });
+        ViewBag.OverdueTodosCount = dashboardVm.OverdueTodosCount;
+        return View(dashboardVm);
     }
 
     public async Task<IActionResult> User()

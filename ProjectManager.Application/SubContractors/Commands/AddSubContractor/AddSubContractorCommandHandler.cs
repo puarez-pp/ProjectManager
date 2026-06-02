@@ -19,12 +19,8 @@ public class AddSubContractorCommandHandler : IRequestHandler<AddSubContractorCo
         subContractor.Email = request.Email;
         subContractor.PhoneNumber = request.PhoneNumber;
         await _context.SubContractors.AddAsync(subContractor);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        var subontractorId = subContractor.Id;
         subContractor.Address = new SubConAddress
         {
-            SubContractorId = subontractorId,
             City = request.City,
             Street = request.Street,
             StreetNumber = request.StreetNumber,

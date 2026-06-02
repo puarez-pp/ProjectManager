@@ -1,5 +1,7 @@
 using AspNetCore.ReCaptcha;
 using DataTables.AspNet.AspNetCore;
+using Hangfire;
+using Hangfire.Common;
 using Microsoft.Extensions.Options;
 using NLog.Web;
 using ProjectManager.Application;
@@ -40,6 +42,13 @@ internal class Program
 
         var app = builder.Build();
         app.UseSession();
+
+        //var recurring = app.Services.GetRequiredService<IRecurringJobManager>();
+        //recurring.AddOrUpdate(
+        //    "SendOverdueTodoNotifications",
+        //    Job.FromExpression<ITodoNotificationService>(s => s.SendOverdueTodoNotificationsAsync()),
+        //    Cron.Daily(),
+        //    null);
 
         using (var scope = app.Services.CreateScope())
         {

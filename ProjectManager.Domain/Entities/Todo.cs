@@ -18,4 +18,5 @@ public class Todo
     public int ProjectId { get; set; }
     public Project Project { get; set; } 
     public ICollection<TodoPost> TodoPosts { get; set; } = new HashSet<TodoPost>();
+    public ICollection<TodoNotificationLog> TodoNotificationLogs { get; set; } = new HashSet<TodoNotificationLog>();
 }

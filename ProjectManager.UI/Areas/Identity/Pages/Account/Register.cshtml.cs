@@ -12,6 +12,9 @@ using ProjectManager.Application.Dictionaries;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace ProjectManager.UI.Areas.Identity.Pages.Account
 {
@@ -149,22 +152,19 @@ namespace ProjectManager.UI.Areas.Identity.Pages.Account
                     await _context.SaveChangesAsync(CancellationToken.None);
 
 
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
-                    //_backgroundWorkerQueue.QueueBackgroundWorkerItem(async x =>
-                    //{
-                    //    await _email.SendAsync(
-                    //    "Potwierdź e-mail",
-                    //    $"Aby potwierdzić utworzone konto kliknij w link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>kliknij tutaj</a>",
-                    //    Input.Email);
-                    //}, $"Aktywacja konta. E-mail: {Input.Email}");
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        protocol: Request.Scheme);
 
+                    await _email.SendAsync(
+                    "Potwierdź e-mail",
+                    $"Aby potwierdzić utworzone konto kliknij w link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>kliknij tutaj</a>",
+                    Input.Email);
 
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                 }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
+using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Application.SubContractors.Commands.EditSubContractor;
 
@@ -16,12 +17,15 @@ public class EditSubContractorCommandHandler : IRequestHandler<EditSubContractor
     {
         var subContractor = await _context
             .SubContractors
+            .Include(x => x.Address)
             .FirstOrDefaultAsync(x => x.Id == request.Id);
-
         subContractor.Name = request.Name;
         subContractor.ContactPerson = request.ContactPerson;
         subContractor.Email = request.Email;
         subContractor.PhoneNumber = request.PhoneNumber;
+        if (subContractor.Address == null)
+            subContractor.Address = new SubConAddress();
+        subContractor.Address.SubContractorId = subContractor.Id;
         subContractor.Address.City = request.City;
         subContractor.Address.Street = request.Street;
         subContractor.Address.StreetNumber = request.StreetNumber;
