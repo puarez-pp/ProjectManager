@@ -7,4 +7,5 @@ public class CostDetailsVm
     public ProjectBasicsDto Project { get; set; }
     public decimal Total { get; set; }
     public List<WorkScopeDto> WorkScopes { get; set; }
+    public int? OpenScopeId { get; set; }
 }

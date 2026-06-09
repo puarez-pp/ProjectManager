@@ -1,9 +1,7 @@
 ﻿using MediatR;
+using ProjectManager.Application.Schedules.Commands.Dto;
 
 namespace ProjectManager.Application.Schedules.Commands.CreateSchedule;
 
-public class CreateScheduleCommand : IRequest
-{
-    public ScheduleEditVm Model { get; set; }
-}
+public record CreateScheduleCommand(ScheduleEditDto Dto) : IRequest<int>;
 

@@ -1,34 +1,33 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Tools.Extensions;
 
 namespace ProjectManager.Application.Tools.Queries.GetRents;
 
 public class GetRentsQueryHandler : IRequestHandler<GetRentsQuery, List<ToolRentsDto>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
     public GetRentsQueryHandler(
-        IApplicationDbContext context)
+        IApplicationDbContext context,
+        IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
+
     public async Task<List<ToolRentsDto>> Handle(GetRentsQuery request, CancellationToken cancellationToken)
     {
-        var rents = await _context
+        return await _context
             .Rents
-            .AsNoTracking ()
+            .AsNoTracking()
             .Where(x => x.ToolId == request.Id)
             .OrderByDescending(x => x.RentDate)
-            .Select(x=>new ToolRentsDto
-            {
-                Id = x.Id,
-                User = $"{x.User.FirstName} {x.User.LastName}",
-                RentDate = x.RentDate,
-                ReturnDate = x.ReturnDate,
-            })
+            .ProjectTo<ToolRentsDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
-        return rents;
     }
+
 }

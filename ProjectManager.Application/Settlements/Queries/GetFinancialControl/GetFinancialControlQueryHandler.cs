@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
@@ -9,13 +11,16 @@ public class GetFinancialControlQueryHandler : IRequestHandler<GetFinancialContr
 {
     private readonly IApplicationDbContext _context;
     private readonly ISettlementService _calc;
+    private readonly IMapper _mapper;
 
     public GetFinancialControlQueryHandler(
         IApplicationDbContext context,
-        ISettlementService calc)
+        ISettlementService calc,
+        IMapper mapper)
     {
         _context = context;
         _calc = calc;
+        _mapper = mapper;
     }
 
     public async Task<FinancialControlVm> Handle(GetFinancialControlQuery request, CancellationToken cancellationToken)
@@ -23,12 +28,7 @@ public class GetFinancialControlQueryHandler : IRequestHandler<GetFinancialContr
         var project = await _context.Projects
             .AsNoTracking()
             .Where(x => x.Id == request.Id)
-            .Select(x => new ProjectBasicsDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Number = x.Number
-            })
+            .ProjectTo<ProjectBasicsDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
         var rawScopes = await _context.WorkScopes

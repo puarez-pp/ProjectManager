@@ -22,105 +22,98 @@ public class UpdateScheduleCommandHandler : IRequestHandler<UpdateScheduleComman
     }
     public async Task<Unit> Handle(UpdateScheduleCommand request, CancellationToken cancellationToken)
     {
-        var m = request.Model;
-
         var schedule = await _context.Schedules
             .Include(s => s.Stages)
                 .ThenInclude(st => st.Tasks)
-            .FirstOrDefaultAsync(s => s.Id == m.Id);
+                    .ThenInclude(t => t.Dependencies)
+            .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
         if (schedule == null)
-            throw new Exception("NIe znaleziono harmonogramu");
+            throw new KeyNotFoundException($"Schedule {request.Id} not found.");
 
-        // Aktualizacja pól prostych
-        schedule.Name = m.Name;
-        schedule.Comment = m.Comment;
-        schedule.EditAt = _dateTimeService.Now;
+        var dto = request.Dto;
 
-        // Diffowanie STAGES
+        schedule.Name = dto.Name;
+        schedule.Comment = dto.Comment;
+        schedule.EditAt = DateTime.UtcNow;
 
-        // istniejące etapy
-        var existingStages = schedule.Stages.ToDictionary(s => s.Id);
+        // --- Aktualizacja Stage ---
+        var dtoStageIds = dto.Stages.Where(s => s.Id.HasValue).Select(s => s.Id.Value).ToList();
+        var existingStageIds = schedule.Stages.Select(s => s.Id).ToList();
 
-        // ID etapów z formularza
-        var incomingStageIds = m.Stages.Where(s => s.Id.HasValue).Select(s => s.Id.Value).ToHashSet();
+        // usuwanie
+        foreach (var stage in schedule.Stages.Where(s => !dtoStageIds.Contains(s.Id)).ToList())
+            _context.ScheduleStages.Remove(stage);
 
-        // 2.1 Usuwanie etapów, które zniknęły
-        var stagesToRemove = schedule.Stages
-            .Where(s => !incomingStageIds.Contains(s.Id))
-            .ToList();
-
-        foreach (var st in stagesToRemove)
-            _context.ScheduleStages.Remove(st);
-
-        // Aktualizacja i dodawanie etapów
-        foreach (var stageVm in m.Stages)
+        // aktualizacja + dodawanie
+        foreach (var stageDto in dto.Stages)
         {
             ScheduleStage stage;
 
-            if (stageVm.Id.HasValue)
+            if (stageDto.Id.HasValue)
             {
-                // aktualizacja istniejącego
-                stage = existingStages[stageVm.Id.Value];
+                stage = schedule.Stages.First(s => s.Id == stageDto.Id.Value);
             }
             else
             {
-                // nowy etap
-                stage = new ScheduleStage
-                {
-                    ScheduleId = schedule.Id
-                };
+                stage = new ScheduleStage();
                 schedule.Stages.Add(stage);
             }
 
-            stage.Name = stageVm.Name;
-            stage.Description = stageVm.Description;
-            stage.Order = stageVm.Order;
-            stage.PlannedStart = stageVm.PlannedStart;
-            stage.PlannedEnd = stageVm.PlannedEnd;
+            stage.Name = stageDto.Name;
+            stage.Description = stageDto.Description;
+            stage.Order = stageDto.Order;
+            stage.PlannedStart = stageDto.PlannedStart;
+            stage.PlannedEnd = stageDto.PlannedEnd;
 
-            //Diffowanie TASKS w etapie
+            // --- Aktualizacja Task ---
+            var dtoTaskIds = stageDto.Tasks.Where(t => t.Id.HasValue).Select(t => t.Id.Value).ToList();
+            var existingTaskIds = stage.Tasks.Select(t => t.Id).ToList();
 
-            var existingTasks = stage.Tasks.ToDictionary(t => t.Id);
-            var incomingTaskIds = stageVm.Tasks.Where(t => t.Id.HasValue).Select(t => t.Id.Value).ToHashSet();
+            // usuwanie
+            foreach (var task in stage.Tasks.Where(t => !dtoTaskIds.Contains(t.Id)).ToList())
+                _context.ScheduleTasks.Remove(task);
 
-            // 3.1 Usuwanie zadań, które zniknęły
-            var tasksToRemove = stage.Tasks
-                .Where(t => !incomingTaskIds.Contains(t.Id))
-                .ToList();
-
-            foreach (var t in tasksToRemove)
-                _context.ScheduleTasks.Remove(t);
-
-            // 3.2 Aktualizacja i dodawanie zadań
-            foreach (var taskVm in stageVm.Tasks)
+            // aktualizacja + dodawanie
+            foreach (var taskDto in stageDto.Tasks)
             {
                 ScheduleTask task;
 
-                if (taskVm.Id.HasValue)
+                if (taskDto.Id.HasValue)
                 {
-                    // aktualizacja istniejącego
-                    task = existingTasks[taskVm.Id.Value];
+                    task = stage.Tasks.First(t => t.Id == taskDto.Id.Value);
                 }
                 else
                 {
-                    // nowe zadanie
                     task = new ScheduleTask
                     {
-                        StageId = stage.Id,
-                        CreatedAt = _dateTimeService.Now,
-                        Status = ScheduleStatus.Planned
+                        CreatedAt = DateTime.UtcNow
                     };
                     stage.Tasks.Add(task);
                 }
 
-                task.Name = taskVm.Name;
-                task.Description = taskVm.Description;
-                task.Order = taskVm.Order;
-                task.PlannedStart = taskVm.PlannedStart;
-                task.PlannedEnd = taskVm.PlannedEnd;
-                task.AssignedUserId = taskVm.AssignedUserId;
+                task.Name = taskDto.Name;
+                task.Description = taskDto.Description;
+                task.Order = taskDto.Order;
+                task.PlannedStart = taskDto.PlannedStart;
+                task.PlannedEnd = taskDto.PlannedEnd;
+                task.AssignedUserId = taskDto.AssignedUserId;
+                task.Status = taskDto.Status;
                 task.UpdatedAt = DateTime.UtcNow;
+
+                // zależności — najpierw czyścimy
+                _context.TaskDependencies.RemoveRange(task.Dependencies);
+
+                // dodajemy nowe
+                foreach (var depDto in taskDto.Dependencies)
+                {
+                    _context.TaskDependencies.Add(new TaskDependency
+                    {
+                        PredecessorTaskId = depDto.PredecessorTaskId,
+                        SuccessorTaskId = task.Id,
+                        Type = depDto.Type
+                    });
+                }
             }
         }
 

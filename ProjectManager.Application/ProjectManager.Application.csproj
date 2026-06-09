@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.6" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
@@ -31,11 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Schedules\Commands\AddStage\" />
-    <Folder Include="Schedules\Commands\AddTask\" />
-    <Folder Include="Schedules\Extension\" />
-    <Folder Include="Schedules\Queries\GetCriticalPath\" />
-    <Folder Include="Schedules\Queries\GetTasks\" />
     <Folder Include="Telemetries\Extensions\" />
     <Folder Include="Telemetries\Queries\" />
   </ItemGroup>

@@ -32,7 +32,6 @@ internal class Program
 
         builder.Services.RegisterDataTables();
 
-
         builder.Services.DefineViewLocation(builder.Configuration);
 
         builder.Services

@@ -4,6 +4,7 @@ using ProjectManager.Domain.Enums;
 public class WorkScopeDto
 {
     public int Id { get; set; }
+    public int? OpenScopeId { get; set; }
     public string Description { get; set; }
     public WorkScopeType WorkScopeType { get; set; }
     public int Order { get; set; }

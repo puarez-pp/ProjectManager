@@ -7,6 +7,7 @@ namespace ProjectManager.Application.Settlements.Queries.GetAddWorkScopeOffer;
 
 public class AddWorkScopeOfferVm
 {
+    public int? OpenScopeId { get; set; }
     public ProjectBasicsDto Project { get; set; }
     public WorkScopeType ScopeType { get; set; }
     public List<SubContractorBasicsDto> SubContractors { get; set; }

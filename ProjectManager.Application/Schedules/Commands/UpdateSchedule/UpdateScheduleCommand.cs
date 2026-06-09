@@ -1,11 +1,9 @@
 ﻿using MediatR;
-using ProjectManager.Application.Schedules.Commands.CreateSchedule;
+using ProjectManager.Application.Schedules.Commands.Dto;
 
 namespace ProjectManager.Application.Schedules.Commands.UpdateTaskStatus;
 
-public class UpdateScheduleCommand : IRequest
-{
-    public ScheduleEditVm Model { get; set; }
-}
+public record UpdateScheduleCommand(int Id, ScheduleEditDto Dto) : IRequest;
+
 
 

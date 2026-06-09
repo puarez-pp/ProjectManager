@@ -1,17 +1,17 @@
 ﻿@model WorkScopeDto
+@{
+    bool isOpen = Model.OpenScopeId.HasValue && Model.OpenScopeId == Model.Id;
+}
 
 <div class="accordion-item mb-2" id="scope-@Model.Id">
     <h2 class="accordion-header" id="heading-@Model.Id">
-        <button class="accordion-button collapsed" type="button"
+        <button class="accordion-button @(isOpen ? "" : "collapsed")"
+                type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapse-@Model.Id">
 
             <div class="d-flex flex-column">
-                <h6>
-                    <strong>
-                        @Model.Description
-                    </strong>
-                </h6>
+                <h6><strong>@Model.Description</strong></h6>
                 <div>
                     <span class="badge bg-primary">
                         Koszty łącznie: @Model.Total.ToString("N2") zł
@@ -22,7 +22,7 @@
     </h2>
 
     <div id="collapse-@Model.Id"
-         class="accordion-collapse collapse"
+         class="accordion-collapse collapse @(isOpen ? "show" : "")"
          aria-labelledby="heading-@Model.Id"
          data-bs-parent="#workScopeAccordion">
 

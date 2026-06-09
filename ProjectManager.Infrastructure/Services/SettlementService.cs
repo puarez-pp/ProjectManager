@@ -21,8 +21,8 @@ public class SettlementService : ISettlementService
     }
 
     public WorkScopeSumDto CalculateAssumptionsSummary(
-        AssumptionDto assumption, 
-        IReadOnlyCollection<WorkScopeBaseAmount> offersBase, 
+        AssumptionDto assumption,
+        IReadOnlyCollection<WorkScopeBaseAmount> offersBase,
         IReadOnlyCollection<WorkScopeBaseAmount> costsBase)
     {
         var sales = offersBase.Select(x =>
@@ -101,8 +101,8 @@ public class SettlementService : ISettlementService
     }
 
     public IReadOnlyCollection<ScopeCostSummaryDto> CalculateCostSummary(
-        IReadOnlyCollection<WorkScopeOfferCostBase> offers, 
-        IReadOnlyCollection<WorkScopeOfferCostBase> costs, 
+        IReadOnlyCollection<WorkScopeOfferCostBase> offers,
+        IReadOnlyCollection<WorkScopeOfferCostBase> costs,
         decimal marginGen, decimal marginInst)
     {
         var ids = offers.Select(x => x.WorkScopeId)
@@ -183,7 +183,7 @@ public class SettlementService : ISettlementService
     }
 
     public IReadOnlyCollection<WorkScopeDto> CalculateScopeTypeOffer(
-        IReadOnlyCollection<RawWorkScopeOffer> rawScopes, 
+        IReadOnlyCollection<RawWorkScopeOffer> rawScopes,
         decimal margin)
     {
         return rawScopes.Select(s =>
@@ -214,5 +214,3 @@ public class SettlementService : ISettlementService
         .ToList();
     }
 }
-
-

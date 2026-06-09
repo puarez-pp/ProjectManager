@@ -6,6 +6,7 @@ namespace ProjectManager.Application.Settlements.Queries.GetEditWorkScopeCost;
 
 public class EditWorkScopeCostVm
 {
+    public int? OpenScopeId { get; set; }
     public ProjectBasicsDto Project { get; set; }
     public List<SubContractorBasicsDto> SubContractors { get; set; }
     public EditWorkScopeCostCommand ScopeCost { get; set; }

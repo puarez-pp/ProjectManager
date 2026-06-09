@@ -54,7 +54,8 @@ public class GetAddWorkScopeOfferQueryHandler : IRequestHandler<GetAddWorkScopeO
                 Description = "Oferta", 
                 Quantity = 1, 
                 NetAmount = 1 
-            }
+            },
+             OpenScopeId = request.Id   
         };
         return vm;
     }

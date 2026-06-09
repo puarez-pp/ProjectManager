@@ -42,7 +42,8 @@ public class GetEditWorkScopeOfferQueryHandler : IRequestHandler<GetEditWorkScop
             .WorkScopeOffers
             .Where(o => o.Id == request.Id)
             .Select(o => new 
-            { 
+            {
+                WorkScopeId = o.WorkScopeId,
                 WorkScopeType = o.WorkScope.WorkScopeType, 
                 WorkScopeOffer = o 
             }).FirstOrDefaultAsync();
@@ -66,7 +67,8 @@ public class GetEditWorkScopeOfferQueryHandler : IRequestHandler<GetEditWorkScop
                 EuroRate = offer.WorkScopeOffer.EuroRate,
                 IsUsed = offer.WorkScopeOffer.IsUsed,
                 SubContractorId = offer.WorkScopeOffer.SubContractorId
-            }
+            },
+            OpenScopeId = offer.WorkScopeId
         };
         return vm;
     }

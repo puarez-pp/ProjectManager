@@ -101,6 +101,8 @@ public static class DependencyInjection
         //    }));
 
         //services.AddHangfireServer();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
         return services;
     }

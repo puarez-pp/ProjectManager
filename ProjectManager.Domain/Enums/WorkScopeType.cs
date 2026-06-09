@@ -13,5 +13,5 @@ public enum WorkScopeType
 
     [Display(Name = "Zarządzanie projektem")]
 
-    Aadministration
+    Administration
 }

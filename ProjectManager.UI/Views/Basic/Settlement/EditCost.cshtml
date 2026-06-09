@@ -30,6 +30,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.ScopeCost.Id)
+        @Html.HiddenFor(x => x.OpenScopeId)
         @Html.HiddenFor(x => x.Project.Id)
         @for (int i = 0; i < Model.SubContractors.Count(); i++)
         {
@@ -63,7 +64,7 @@
             <div class="form-group col-sm-6">
                 @Html.LabelFor(x => x.ScopeCost.UnitType)
                 <div class="select2-blue">
-                    @Html.DropDownList("ScopeOffer.UnitType", Html.GetEnumSelectList<UnitType>(), null, htmlAttributes: new { @class = "form-control select2-UnitType", style = "width: 100%;" })
+                    @Html.DropDownList("ScopeCost.UnitType", Html.GetEnumSelectList<UnitType>(), null, htmlAttributes: new { @class = "form-control select2-UnitType", style = "width: 100%;" })
                     @Html.ValidationMessageFor(x => x.ScopeCost.UnitType)
                 </div>
             </div>
@@ -109,7 +110,7 @@
                 @Html.LabelFor(x => x.ScopeCost.SubContractorId)
                 <div class="select2-blue">
                     @Html.DropDownList("ScopeCost.SubContractorId", @Model.SubContractors.Select(x => new SelectListItem(x.Name, x.Id.ToString())), null, htmlAttributes: new { @class = "form-control select2-SubContractor", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(x => x.SubContractors)
+                    @Html.ValidationMessageFor(x => x.ScopeCost.SubContractorId)
                 </div>
             </div>
         </div>

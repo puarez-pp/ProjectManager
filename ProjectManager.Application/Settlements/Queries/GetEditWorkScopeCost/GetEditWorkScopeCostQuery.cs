@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using ProjectManager.Application.Settlements.Commands.EditWorkScopeCost;
 
 namespace ProjectManager.Application.Settlements.Queries.GetEditWorkScopeCost;
 

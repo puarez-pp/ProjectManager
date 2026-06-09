@@ -1,70 +1,94 @@
 ﻿using MediatR;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Domain.Entities;
-using ProjectManager.Domain.Enums;
 
 namespace ProjectManager.Application.Schedules.Commands.CreateSchedule;
 
-public class CreateScheduleCommandHandler : IRequestHandler<CreateScheduleCommand>
+public class CreateScheduleCommandHandler : IRequestHandler<CreateScheduleCommand, int>
 {
     private readonly IApplicationDbContext _context;
     private readonly IDateTimeService _dateTimeService;
-    private readonly ICurrentUserService _userService;
+    private readonly ICurrentUserService _currentUser;
 
     public CreateScheduleCommandHandler(IApplicationDbContext context,
         IDateTimeService dateTimeService,
-        ICurrentUserService userService)
+        ICurrentUserService currentUser)
     {
         _context = context;
         _dateTimeService = dateTimeService;
-        _userService = userService;
+        _currentUser = currentUser;
     }
-    public async Task<Unit> Handle(CreateScheduleCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateScheduleCommand request, CancellationToken cancellationToken)
     {
-        var m = request.Model;
+        var dto = request.Dto;
 
         var schedule = new Schedule
         {
-            ProjectId = m.ProjectId,
-            Name = m.Name,
-            Comment = m.Comment,
-            UserId = _userService.UserId,
-            CreatedAt = _dateTimeService.Now,
-            EditAt = _dateTimeService.Now
+            ProjectId = dto.ProjectId,
+            Name = dto.Name,
+            Comment = dto.Comment,
+            UserId = _currentUser.UserId,
+            CreatedAt = DateTime.UtcNow,
+            EditAt = DateTime.UtcNow
         };
 
-        foreach (var stageVm in m.Stages.OrderBy(s => s.Order))
+        foreach (var stageDto in dto.Stages)
         {
             var stage = new ScheduleStage
             {
-                Name = stageVm.Name,
-                Description = stageVm.Description,
-                Order = stageVm.Order,
-                PlannedStart = stageVm.PlannedStart,
-                PlannedEnd = stageVm.PlannedEnd
+                Name = stageDto.Name,
+                Description = stageDto.Description,
+                Order = stageDto.Order,
+                PlannedStart = stageDto.PlannedStart,
+                PlannedEnd = stageDto.PlannedEnd
             };
 
-            foreach (var taskVm in stageVm.Tasks.OrderBy(t => t.Order))
+            foreach (var taskDto in stageDto.Tasks)
             {
-                stage.Tasks.Add(new ScheduleTask
+                var task = new ScheduleTask
                 {
-                    Name = taskVm.Name,
-                    Description = taskVm.Description,
-                    Order = taskVm.Order,
-                    PlannedStart = taskVm.PlannedStart,
-                    PlannedEnd = taskVm.PlannedEnd,
-                    Status = ScheduleStatus.Planned,
-                    CreatedAt = _dateTimeService.Now
-                });
+                    Name = taskDto.Name,
+                    Description = taskDto.Description,
+                    Order = taskDto.Order,
+                    PlannedStart = taskDto.PlannedStart,
+                    PlannedEnd = taskDto.PlannedEnd,
+                    AssignedUserId = taskDto.AssignedUserId,
+                    Status = taskDto.Status,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                stage.Tasks.Add(task);
             }
 
             schedule.Stages.Add(stage);
         }
 
-        await _context.Schedules.AddAsync(schedule);
+        _context.Schedules.Add(schedule);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        foreach (var stageDto in dto.Stages)
+        {
+            foreach (var taskDto in stageDto.Tasks)
+            {
+                var task = schedule.Stages
+                    .SelectMany(s => s.Tasks)
+                    .First(t => t.Name == taskDto.Name && t.Order == taskDto.Order);
+
+                foreach (var depDto in taskDto.Dependencies)
+                {
+                    _context.TaskDependencies.Add(new TaskDependency
+                    {
+                        PredecessorTaskId = depDto.PredecessorTaskId,
+                        SuccessorTaskId = task.Id,
+                        Type = depDto.Type
+                    });
+                }
+            }
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return schedule.Id;
     }
 }
 

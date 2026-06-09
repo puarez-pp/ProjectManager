@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 
@@ -8,29 +10,26 @@ public class GetOverdueTodosForNotificationQueryHandler : IRequestHandler<GetOve
 {
     private readonly IApplicationDbContext _context;
     private readonly IDateTimeService _dateTimeService;
+    private readonly IMapper _mapper;
 
     public GetOverdueTodosForNotificationQueryHandler(
         IApplicationDbContext context,
-        IDateTimeService dateTimeService)
+        IDateTimeService dateTimeService,
+        IMapper mapper)
     {
         _context = context;
         _dateTimeService = dateTimeService;
+        _mapper = mapper;
     }
     public async Task<List<OverdueTodoDto>> Handle(GetOverdueTodosForNotificationQuery request, CancellationToken cancellationToken)
     {
-        var todos = await _context
-            .Todos
-            .AsNoTracking()
-            .Where(t => !t.IsCompleted && t.CompletionDate != null && t.CompletionDate < _dateTimeService.Now)
-            .Select(t => new OverdueTodoDto
-            {
-                Id = t.Id,
-                Title = t.Title,
-                FinishDate = t.FinishDate,
-                UserToId = t.UserToId,
-                UserToEmail = t.UserTo.Email
-            })
-            .ToListAsync(cancellationToken);
-        return todos;
+        return await _context
+        .Todos
+        .AsNoTracking()
+        .Where(t => !t.IsCompleted
+                 && t.FinishDate != null
+                 && t.FinishDate < _dateTimeService.Now)
+        .ProjectTo<OverdueTodoDto>(_mapper.ConfigurationProvider)
+        .ToListAsync(cancellationToken);
     }
 }

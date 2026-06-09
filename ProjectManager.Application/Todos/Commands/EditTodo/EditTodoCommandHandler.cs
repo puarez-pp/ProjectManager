@@ -43,7 +43,7 @@ public class EditTodoCommandHandler : IRequestHandler<EditTodoCommand>
 
         var sendEmail = await _appSettings.Get(SettingsDict.EmailOnNewTodo);
 
-        if (Convert.ToBoolean(sendEmail) && oldUserToId != newUserToId && false)
+        if (Convert.ToBoolean(sendEmail) && oldUserToId != newUserToId)
         {
             var todoWithUsers = await _context.Todos
                 .Include(x => x.UserFrom)

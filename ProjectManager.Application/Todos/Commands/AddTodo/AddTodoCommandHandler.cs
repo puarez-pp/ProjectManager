@@ -45,7 +45,7 @@ public class AddTodoCommandHandler : IRequestHandler<AddTodoCommand>
 
         var sendEmail = await _appSettings.Get(SettingsDict.EmailOnNewTodo);
         
-        if (Convert.ToBoolean(sendEmail) && false)
+        if (Convert.ToBoolean(sendEmail))
         {
             var todoWithUsers = await _context.Todos
                 .Include(x => x.UserFrom)

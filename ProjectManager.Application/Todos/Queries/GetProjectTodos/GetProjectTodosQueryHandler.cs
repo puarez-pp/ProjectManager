@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Extensions;
 using ProjectManager.Application.Common.Interfaces;
@@ -11,10 +13,13 @@ namespace ProjectManager.Application.Todos.Queries.GetProjectTodos;
 public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery, ProjectTodosVm>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetProjectTodosQueryHandler(IApplicationDbContext context)
+    public GetProjectTodosQueryHandler(IApplicationDbContext context, 
+        IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<ProjectTodosVm> Handle(GetProjectTodosQuery request, CancellationToken cancellationToken)
     {
@@ -31,33 +36,14 @@ public class GetProjectTodosQueryHandler : IRequestHandler<GetProjectTodosQuery,
            })       
            .FirstOrDefaultAsync ();
 
-        var todos = await  _context 
+        var todos = await _context
             .Todos
             .AsNoTracking()
-            .Select(x => new TodoDto
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Body = x.Body,
-                IsCompleted = x.IsCompleted,
-                CreatedAt = x.CreatedAt,
-                FinishDate = x.FinishDate,
-                CompletionDate = x.CompletionDate,
-                UserFrom = new UserDto
-                {
-                    Id = x.UserFromId,
-                    FullName = $"{x.UserFrom.FirstName} {x.UserFrom.LastName}",
-                    Employee = new EmployeeDto()
-                },
-                UserTo = new UserDto
-                {
-                    Id = x.UserToId,
-                    FullName = $"{x.UserTo.FirstName} {x.UserTo.LastName}",
-                    Employee = new EmployeeDto()
-                },
-                PostsNumber = x.TodoPosts.Count()
-            })
+            .Where(x => x.ProjectId == request.Id)
+            .OrderByDescending(x => x.CreatedAt)
+            .ProjectTo<TodoDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageIndex, pageSize);
+
 
         var vm = new ProjectTodosVm();
         vm.Project = project;

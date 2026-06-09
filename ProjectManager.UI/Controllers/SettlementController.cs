@@ -23,12 +23,10 @@ namespace ProjectManager.UI.Controllers
 {
     public class SettlementController : BaseController
     {
-        private readonly IDateTimeService _dateTimeService;
         private readonly ILogger<SettlementController> _logger;
-        public SettlementController(IDateTimeService dateTimeService,
+        public SettlementController(
             ILogger<SettlementController> logger)
         {
-            _dateTimeService = dateTimeService;
             _logger = logger;
         }
 
@@ -38,9 +36,11 @@ namespace ProjectManager.UI.Controllers
             return View(await Mediator.Send(new GetAssumptionQuery { Id = id }));
         }
 
-        public async Task<IActionResult> Offers(int id, WorkScopeType st)
+        public async Task<IActionResult> Offers(int id, WorkScopeType st, int? openScopeId)
         {
-            return View(await Mediator.Send(new GetScopeTypeOfferQuery { Id = id, ScopeType = st}));
+            var vm = await Mediator.Send(new GetScopeTypeOfferQuery { Id = id, ScopeType = st });
+            vm.OpenScopeId = openScopeId;
+            return View(vm);
         }
 
         public async Task<IActionResult> FinanceControl(int id)
@@ -48,9 +48,11 @@ namespace ProjectManager.UI.Controllers
             return View(await Mediator.Send(new GetFinancialControlQuery { Id = id}));
         }
 
-        public async Task<IActionResult> CostsDetails(int id)
+        public async Task<IActionResult> CostsDetails(int id, int? openScopeId)
         {
-            return View(await Mediator.Send(new GetCostDetailsQuery { Id = id }));
+            var vm = await Mediator.Send(new GetCostDetailsQuery { Id = id });
+            vm.OpenScopeId = openScopeId;
+            return View(vm);
         }
 
         public async Task<IActionResult> CostsSummary(int id)
@@ -113,7 +115,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("CostsDetails", new { @id = viewModel.Project.Id });
+            return RedirectToAction("CostsDetails", new { id = viewModel.Project.Id, openScopeId = viewModel.OpenScopeId });
         }
 
         public async Task<IActionResult> EditCost(int id)
@@ -131,8 +133,10 @@ namespace ProjectManager.UI.Controllers
                 return View(viewModel);
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
+            
 
-            return RedirectToAction("CostsDetails", new { @id = viewModel.Project.Id});
+            return RedirectToAction("CostsDetails", new { id = viewModel.Project.Id, openScopeId = viewModel.OpenScopeId });
+
         }
 
         [HttpPost]
@@ -171,7 +175,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Oferta została dodana.";
 
-            return RedirectToAction("Offers", new { @id = viewModel.Project.Id, @st = viewModel.ScopeType });
+            return RedirectToAction("Offers", new { @id = viewModel.Project.Id, @st = viewModel.ScopeType, @openScopeId = viewModel.OpenScopeId });
 
         }
 
@@ -191,7 +195,7 @@ namespace ProjectManager.UI.Controllers
 
             TempData["Success"] = "Dane zostały zaktualizowane.";
 
-            return RedirectToAction("Offers", new { @id = viewModel.Project.Id, @st = viewModel.ScopeType });
+            return RedirectToAction("Offers", new { @id = viewModel.Project.Id, @st = viewModel.ScopeType, @openScopeId = viewModel.OpenScopeId });
         }
 
         [HttpPost]

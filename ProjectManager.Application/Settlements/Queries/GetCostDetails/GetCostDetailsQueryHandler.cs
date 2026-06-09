@@ -61,7 +61,7 @@ public class GetCostDetailsQueryHandler : IRequestHandler<GetCostDetailsQuery, C
         {
             Project = project,
             Total = workScopes.Sum(s => s.Total),
-            WorkScopes = workScopes.ToList()
+            WorkScopes = workScopes.ToList(),
         };
     }
 }

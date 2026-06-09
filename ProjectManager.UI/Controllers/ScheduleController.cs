@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.Schedules.Commands.CreateSchedule;
 using ProjectManager.Application.Schedules.Commands.UpdateTaskStatus;
-using ProjectManager.Application.Schedules.Queries.GetAddSchedule;
+using ProjectManager.Application.Schedules.Queries.GetEditSchedule;
 using ProjectManager.Application.Schedules.Queries.GetSchedule;
 using ProjectManager.Application.Schedules.Queries.GetSchedules;
 
@@ -20,14 +20,19 @@ public class ScheduleController : BaseController
 
     public async Task<IActionResult> Schedules(int projectId)
     {
-        var vm = await Mediator.Send(new GetSchedulesQuery { ProjectId = projectId});
-        ViewBag.ProjectId = projectId;
+        var vm = await Mediator.Send(new GetSchedulesQuery { Id = projectId});
         return View(vm);
     }
 
-    public async Task<IActionResult> Schedule(int id)
+    public async Task<IActionResult> Details(int id)
     {
-        var vm = await Mediator.Send(new GetScheduleQuery { Id = id});
+        var vm = await Mediator.Send(new GetScheduleDetailsQuery { Id = id});
+        return View(vm);
+    }
+
+    public async Task<IActionResult> CriticalPath(int id)
+    {
+        var vm = await Mediator.Send(new GetScheduleCriticalPathQuery { Id = id});
         return View(vm);
     }
 
@@ -40,13 +45,13 @@ public class ScheduleController : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(ScheduleEditVm model)
+    public async Task<IActionResult> Create(CreateScheduleCommand model)
     {
         if (!ModelState.IsValid)
             return View(model);
 
-        var id = await Mediator.Send(new CreateScheduleCommand { Model = model});
-        return RedirectToAction(nameof(Schedule), new { id });
+        var id = await Mediator.Send(model);
+        return RedirectToAction(nameof(CriticalPath), new { id });
     }
 
     [HttpGet]
@@ -58,13 +63,13 @@ public class ScheduleController : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(ScheduleEditVm model)
+    public async Task<IActionResult> Edit(UpdateScheduleCommand model)
     {
         if (!ModelState.IsValid)
             return View(model);
 
-        await Mediator.Send(new UpdateScheduleCommand { Model = model});
-        return RedirectToAction(nameof(Schedule), new { id = model.Id });
+        await Mediator.Send(model);
+        return RedirectToAction(nameof(CriticalPath), new { id = model.Id });
     }
 
 }

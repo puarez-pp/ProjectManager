@@ -1,6 +1,5 @@
 ﻿using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Schedules.CriticalPath;
-using ProjectManager.Application.Schedules.Dto;
+using ProjectManager.Application.Schedules.Queries.Dto;
 using ProjectManager.Domain.Entities;
 
 namespace ProjectManager.Infrastructure.Services;
@@ -18,31 +17,7 @@ public class CriticalPathService : ICriticalPathService
         return ExtractCriticalPath(sorted);
     }
 
-    public CriticalPathResult CalculateDetailedCriticalPath(IEnumerable<ScheduleTask> tasks)
-    {
-        var graph = BuildGraph(tasks.ToList());
-        var sorted = TopologicalSort(graph);
-
-        ForwardPass(sorted);
-        BackwardPass(sorted);
-
-        return new CriticalPathResult
-        {
-            Tasks = sorted
-                .OrderBy(n => n.ES)
-                .Select(n => new CriticalPathTaskDto
-                {
-                    TaskId = n.Task.Id,
-                    Name = n.Task.Name,
-                    ES = n.ES,
-                    EF = n.EF,
-                    LS = n.LS,
-                    LF = n.LF,
-                    Slack = n.Slack
-                })
-                .ToList()
-        };
-    }
+    
 
     public CriticalPathResultDto CalculateDetailedCriticalPathDto(IEnumerable<ScheduleTask> tasks)
     {

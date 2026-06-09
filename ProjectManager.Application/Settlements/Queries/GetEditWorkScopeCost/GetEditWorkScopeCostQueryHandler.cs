@@ -56,7 +56,8 @@ public class GetEditWorkScopeCostQueryHandler : IRequestHandler<GetEditWorkScope
                 EuroNetAmount = cost.EuroNetAmount,
                 EuroRate = cost.EuroRate,
                 SubContractorId = cost.SubContractorId
-            }
+            },
+            OpenScopeId = cost.WorkScopeId,
         };
         return vm;
     }

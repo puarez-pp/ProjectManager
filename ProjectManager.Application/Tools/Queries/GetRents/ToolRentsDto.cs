@@ -8,5 +8,4 @@ public class ToolRentsDto
     public string Name { get; set; }
     public DateTime RentDate { get; set; }
     public DateTime? ReturnDate { get; set; }
-
 }

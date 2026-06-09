@@ -26,6 +26,7 @@
         <div class="accordion" id="workScopeAccordion">
             @foreach (var scope in Model.WorkScopes.OrderBy(s => s.Order))
             {
+                scope.OpenScopeId = Model.OpenScopeId;
                 @await Html.PartialAsync("_WorkScopeCostItem", scope)
             }
         </div>

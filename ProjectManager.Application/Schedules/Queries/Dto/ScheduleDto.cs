@@ -1,4 +1,4 @@
-﻿namespace ProjectManager.Application.Schedules.Dto;
+﻿namespace ProjectManager.Application.Schedules.Queries.Dto;
 
 public class ScheduleDto
 {

@@ -1,37 +1,39 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
 using ProjectManager.Application.Projects.Queries.GetProjectBasics;
-using ProjectManager.Application.Schedules.Dto;
+using ProjectManager.Application.Schedules.Queries.Dto;
 
 namespace ProjectManager.Application.Schedules.Queries.GetSchedules;
 
-public class GetSchedulesQueryHandler : IRequestHandler<GetSchedulesQuery, List<ScheduleDto>>
+public class GetSchedulesQueryHandler : IRequestHandler<GetSchedulesQuery, SchedulesVm>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetSchedulesQueryHandler(IApplicationDbContext context)
+    public GetSchedulesQueryHandler(IApplicationDbContext context,
+        IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
-
-    public async Task<List<ScheduleDto>> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
+    public async Task<SchedulesVm> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
     {
-        return await _context
-            .Schedules
-            .Where(s => s.ProjectId == request.ProjectId)
-            .OrderByDescending(s => s.CreatedAt)
-            .Select(s => new ScheduleDto
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Comment = s.Comment,
-                CreatedAt = s.CreatedAt,
-                EditAt = s.EditAt,
-                UserName = $"{s.User.FirstName} {s.User.LastName}",
-                StagesCount = s.Stages.Count(),
-                TasksCount = s.Stages.SelectMany(s => s.Tasks).Count()
-            })
-            .ToListAsync(cancellationToken);
+        var project = await _context.Projects
+            .Include(x=>x.Schedules)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        if (project == null)
+        {
+            return null;
+        }
+
+        var vm = new SchedulesVm
+        {
+            Project = _mapper.Map<ProjectBasicsDto>(project),
+            Schedules = _mapper.Map<IList<ScheduleDto>>(project.Schedules)
+        };
+        return vm;
     }
 }

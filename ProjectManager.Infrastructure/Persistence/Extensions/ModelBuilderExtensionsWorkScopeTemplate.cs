@@ -62,7 +62,7 @@ static class ModelBuilderExtensionsWorkScopeTemplate
                 Id = 7,
                 Description = "Zarządzenie projektem, dokumenetacja techniczna, rozruchy",
                 ProjectType = ProjectType.Gas,
-                WorkScopeType = WorkScopeType.Aadministration,
+                WorkScopeType = WorkScopeType.Administration,
                 Order = 7
             },
             new WorkScopeTemplate
@@ -142,7 +142,7 @@ static class ModelBuilderExtensionsWorkScopeTemplate
                 Id = 17,
                 Description = "Zarządzenie projektem, dokumenetacja techniczna, rozruchy",
                 ProjectType = ProjectType.Diesel,
-                WorkScopeType = WorkScopeType.Aadministration,
+                WorkScopeType = WorkScopeType.Administration,
                 Order = 10
             });
     }

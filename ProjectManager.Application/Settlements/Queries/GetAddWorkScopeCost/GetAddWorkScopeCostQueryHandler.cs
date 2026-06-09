@@ -46,7 +46,8 @@ public class GetAddWorkScopeCostQueryHandler : IRequestHandler<GetAddWorkScopeCo
                 CostStatusType = CostStatusType.Invoice,
                 Quantity = 1,
                 NetAmount = 1,
-            }
+            },
+            OpenScopeId = request.Id
         };
         return vm;
     }

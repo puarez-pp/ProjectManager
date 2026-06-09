@@ -8,5 +8,4 @@ public class Client
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
     public ICollection<Project> Projects { get; set; } = new HashSet<Project>();
-
 }

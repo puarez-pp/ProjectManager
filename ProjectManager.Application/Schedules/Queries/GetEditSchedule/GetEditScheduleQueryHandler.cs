@@ -1,65 +1,39 @@
 ﻿
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.Common.Interfaces;
-using ProjectManager.Application.Schedules.Commands.CreateSchedule;
+using ProjectManager.Application.Schedules.Commands.Dto;
 
-namespace ProjectManager.Application.Schedules.Queries.GetAddSchedule;
+namespace ProjectManager.Application.Schedules.Queries.GetEditSchedule;
 
-public class GetEditScheduleQueryHandler : IRequestHandler<GetEditScheduleQuery, ScheduleEditVm>
+public class GetEditScheduleQueryHandler : IRequestHandler<GetEditScheduleQuery, ScheduleEditDto>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetEditScheduleQueryHandler(IApplicationDbContext context)
+    public GetEditScheduleQueryHandler(
+        IApplicationDbContext context,
+        IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<ScheduleEditVm> Handle(GetEditScheduleQuery request, CancellationToken cancellationToken)
+    public async Task<ScheduleEditDto> Handle(GetEditScheduleQuery request, CancellationToken cancellationToken)
     {
-        var schedule = await _context
-            .Schedules
+        var schedule = await _context.Schedules
             .Include(s => s.Stages)
                 .ThenInclude(st => st.Tasks)
-            .FirstOrDefaultAsync(s => s.Id == request.Id);
+                    .ThenInclude(t => t.Dependencies)
+            .Include(s => s.Stages)
+                .ThenInclude(st => st.Tasks)
+                    .ThenInclude(t => t.Predecessors)
+            .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
         if (schedule == null)
-            throw new Exception("Nie znaleziono harmonogramu");
+            throw new KeyNotFoundException($"Schedule {request.Id} not found.");
 
-        var vm = new ScheduleEditVm
-        {
-            Id = schedule.Id,
-            ProjectId = schedule.ProjectId,
-            Name = schedule.Name,
-            Comment = schedule.Comment,
-            Stages = schedule.Stages
-                .OrderBy(st => st.Order)
-                .Select(st => new ScheduleStageEditVm
-                {
-                    Id = st.Id,
-                    Name = st.Name,
-                    Description = st.Description,
-                    Order = st.Order,
-                    PlannedStart = st.PlannedStart,
-                    PlannedEnd = st.PlannedEnd,
-
-                    Tasks = st.Tasks
-                        .OrderBy(t => t.Order)
-                        .Select(t => new ScheduleTaskEditVm
-                        {
-                            Id = t.Id,
-                            Name = t.Name,
-                            Description = t.Description,
-                            Order = t.Order,
-                            PlannedStart = t.PlannedStart,
-                            PlannedEnd = t.PlannedEnd,
-                            AssignedUserId = t.AssignedUserId
-                        })
-                        .ToList()
-                })
-                .ToList()
-        };
-
-        return vm;
+        return _mapper.Map<ScheduleEditDto>(schedule);
     }
 }
